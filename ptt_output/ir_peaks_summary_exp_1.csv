@@ -1,0 +1,5 @@
+sensor,sensor_name,peak_count,is_valid,hr_fft,hr_peaks,validation_message
+sensor2,nose,635,False,52.734375,65.86315594288894,心率不一致: 峰值65.9 vs FFT52.7 BPM (差异24.9%)
+sensor3,finger,649,True,58.59375,64.34120652797331,"验证通过: HR=64.3BPM, 峰值数量=649"
+sensor4,wrist,657,False,58.59375,64.85581784581052,心率不一致: 峰值64.9 vs FFT58.6 BPM (差异10.7%)
+sensor5,ear,700,False,58.59375,66.81800236873273,心率不一致: 峰值66.8 vs FFT58.6 BPM (差异14.0%)
