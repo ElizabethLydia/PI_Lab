@@ -1,0 +1,2 @@
+sensor_pair,sensor_names,valid_heartbeats,mean_ptt_ms,std_ptt_ms,min_ptt_ms,max_ptt_ms,median_ptt_ms,q25_ptt_ms,q75_ptt_ms
+sensor4-sensor5,wrist→ear,83,-102.16867469879467,58.14498274765746,-199.9999999999993,199.9999999999993,-110.00000000000121,-129.99999999999545,-90.00000000000341
