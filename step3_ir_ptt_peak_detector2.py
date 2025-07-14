@@ -104,7 +104,7 @@ class IRWindowedPTTPeakDetector:
         else:
             print(f"⚠️ 计算出的采样率 {sampling_rate:.1f}Hz 超出合理范围，使用默认值 {self.default_fs}Hz")
             return self.default_fs
-
+    
     def _select_method(self, method):
         """智能选择可用的峰值检测方法"""
         if method == "auto":

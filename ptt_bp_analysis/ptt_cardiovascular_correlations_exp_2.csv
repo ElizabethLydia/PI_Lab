@@ -1,0 +1,37 @@
+experiment_id,sensor_pair,sensor_combination,physiological_parameter,parameter_label,correlation_coefficient,p_value,n_samples,statistically_significant
+2,sensor3-sensor4,Finger→Wrist,systolic_bp_mean,Systolic BP (mmHg),-0.268233418889287,0.022719227930801507,72,True
+2,sensor3-sensor4,Finger→Wrist,systolic_bp_std,Systolic BP (mmHg) (SD),0.3610278840134358,0.0018356404440056687,72,True
+2,sensor3-sensor4,Finger→Wrist,systolic_bp_min,Systolic BP (mmHg) (Min),-0.36414476184195044,0.0016636575301924499,72,True
+2,sensor3-sensor4,Finger→Wrist,systolic_bp_max,Systolic BP (mmHg) (Max),-0.3431127994428895,0.0031717023827253963,72,True
+2,sensor3-sensor4,Finger→Wrist,diastolic_bp_mean,Diastolic BP (mmHg),0.36425246144991913,0.0016579831176214985,72,True
+2,sensor3-sensor4,Finger→Wrist,diastolic_bp_std,Diastolic BP (mmHg) (SD),-0.36438033375826634,0.0016512684818057151,72,True
+2,sensor3-sensor4,Finger→Wrist,diastolic_bp_min,Diastolic BP (mmHg) (Min),0.19067116957583696,0.1086392591951149,72,False
+2,sensor3-sensor4,Finger→Wrist,diastolic_bp_max,Diastolic BP (mmHg) (Max),0.13319470109089662,0.2646820899469898,72,False
+2,sensor3-sensor4,Finger→Wrist,mean_bp_mean,Mean Arterial Pressure (mmHg),0.3441031359887471,0.0030797524887538168,72,True
+2,sensor3-sensor4,Finger→Wrist,mean_bp_std,Mean Arterial Pressure (mmHg) (SD),0.36334081994870776,0.0017065703748658655,72,True
+2,sensor3-sensor4,Finger→Wrist,mean_bp_min,Mean Arterial Pressure (mmHg) (Min),-0.07090470761004115,0.5539427383753781,72,False
+2,sensor3-sensor4,Finger→Wrist,mean_bp_max,Mean Arterial Pressure (mmHg) (Max),0.1926831634950993,0.10489082061258455,72,False
+2,sensor3-sensor4,Finger→Wrist,bp_mean,Continuous BP (mmHg),0.3132991487594595,0.007368120504885846,72,True
+2,sensor3-sensor4,Finger→Wrist,bp_std,Continuous BP (mmHg) (SD),-0.31176978376840525,0.007676982727709067,72,True
+2,sensor3-sensor4,Finger→Wrist,bp_min,Continuous BP (mmHg) (Min),0.18754654978206325,0.1146650644405795,72,False
+2,sensor3-sensor4,Finger→Wrist,bp_max,Continuous BP (mmHg) (Max),-0.3057431693453635,0.009007323268714939,72,True
+2,sensor3-sensor4,Finger→Wrist,cardiac_output_mean,Cardiac Output (L/min),-0.3514919204751262,0.0024654678370862643,72,True
+2,sensor3-sensor4,Finger→Wrist,cardiac_output_std,Cardiac Output (L/min) (SD),-0.01682549476807088,0.8884385398799906,72,False
+2,sensor3-sensor4,Finger→Wrist,cardiac_output_min,Cardiac Output (L/min) (Min),-0.36388597058891237,0.0016773640957047915,72,True
+2,sensor3-sensor4,Finger→Wrist,cardiac_output_max,Cardiac Output (L/min) (Max),-0.32638222762241764,0.005141382056191657,72,True
+2,sensor3-sensor4,Finger→Wrist,cardiac_index_mean,Cardiac Index (L/min/m²),-0.35167239158524716,0.002451945305669822,72,True
+2,sensor3-sensor4,Finger→Wrist,cardiac_index_std,Cardiac Index (L/min/m²) (SD),-0.006117484051680642,0.9593250752318473,72,False
+2,sensor3-sensor4,Finger→Wrist,cardiac_index_min,Cardiac Index (L/min/m²) (Min),-0.36385729873873823,0.0016788889017488793,72,True
+2,sensor3-sensor4,Finger→Wrist,cardiac_index_max,Cardiac Index (L/min/m²) (Max),-0.32709046161281985,0.005039969271512495,72,True
+2,sensor3-sensor4,Finger→Wrist,hr_mean,Heart Rate (bpm),-0.3292049162915617,0.0047476444216590415,72,True
+2,sensor3-sensor4,Finger→Wrist,hr_std,Heart Rate (bpm) (SD),-0.24799680513992678,0.03569128174676213,72,True
+2,sensor3-sensor4,Finger→Wrist,hr_min,Heart Rate (bpm) (Min),-0.35335773633327744,0.0023288332080386304,72,True
+2,sensor3-sensor4,Finger→Wrist,hr_max,Heart Rate (bpm) (Max),-0.31268816004762745,0.007490179329230547,72,True
+2,sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),0.3551851567967511,0.002201626325030129,72,True
+2,sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_std,Systemic Vascular Resistance (dyn·s/cm⁵) (SD),0.3215959795184521,0.005875289303423252,72,True
+2,sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_min,Systemic Vascular Resistance (dyn·s/cm⁵) (Min),0.1699718781937118,0.15345669218773483,72,False
+2,sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_max,Systemic Vascular Resistance (dyn·s/cm⁵) (Max),0.3603669047642458,0.0018741035481041322,72,True
+2,sensor3-sensor4,Finger→Wrist,rsp_mean,Respiration Rate (breaths/min),,,72,False
+2,sensor3-sensor4,Finger→Wrist,rsp_std,Respiration Rate (breaths/min) (SD),,,72,False
+2,sensor3-sensor4,Finger→Wrist,rsp_min,Respiration Rate (breaths/min) (Min),,,72,False
+2,sensor3-sensor4,Finger→Wrist,rsp_max,Respiration Rate (breaths/min) (Max),,,72,False
