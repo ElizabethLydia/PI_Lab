@@ -1,0 +1,6 @@
+experiment,physiological_parameter,parameter_label,r2_score,mae,n_samples
+7,systolic_bp_mean,Systolic BP (mmHg),0.01683460433270445,3.6573652819890805,27
+7,diastolic_bp_mean,Diastolic BP (mmHg),0.13628353968326112,1.3139544179530969,27
+7,mean_bp_mean,Mean Arterial Pressure (mmHg),0.18201286096329006,0.9392283577003434,27
+7,cardiac_output_mean,Cardiac Output (L/min),0.07838924246521584,0.5823582479613025,27
+7,cardiac_index_mean,Cardiac Index (L/min/m²),0.07823303186136232,0.051450939711733375,27

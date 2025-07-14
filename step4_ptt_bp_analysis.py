@@ -9,6 +9,8 @@ import os
 import pickle
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # 设置非交互模式，不显示弹窗
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
@@ -18,9 +20,10 @@ from sklearn.preprocessing import StandardScaler
 import warnings
 warnings.filterwarnings('ignore')
 
-# 设置中文字体
+# 设置中文字体和图片保存模式
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
+plt.ioff()  # 关闭交互模式
 
 class PTTBloodPressureAnalyzer:
     """PTT与血压相关性分析器"""
@@ -736,8 +739,139 @@ class PTTBloodPressureAnalyzer:
             'models': models
         }
     
+    def run_individual_experiment_sensor_regression_analysis(self):
+        """为每个实验的每个传感器对单独构建回归模型"""
+        print("\n🎯 开始按实验×传感器对单独拟合分析...")
+        print("📋 拟合策略: 每个实验的每个传感器对对每个生理指标建立独立模型")
+        
+        all_models = {}
+        model_summary = []
+        
+        # 生理指标列表
+        main_physio_cols = []
+        for indicator in ['systolic_bp', 'diastolic_bp', 'mean_bp', 'cardiac_output', 'cardiac_index']:
+            col_name = f'{indicator}_mean'
+            main_physio_cols.append(col_name)
+        
+        # 为每个实验单独建模
+        for exp_id in range(1, 12):  # 实验1-11
+            print(f"\n🔍 分析实验 {exp_id}")
+            exp_data = self.analyze_experiment(exp_id)
+            
+            if not exp_data or len(exp_data['sync_data']) < 10:
+                print(f"❌ 实验{exp_id}数据不足")
+                continue
+            
+            sync_df = exp_data['sync_data']
+            all_models[f'exp_{exp_id}'] = {}
+            
+            # 获取该实验的传感器对
+            sensor_pairs = sync_df['sensor_pair'].unique()
+            print(f"   📡 传感器对: {list(sensor_pairs)}")
+            
+            # 为每个传感器对建模
+            for sensor_pair in sensor_pairs:
+                print(f"   🔧 传感器对: {sensor_pair} ({self._format_sensor_pair_label_en(sensor_pair)})")
+                
+                # 筛选该传感器对的数据
+                sensor_data = sync_df[sync_df['sensor_pair'] == sensor_pair].copy()
+                
+                if len(sensor_data) < 5:
+                    print(f"      ⚠️ 数据不足: {len(sensor_data)}个样本")
+                    continue
+                
+                all_models[f'exp_{exp_id}'][sensor_pair] = {}
+                
+                # 为每个生理指标建模
+                for physio_col in main_physio_cols:
+                    if physio_col not in sensor_data.columns:
+                        continue
+                    
+                    # 准备数据（去除NaN）
+                    mask = (~sensor_data[physio_col].isna()) & (~sensor_data['ptt_ms'].isna())
+                    valid_data = sensor_data[mask]
+                    
+                    if len(valid_data) < 5:
+                        print(f"      ⚠️ {physio_col}: 有效样本不足({len(valid_data)}<5)")
+                        continue
+                    
+                    # 单变量线性回归: PTT → 生理指标
+                    X = valid_data[['ptt_ms']].values
+                    y = valid_data[physio_col].values
+                    
+                    # 数据标准化
+                    scaler_X = StandardScaler()
+                    scaler_y = StandardScaler()
+                    X_scaled = scaler_X.fit_transform(X)
+                    y_scaled = scaler_y.fit_transform(y.reshape(-1, 1)).flatten()
+                    
+                    # 训练模型
+                    model = LinearRegression()
+                    model.fit(X_scaled, y_scaled)
+                    
+                    # 预测
+                    y_pred_scaled = model.predict(X_scaled)
+                    y_pred = scaler_y.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
+                    
+                    # 评估
+                    r2 = r2_score(y, y_pred)
+                    mae = mean_absolute_error(y, y_pred)
+                    
+                    # 保存模型
+                    all_models[f'exp_{exp_id}'][sensor_pair][physio_col] = {
+                        'model': model,
+                        'scaler_X': scaler_X,
+                        'scaler_y': scaler_y,
+                        'r2_score': r2,
+                        'mae': mae,
+                        'n_samples': len(y),
+                        'y_true': y,
+                        'y_pred': y_pred
+                    }
+                    
+                    # 收集统计信息
+                    model_summary.append({
+                        'experiment': exp_id,
+                        'sensor_pair': sensor_pair,
+                        'sensor_label': self._format_sensor_pair_label_en(sensor_pair),
+                        'physiological_parameter': physio_col,
+                        'parameter_label': self._format_physio_label_en(physio_col),
+                        'r2_score': r2,
+                        'mae': mae,
+                        'n_samples': len(y)
+                    })
+                    
+                    print(f"      📈 {self._format_physio_label_en(physio_col)}: R²={r2:.3f}, MAE={mae:.2f}, N={len(y)}")
+        
+        # 保存结果
+        if model_summary:
+            model_df = pd.DataFrame(model_summary)
+            model_file = f"{self.output_dir}/experiment_sensor_models.csv"
+            model_df.to_csv(model_file, index=False)
+            print(f"💾 保存实验×传感器对模型评估: {model_file}")
+            
+            # 创建详细的性能对比图
+            self.create_experiment_sensor_comparison(model_df)
+            
+            # 统计总结
+            total_models = len(model_summary)
+            successful_models = len([m for m in model_summary if m['r2_score'] > 0])
+            print(f"\n📊 建模统计:")
+            print(f"   • 总模型数: {total_models}")
+            print(f"   • 成功模型数: {successful_models}")
+            print(f"   • 成功率: {successful_models/total_models*100:.1f}%")
+            
+            # 显示最佳模型
+            best_models = sorted(model_summary, key=lambda x: x['r2_score'], reverse=True)[:5]
+            print(f"\n🏆 Top 5 最佳模型:")
+            for i, model in enumerate(best_models):
+                print(f"   {i+1}. 实验{model['experiment']} {model['sensor_label']} → {model['parameter_label']}")
+                print(f"      R²={model['r2_score']:.3f}, MAE={model['mae']:.2f}, N={model['n_samples']}")
+        
+        return all_models
+    
     def run_individual_regression_analysis(self):
-        """为每个实验单独构建回归模型"""
+        """为每个实验单独构建回归模型（保留原功能）"""
         print("\n🎯 开始单独实验回归分析...")
         individual_models = {}
         model_summary = []
@@ -778,6 +912,136 @@ class PTTBloodPressureAnalyzer:
             self.create_individual_model_comparison(model_df)
         
         return individual_models
+    
+    def create_experiment_sensor_comparison(self, model_df):
+        """创建实验×传感器对性能对比图"""
+        if model_df.empty:
+            return
+        
+        # 创建多维度对比图
+        fig, axes = plt.subplots(2, 2, figsize=(20, 16))
+        
+        # 1. 按实验分组的R²热图
+        exp_r2_pivot = model_df.pivot_table(
+            index='experiment', 
+            columns=['sensor_label', 'parameter_label'], 
+            values='r2_score', 
+            aggfunc='mean'
+        )
+        sns.heatmap(exp_r2_pivot, annot=True, fmt='.2f', cmap='Blues', 
+                   ax=axes[0,0], cbar_kws={'label': 'R² Score'})
+        axes[0,0].set_title('各实验R²对比 (按传感器对×生理参数)', fontsize=12, fontweight='bold')
+        axes[0,0].set_xlabel('传感器对 × 生理参数')
+        axes[0,0].set_ylabel('实验编号')
+        
+        # 2. 按实验分组的MAE热图
+        exp_mae_pivot = model_df.pivot_table(
+            index='experiment', 
+            columns=['sensor_label', 'parameter_label'], 
+            values='mae', 
+            aggfunc='mean'
+        )
+        sns.heatmap(exp_mae_pivot, annot=True, fmt='.1f', cmap='Reds', 
+                   ax=axes[0,1], cbar_kws={'label': 'MAE'})
+        axes[0,1].set_title('各实验MAE对比 (按传感器对×生理参数)', fontsize=12, fontweight='bold')
+        axes[0,1].set_xlabel('传感器对 × 生理参数')
+        axes[0,1].set_ylabel('实验编号')
+        
+        # 3. 按传感器对分组的平均R²
+        sensor_avg_r2 = model_df.groupby(['sensor_label', 'parameter_label'])['r2_score'].mean().reset_index()
+        sensor_r2_pivot = sensor_avg_r2.pivot(index='sensor_label', columns='parameter_label', values='r2_score')
+        sns.heatmap(sensor_r2_pivot, annot=True, fmt='.3f', cmap='Blues', 
+                   ax=axes[1,0], cbar_kws={'label': 'Average R²'})
+        axes[1,0].set_title('各传感器对平均R² (跨实验)', fontsize=12, fontweight='bold')
+        axes[1,0].set_xlabel('生理参数')
+        axes[1,0].set_ylabel('传感器对')
+        
+        # 4. 按传感器对分组的平均MAE
+        sensor_avg_mae = model_df.groupby(['sensor_label', 'parameter_label'])['mae'].mean().reset_index()
+        sensor_mae_pivot = sensor_avg_mae.pivot(index='sensor_label', columns='parameter_label', values='mae')
+        sns.heatmap(sensor_mae_pivot, annot=True, fmt='.1f', cmap='Reds', 
+                   ax=axes[1,1], cbar_kws={'label': 'Average MAE'})
+        axes[1,1].set_title('各传感器对平均MAE (跨实验)', fontsize=12, fontweight='bold')
+        axes[1,1].set_xlabel('生理参数')
+        axes[1,1].set_ylabel('传感器对')
+        
+        plt.tight_layout()
+        comparison_file = f"{self.output_dir}/experiment_sensor_performance_comparison.png"
+        plt.savefig(comparison_file, dpi=300, bbox_inches='tight')
+        plt.close()  # 关闭图形，不显示
+        print(f"💾 保存实验×传感器对性能对比图: {comparison_file}")
+        
+        # 保存最佳传感器对排名（跨实验平均）
+        best_sensors = []
+        for param in sensor_r2_pivot.columns:
+            if param in sensor_r2_pivot.columns:
+                best_r2_idx = sensor_r2_pivot[param].idxmax()
+                best_r2_val = sensor_r2_pivot.loc[best_r2_idx, param]
+                best_mae_val = sensor_mae_pivot.loc[best_r2_idx, param]
+                best_sensors.append({
+                    'parameter': param,
+                    'best_sensor': best_r2_idx,
+                    'avg_r2_score': best_r2_val,
+                    'avg_mae': best_mae_val
+                })
+        
+        if best_sensors:
+            best_df = pd.DataFrame(best_sensors)
+            best_file = f"{self.output_dir}/best_sensors_across_experiments.csv"
+            best_df.to_csv(best_file, index=False)
+            print(f"💾 保存跨实验最佳传感器对: {best_file}")
+    
+    def create_sensor_pair_comparison(self, model_df):
+        """创建传感器对性能对比图"""
+        if model_df.empty:
+            return
+        
+        # 创建MAE和R²对比图
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(16, 12))
+        
+        # MAE对比热图
+        pivot_mae = model_df.pivot(index='sensor_label', columns='parameter_label', values='mae')
+        sns.heatmap(pivot_mae, annot=True, fmt='.1f', cmap='Reds', ax=ax1, cbar_kws={'label': 'MAE'})
+        ax1.set_title('各传感器对MAE对比 (越低越好)', fontsize=14, fontweight='bold')
+        ax1.set_xlabel('生理参数')
+        ax1.set_ylabel('传感器对')
+        
+        # R²对比热图
+        pivot_r2 = model_df.pivot(index='sensor_label', columns='parameter_label', values='r2_score')
+        sns.heatmap(pivot_r2, annot=True, fmt='.3f', cmap='Blues', ax=ax2, cbar_kws={'label': 'R² Score'})
+        ax2.set_title('各传感器对R²对比 (越高越好)', fontsize=14, fontweight='bold')
+        ax2.set_xlabel('生理参数')
+        ax2.set_ylabel('传感器对')
+        
+        plt.tight_layout()
+        comparison_file = f"{self.output_dir}/sensor_pair_performance_comparison.png"
+        plt.savefig(comparison_file, dpi=300, bbox_inches='tight')
+        plt.close()  # 关闭图形，不显示
+        print(f"💾 保存传感器对性能对比图: {comparison_file}")
+        
+        # 创建最佳传感器对排名
+        best_sensors = []
+        for param in pivot_r2.columns:
+            if param in pivot_r2.columns:
+                best_r2_idx = pivot_r2[param].idxmax()
+                best_r2_val = pivot_r2.loc[best_r2_idx, param]
+                best_mae_val = pivot_mae.loc[best_r2_idx, param]
+                best_sensors.append({
+                    'parameter': param,
+                    'best_sensor': best_r2_idx,
+                    'r2_score': best_r2_val,
+                    'mae': best_mae_val
+                })
+        
+        if best_sensors:
+            best_df = pd.DataFrame(best_sensors)
+            best_file = f"{self.output_dir}/best_sensor_pairs.csv"
+            best_df.to_csv(best_file, index=False)
+            print(f"💾 保存最佳传感器对排名: {best_file}")
+            
+            print(f"\n🏆 各生理参数的最佳传感器对:")
+            for _, row in best_df.iterrows():
+                print(f"   • {row['parameter']}: {row['best_sensor']} (R²={row['r2_score']:.3f}, MAE={row['mae']:.1f})")
     
     def create_individual_model_comparison(self, model_df):
         """创建单独实验模型性能对比图"""
@@ -830,7 +1094,7 @@ class PTTBloodPressureAnalyzer:
         plt.tight_layout()
         comparison_file = f"{self.output_dir}/individual_model_performance_comparison.png"
         plt.savefig(comparison_file, dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图形，不显示
         print(f"💾 保存模型性能对比图: {comparison_file}")
 
     def save_analysis_results(self, combined_df, correlations, models):
@@ -888,14 +1152,15 @@ def main():
     print("\n📋 请选择分析方式:")
     print("1. 综合分析 (原始：池化所有实验数据拟合)")
     print("2. 单独实验拟合分析 (每个实验单独建模)")
-    print("3. 完整对比分析 (包含1+2)")
+    print("3. 传感器对单独拟合分析 (每个传感器对单独建模) ⭐推荐")
+    print("4. 完整对比分析 (包含1+2+3)")
     
     try:
-        choice = input("\n请输入选择 (1/2/3, 默认1): ").strip()
+        choice = input("\n请输入选择 (1/2/3/4, 默认3): ").strip()
         if not choice:
-            choice = "1"
+            choice = "3"  # 默认选择传感器对拟合
     except:
-        choice = "1"  # 默认选择
+        choice = "3"  # 默认选择
     
     if choice == "1":
         print("\n🔬 运行综合分析（池化拟合）...")
@@ -957,57 +1222,82 @@ def main():
             print(f"   • 性能对比图: individual_model_performance_comparison.png")
     
     elif choice == "3":
-        print("\n🔬 运行完整对比分析...")
-        # 先运行综合分析
-        results = analyzer.run_comprehensive_analysis()
-        
-        # 再运行单独实验拟合
-        print("\n" + "="*60)
-        individual_models = analyzer.run_individual_regression_analysis()
-        
-        # 对比总结
-        if results and results['overall'] and individual_models:
-            print("\n📈 拟合方式对比总结:")
-            overall_models = results['overall']['models']
-            
-            print("\n🔍 池化拟合 vs 单独拟合对比:")
-            for physio_param in ['systolic_bp_mean', 'diastolic_bp_mean', 'mean_bp_mean']:
-                if physio_param in overall_models:
-                    overall_mae = overall_models[physio_param]['mae']
-                    overall_r2 = overall_models[physio_param]['r2_score']
-                    overall_n = overall_models[physio_param]['n_samples']
-                    
-                    physio_label = analyzer._format_physio_label_en(physio_param)
-                    print(f"\n📊 {physio_label}:")
-                    print(f"   池化拟合: R²={overall_r2:.3f}, MAE={overall_mae:.2f}, N={overall_n}")
-                    
-                    # 统计单独实验的平均性能
-                    individual_r2s = []
-                    individual_maes = []
-                    individual_ns = []
-                    
-                    for exp_key, exp_models in individual_models.items():
-                        if physio_param in exp_models:
-                            individual_r2s.append(exp_models[physio_param]['r2_score'])
-                            individual_maes.append(exp_models[physio_param]['mae'])
-                            individual_ns.append(exp_models[physio_param]['n_samples'])
-                    
-                    if individual_r2s:
-                        avg_r2 = np.mean(individual_r2s)
-                        avg_mae = np.mean(individual_maes)
-                        total_n = sum(individual_ns)
-                        print(f"   单独拟合: R²={avg_r2:.3f}±{np.std(individual_r2s):.3f}, MAE={avg_mae:.2f}±{np.std(individual_maes):.2f}, 总N={total_n}")
-                        
-                        # 性能比较
-                        if overall_r2 > avg_r2:
-                            print(f"   ✅ 池化拟合R²更优 (+{overall_r2-avg_r2:.3f})")
-                        else:
-                            print(f"   ⚠️  单独拟合R²更优 (+{avg_r2-overall_r2:.3f})")
-                        
-                        if overall_mae < avg_mae:
-                            print(f"   ✅ 池化拟合MAE更优 (-{avg_mae-overall_mae:.2f})")
-                        else:
-                            print(f"   ⚠️  单独拟合MAE更优 (-{overall_mae-avg_mae:.2f})")
+         print("\n🎯 运行实验×传感器对单独拟合分析...")
+         # 运行实验×传感器对单独拟合
+         exp_sensor_models = analyzer.run_individual_experiment_sensor_regression_analysis()
+         
+         if exp_sensor_models:
+             print(f"\n✅ 实验×传感器对单独拟合完成!")
+             print(f"📁 结果保存在: {analyzer.output_dir}")
+             print(f"📊 成功分析的实验数量: {len(exp_sensor_models)}")
+             print(f"📋 生成的文件:")
+             print(f"   • experiment_sensor_models.csv - 详细模型性能")
+             print(f"   • experiment_sensor_performance_comparison.png - 性能对比图")
+             print(f"   • best_sensors_across_experiments.csv - 跨实验最佳传感器对")
+    
+    elif choice == "4":
+         print("\n🔬 运行完整对比分析...")
+         # 先运行综合分析
+         print("\n第一部分：综合分析")
+         results = analyzer.run_comprehensive_analysis()
+         
+         # 再运行单独实验拟合
+         print("\n" + "="*60)
+         print("第二部分：单独实验分析")
+         individual_models = analyzer.run_individual_regression_analysis()
+         
+         # 最后运行实验×传感器对单独拟合
+         print("\n" + "="*60)
+         print("第三部分：实验×传感器对单独拟合")
+         exp_sensor_models = analyzer.run_individual_experiment_sensor_regression_analysis()
+         
+         # 对比总结
+         if results and results['overall'] and individual_models and exp_sensor_models:
+             print("\n" + "="*60)
+             print("第四部分：三种方法对比总结")
+             overall_models = results['overall']['models']
+             
+             print("\n📈 三种拟合方式对比:")
+             for physio_param in ['systolic_bp_mean', 'diastolic_bp_mean', 'mean_bp_mean']:
+                 if physio_param in overall_models:
+                     physio_label = analyzer._format_physio_label_en(physio_param)
+                     print(f"\n📊 {physio_label}:")
+                     
+                     # 池化拟合结果
+                     overall_mae = overall_models[physio_param]['mae']
+                     overall_r2 = overall_models[physio_param]['r2_score']
+                     overall_n = overall_models[physio_param]['n_samples']
+                     print(f"   池化拟合: R²={overall_r2:.3f}, MAE={overall_mae:.2f}, N={overall_n}")
+                     
+                     # 单独实验的平均性能
+                     individual_r2s = []
+                     individual_maes = []
+                     for exp_key, exp_models in individual_models.items():
+                         if physio_param in exp_models:
+                             individual_r2s.append(exp_models[physio_param]['r2_score'])
+                             individual_maes.append(exp_models[physio_param]['mae'])
+                     
+                     if individual_r2s:
+                         avg_r2 = np.mean(individual_r2s)
+                         avg_mae = np.mean(individual_maes)
+                         print(f"   单独实验: R²={avg_r2:.3f}±{np.std(individual_r2s):.3f}, MAE={avg_mae:.2f}±{np.std(individual_maes):.2f}")
+                     
+                     # 实验×传感器对的性能统计
+                     exp_sensor_r2s = []
+                     exp_sensor_maes = []
+                     for exp_key, exp_data in exp_sensor_models.items():
+                         for sensor_pair, sensor_models in exp_data.items():
+                             if physio_param in sensor_models:
+                                 exp_sensor_r2s.append(sensor_models[physio_param]['r2_score'])
+                                 exp_sensor_maes.append(sensor_models[physio_param]['mae'])
+                     
+                     if exp_sensor_r2s:
+                         best_r2 = max(exp_sensor_r2s)
+                         best_mae = min(exp_sensor_maes)
+                         avg_r2 = np.mean(exp_sensor_r2s)
+                         avg_mae = np.mean(exp_sensor_maes)
+                         print(f"   实验×传感器对: 最佳R²={best_r2:.3f}, 最佳MAE={best_mae:.2f}")
+                         print(f"                 平均R²={avg_r2:.3f}±{np.std(exp_sensor_r2s):.3f}, 平均MAE={avg_mae:.2f}±{np.std(exp_sensor_maes):.2f}")
     else:
         print("❌ 无效选择，默认运行综合分析")
         choice = "1"
