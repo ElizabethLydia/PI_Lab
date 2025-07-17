@@ -337,9 +337,21 @@ class PTTBloodPressureAnalyzer:
         """格式化传感器对标签（英文版）"""
         return self.ptt_combinations_en.get(sensor_pair, sensor_pair)
     
-    def build_regression_models(self, sync_df):
-        """构建PTT→生理指标的回归模型"""
+    def build_regression_models(self, sync_df, exp_id=None):
+        """构建PTT→生理指标的回归模型，并返回模型和数据"""
+        from sklearn.linear_model import LinearRegression
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.metrics import r2_score, mean_absolute_error
+        from sklearn.impute import SimpleImputer
+        import pandas as pd
+        import numpy as np
+        import matplotlib.pyplot as plt
+        import os
+        
         models = {}
+        
+        # 确保输出目录存在
+        os.makedirs(self.output_dir, exist_ok=True)
         
         # 主要生理指标（均值）
         main_physio_cols = []
@@ -348,128 +360,232 @@ class PTTBloodPressureAnalyzer:
             if col_name in sync_df.columns:
                 main_physio_cols.append(col_name)
         
-        # 创建传感器对的透视表
-        ptt_pivot = sync_df.pivot_table(
-            index=['exp_id', 'window_id'], 
-            columns='sensor_pair', 
-            values='ptt_ms',
-            aggfunc='mean'
-        ).reset_index()
+        # 获取所有传感器对
+        sensor_pairs = sync_df['sensor_pair'].unique()
+        print(f"🔍 发现传感器对: {sensor_pairs}")
         
-        # 合并生理数据（取平均值）
-        physio_agg = sync_df.groupby(['exp_id', 'window_id']).agg({
-            col: 'mean' for col in main_physio_cols if col in sync_df.columns
-        }).reset_index()
+        # 创建结果数据结构
+        all_models = {}
+        all_model_data = {}
+        metrics_list = []  # 用于存储 CSV 的指标数据
         
-        # 合并PTT和生理数据
-        model_data = pd.merge(ptt_pivot, physio_agg, on=['exp_id', 'window_id'], how='inner')
-        
-        if len(model_data) < 20:
-            print(f"⚠️ 模型数据不足: 只有{len(model_data)}个样本")
-            return models
-        
-        # 获取PTT特征列
-        ptt_cols = [col for col in model_data.columns if col not in ['exp_id', 'window_id'] + main_physio_cols]
-        # 去除全空的PTT列
-        ptt_cols = [col for col in ptt_cols if not model_data[col].isna().all()]
-        
-        if len(ptt_cols) == 0:
-            print("❌ 没有有效的PTT特征")
-            return models
-        
-        for physio_col in main_physio_cols:
-            if physio_col not in model_data.columns:
+        # 为每个传感器对单独处理
+        for sensor_pair in sensor_pairs:
+            print(f"\n🔧 处理传感器对: {sensor_pair}")
+            
+            # 过滤当前传感器对的数据
+            pair_df = sync_df[sync_df['sensor_pair'] == sensor_pair].copy()
+            
+            # 创建数据透视表 - 每个窗口一个PTT值
+            ptt_pivot = pair_df.pivot_table(
+                index=['exp_id', 'window_id'], 
+                values='ptt_ms',
+                aggfunc='mean'
+            ).reset_index().rename(columns={'ptt_ms': f'ptt_{sensor_pair}'})
+            
+            # 合并生理数据（取平均值）
+            physio_agg = pair_df.groupby(['exp_id', 'window_id']).agg({
+                col: 'mean' for col in main_physio_cols if col in pair_df.columns
+            }).reset_index()
+            
+            # 合并PTT和生理数据
+            model_data = pd.merge(ptt_pivot, physio_agg, on=['exp_id', 'window_id'], how='inner')
+            
+            # 检查数据量
+            if len(model_data) < 10:
+                print(f"⚠️ 数据不足: {sensor_pair} 只有{len(model_data)}个样本")
                 continue
                 
-            # 准备数据
-            mask = ~model_data[physio_col].isna()
-            for ptt_col in ptt_cols:
-                mask &= ~model_data[ptt_col].isna()
+            # 获取PTT特征列
+            ptt_col = f'ptt_{sensor_pair}'
             
-            if mask.sum() < 10:  # 至少10个样本
-                continue
+            # 检查PTT列的NaN比例
+            nan_ratio = model_data[ptt_col].isna().mean()
+            print(f"📊 PTT列 {ptt_col} NaN比例: {nan_ratio:.2%}")
             
-            X = model_data.loc[mask, ptt_cols].values
-            y = model_data.loc[mask, physio_col].values
-            
-            # 数据标准化
-            scaler_X = StandardScaler()
-            scaler_y = StandardScaler()
-            X_scaled = scaler_X.fit_transform(X)
-            y_scaled = scaler_y.fit_transform(y.reshape(-1, 1)).flatten()
-            
-            # 训练模型
-            model = LinearRegression()
-            model.fit(X_scaled, y_scaled)
-            
-            # 预测
-            y_pred_scaled = model.predict(X_scaled)
-            y_pred = scaler_y.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
-            
-            # 评估
-            r2 = r2_score(y, y_pred)
-            mae = mean_absolute_error(y, y_pred)
-            
-            models[physio_col] = {
-                'model': model,
-                'scaler_X': scaler_X,
-                'scaler_y': scaler_y,
-                'feature_names': ptt_cols,
-                'r2_score': r2,
-                'mae': mae,
-                'n_samples': len(y),
-                'y_true': y,
-                'y_pred': y_pred
-            }
-            
-            print(f"📈 {self._format_physio_label_en(physio_col)}模型: R²={r2:.3f}, MAE={mae:.2f}, N={len(y)}")
+            # 为每个生理指标单独建模
+            for physio_col in main_physio_cols:
+                if physio_col not in model_data.columns:
+                    continue
+                    
+                # 准备数据 - 移除NaN
+                mask = ~model_data[physio_col].isna() & ~model_data[ptt_col].isna()
+                
+                if mask.sum() < 5:  # 至少5个样本
+                    print(f"⚠️ 数据不足: {sensor_pair}→{physio_col} 有效样本={mask.sum()}")
+                    continue
+                
+                X = model_data.loc[mask, ptt_col].values.reshape(-1, 1)
+                y = model_data.loc[mask, physio_col].values
+                
+                # 数据标准化
+                scaler_X = StandardScaler()
+                scaler_y = StandardScaler()
+                X_scaled = scaler_X.fit_transform(X)
+                y_scaled = scaler_y.fit_transform(y.reshape(-1, 1)).flatten()
+                
+                # 训练模型
+                model = LinearRegression()
+                model.fit(X_scaled, y_scaled)
+                
+                # 预测
+                y_pred_scaled = model.predict(X_scaled)
+                y_pred = scaler_y.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
+                
+                # 评估
+                r2 = r2_score(y, y_pred)
+                mae = mean_absolute_error(y, y_pred)
+                
+                # 存储模型
+                model_key = f"{sensor_pair}→{physio_col}"
+                all_models[model_key] = {
+                    'model': model,
+                    'scaler_X': scaler_X,
+                    'scaler_y': scaler_y,
+                    'feature_names': [ptt_col],
+                    'r2_score': r2,
+                    'mae': mae,
+                    'n_samples': len(y),
+                    'y_true': y,
+                    'y_pred': y_pred,
+                    'sensor_pair': sensor_pair,
+                    'physio_col': physio_col
+                }
+                
+                print(f"📈 {model_key}模型: R²={r2:.3f}, MAE={mae:.2f}, N={len(y)}")
+                
+                # 创建图表
+                plt.figure(figsize=(10, 6))
+                
+                # 1. 绘制原始数据点
+                plt.scatter(X, y, alpha=0.6, color='blue', label='原始数据')
+                
+                # 2. 绘制拟合直线
+                x_min, x_max = np.min(X), np.max(X)
+                x_range = np.linspace(x_min, x_max, 100).reshape(-1, 1)
+                
+                x_range_scaled = scaler_X.transform(x_range)
+                y_range_scaled = model.predict(x_range_scaled)
+                y_range = scaler_y.inverse_transform(y_range_scaled.reshape(-1, 1)).flatten()
+                
+                plt.plot(x_range, y_range, 'r-', linewidth=2, label='拟合直线')
+                
+                # 3. 添加图例和标签
+                plt.xlabel(f'PTT ({sensor_pair}) (ms)')
+                plt.ylabel(f'{physio_col}')
+                
+                # 获取方程系数
+                coef = model.coef_[0]
+                intercept = model.intercept_
+                
+                # 计算原始数据空间的斜率和截距，确保使用标量值
+                coef_original = coef * (scaler_y.scale_[0] / scaler_X.scale_[0])
+                intercept_original = scaler_y.mean_[0] - coef * (scaler_X.mean_[0] * scaler_y.scale_[0] / scaler_X.scale_[0]) + intercept * scaler_y.scale_[0]
+                
+                print(f"🔍 {model_key} 方程（原始空间）: y = {coef_original:.3f}·x + {intercept_original:.3f}")
+                
+                plt.title(f'{physio_col} vs PTT ({sensor_pair})\n'
+                        f'方程: y = {coef_original:.3f}·x + {intercept_original:.3f}\n'
+                        f'R²={r2:.3f}, MAE={mae:.2f}, n={len(y)}')
+                
+                plt.legend()
+                plt.grid(alpha=0.3)
+                
+                # 保存图表
+                safe_physio = physio_col.replace(' ', '_').replace('/', '_')
+                safe_pair = sensor_pair.replace(' ', '_').replace('/', '_')
+                if exp_id is not None:
+                    plot_path = os.path.join(self.output_dir, f"exp{exp_id}_{safe_physio}_vs_{safe_pair}_fit.png")
+                else:
+                    plot_path = os.path.join(self.output_dir, f"{safe_physio}_vs_{safe_pair}_fit.png")
+                plt.savefig(plot_path, bbox_inches='tight', dpi=150)
+                plt.close()
+                
+                print(f"💾 保存特征拟合图: {plot_path}")
+                
+                # 存储模型数据
+                all_model_data[model_key] = model_data.loc[mask, [ptt_col, physio_col]]
+                
+                # 收集指标数据用于 CSV
+                if exp_id is not None:
+                    metrics_list.append({
+                        'exp_id': exp_id,
+                        'sensor_pair': sensor_pair,
+                        'physio_col': physio_col,
+                        'r2_score': r2,
+                        'mae': mae,
+                        'n_samples': len(y),
+                        'slope': coef_original,
+                        'intercept': intercept_original
+                    })
         
-        return models
-    
+        # 如果有 exp_id，保存指标到 CSV
+        if exp_id is not None and metrics_list:
+            csv_path = os.path.join(self.output_dir, "all_experiments_regression_metrics.csv")
+            metrics_df = pd.DataFrame(metrics_list)
+            # 如果文件存在，追加数据；否则创建新文件
+            if os.path.exists(csv_path):
+                existing_df = pd.read_csv(csv_path)
+                combined_df = pd.concat([existing_df, metrics_df], ignore_index=True)
+                combined_df.to_csv(csv_path, index=False)
+            else:
+                metrics_df.to_csv(csv_path, index=False)
+            print(f"💾 追加回归指标到 CSV: {csv_path}")
+        
+        return all_models, all_model_data
+
+
     def create_regression_plots(self, models):
         """创建回归分析图（英文专业版）"""
-        n_models = len(models)
-        if n_models == 0:
-            return
-        
-        fig, axes = plt.subplots(1, n_models, figsize=(6*n_models, 5))
-        if n_models == 1:
-            axes = [axes]
-        
-        for idx, (physio_col, model_data) in enumerate(models.items()):
-            ax = axes[idx]
+        print('开始创建回归分析图')
+        try:
+            n_models = len(models)
+            if n_models == 0:
+                return
             
-            y_true = model_data['y_true']
-            y_pred = model_data['y_pred']
-            r2 = model_data['r2_score']
-            mae = model_data['mae']
+            fig, axes = plt.subplots(1, n_models, figsize=(6*n_models, 5))
+            if n_models == 1:
+                axes = [axes]
             
-            # 散点图
-            ax.scatter(y_true, y_pred, alpha=0.6, s=50, color='steelblue')
+            for idx, (physio_col, model_data) in enumerate(models.items()):
+                ax = axes[idx]
+                
+                y_true = model_data['y_true']
+                y_pred = model_data['y_pred']
+                r2 = model_data['r2_score']
+                mae = model_data['mae']
+                
+                # 散点图
+                ax.scatter(y_true, y_pred, alpha=0.6, s=50, color='steelblue')
+                
+                # 理想线
+                min_val = min(y_true.min(), y_pred.min())
+                max_val = max(y_true.max(), y_pred.max())
+                ax.plot([min_val, max_val], [min_val, max_val], 'r--', lw=2, label='Perfect Prediction')
+                
+                # 格式化
+                physio_label = self._format_physio_label_en(physio_col)
+                ax.set_xlabel(f'Actual {physio_label}', fontweight='bold')
+                ax.set_ylabel(f'Predicted {physio_label}', fontweight='bold')
+                ax.set_title(f'{physio_label}\nR²={r2:.3f}, MAE={mae:.2f}', fontweight='bold')
+                ax.grid(True, alpha=0.3)
+                ax.legend()
             
-            # 理想线
-            min_val = min(y_true.min(), y_pred.min())
-            max_val = max(y_true.max(), y_pred.max())
-            ax.plot([min_val, max_val], [min_val, max_val], 'r--', lw=2, label='Perfect Prediction')
+            plt.suptitle('PTT-Based Physiological Parameter Prediction Models', 
+                        fontsize=16, fontweight='bold', y=1.02)
+            plt.tight_layout()
             
-            # 格式化
-            physio_label = self._format_physio_label_en(physio_col)
-            ax.set_xlabel(f'Actual {physio_label}', fontweight='bold')
-            ax.set_ylabel(f'Predicted {physio_label}', fontweight='bold')
-            ax.set_title(f'{physio_label}\nR²={r2:.3f}, MAE={mae:.2f}', fontweight='bold')
-            ax.grid(True, alpha=0.3)
-            ax.legend()
-        
-        plt.suptitle('PTT-Based Physiological Parameter Prediction Models', 
-                    fontsize=16, fontweight='bold', y=1.02)
-        plt.tight_layout()
-        
-        # 保存图像
-        filename = f"{self.output_dir}/ptt_cardiovascular_regression_analysis.png"
-        plt.savefig(filename, dpi=300, bbox_inches='tight')
-        print(f"💾 保存回归分析图: {filename}")
-        
-        return fig
+            # 保存图像
+            filename = f"{self.output_dir}/ptt_cardiovascular_regression_analysis.png"
+            plt.savefig(filename, dpi=300, bbox_inches='tight')
+            print(f"💾 保存回归分析图: {filename}")
+            
+            return fig
+        except Exception as e:
+            print(f"创建回归图时发生错误: {str(e)}")
+            import traceback
+            traceback.print_exc()  # 打印完整的错误堆栈信息
+            return None
     
     def analyze_experiment(self, exp_id):
         """分析单个实验"""
@@ -491,7 +607,7 @@ class PTTBloodPressureAnalyzer:
         correlations = self.calculate_correlations(sync_df)
         
         # 4. 回归建模
-        models = self.build_regression_models(sync_df)
+        models, model_data = self.build_regression_models(sync_df, exp_id=exp_id)
         
         return {
             'sync_data': sync_df,
@@ -713,6 +829,7 @@ class PTTBloodPressureAnalyzer:
         
         # 合并所有实验的数据（修正：提取DataFrame）
         combined_df = pd.concat(all_experiments, ignore_index=True)
+        print(combined_df.head())
         print(f"\n📊 合并数据: {len(combined_df)}个样本，来自{len(all_experiments)}个实验")
         
         # 计算整体相关性
@@ -724,10 +841,10 @@ class PTTBloodPressureAnalyzer:
         
         # 构建回归模型
         print("\n🎯 构建整体回归模型...")
-        models = self.build_regression_models(combined_df)
+        models = self.build_regression_models(combined_df, exp_id=None)
         
         # 创建回归图
-        if models:
+        if models is not None:
             self.create_regression_plots(models)
         
         # 保存结果
@@ -871,7 +988,7 @@ class PTTBloodPressureAnalyzer:
         return all_models
     
     def run_individual_regression_analysis(self):
-        """为每个实验单独构建回归模型（保留原功能）"""
+        """为每个实验单独构建回归模型并绘制拟合直线"""
         print("\n🎯 开始单独实验回归分析...")
         individual_models = {}
         model_summary = []
@@ -884,21 +1001,26 @@ class PTTBloodPressureAnalyzer:
                 print(f"❌ 实验{exp_id}数据不足（<20样本）")
                 continue
             
-            # 为单个实验构建模型
-            exp_models = self.build_regression_models(exp_data['sync_data'])
-            
-            if exp_models:
+            # 直接从analyze_experiment的结果中获取模型
+            if 'models' in exp_data and exp_data['models']:
+                exp_models = exp_data['models']
                 individual_models[f'exp_{exp_id}'] = exp_models
                 
                 # 收集模型性能统计
-                for physio_param, model_info in exp_models.items():
+                for model_key, model_info in exp_models.items():
+                    # 从model_key中提取生理指标名称
+                    # model_key格式: "sensor_pair→physio_col"
+                    physio_param = model_key.split('→')[1] if '→' in model_key else model_key
+                    
                     model_summary.append({
                         'experiment': exp_id,
                         'physiological_parameter': physio_param,
                         'parameter_label': self._format_physio_label_en(physio_param),
                         'r2_score': model_info['r2_score'],
                         'mae': model_info['mae'],
-                        'n_samples': model_info['n_samples']
+                        'n_samples': model_info['n_samples'],
+                        'sensor_pair': model_info.get('sensor_pair', ''),
+                        'sensor_label': self._format_sensor_pair_label_en(model_info.get('sensor_pair', ''))
                     })
         
         # 保存单独实验的模型评估
@@ -907,12 +1029,16 @@ class PTTBloodPressureAnalyzer:
             model_file = f"{self.output_dir}/individual_experiment_models.csv"
             model_df.to_csv(model_file, index=False)
             print(f"💾 保存单独实验模型评估: {model_file}")
+
+            # 对每个实验的每个生理参数，选择最佳模型（按R²）
+            # 首先按实验和生理参数分组，然后在每个组内取R²最大的行
+            best_model_df = model_df.loc[model_df.groupby(['experiment', 'physiological_parameter'])['r2_score'].idxmax()]
             
             # 创建模型性能对比可视化
-            self.create_individual_model_comparison(model_df)
+            self.create_individual_model_comparison(best_model_df)
         
         return individual_models
-    
+
     def create_experiment_sensor_comparison(self, model_df):
         """创建实验×传感器对性能对比图"""
         if model_df.empty:
