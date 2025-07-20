@@ -339,17 +339,6 @@ class PTTBloodPressureAnalyzer:
     
     def build_regression_models(self, sync_df, exp_id=None):
         """构建PTT→生理指标的回归模型，并返回模型和数据"""
-        from sklearn.linear_model import LinearRegression
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.metrics import r2_score, mean_absolute_error
-        from sklearn.impute import SimpleImputer
-        import pandas as pd
-        import numpy as np
-        import matplotlib.pyplot as plt
-        import os
-        
-        models = {}
-        
         # 确保输出目录存在
         os.makedirs(self.output_dir, exist_ok=True)
         
@@ -511,7 +500,22 @@ class PTTBloodPressureAnalyzer:
                     metrics_list.append({
                         'exp_id': exp_id,
                         'sensor_pair': sensor_pair,
-                        'physio_col': physio_col,
+                        'sensor_combination': self._format_sensor_pair_label_en(sensor_pair),
+                        'physiological_parameter': physio_col,
+                        'parameter_label': self._format_physio_label_en(physio_col),
+                        'r2_score': r2,
+                        'mae': mae,
+                        'n_samples': len(y),
+                        'slope': coef_original,
+                        'intercept': intercept_original
+                    })
+
+                else:
+                    metrics_list.append({
+                        'sensor_pair': sensor_pair,
+                        'sensor_combination': self._format_sensor_pair_label_en(sensor_pair),
+                        'physiological_parameter': physio_col,
+                        'parameter_label': self._format_physio_label_en(physio_col),
                         'r2_score': r2,
                         'mae': mae,
                         'n_samples': len(y),
@@ -519,8 +523,14 @@ class PTTBloodPressureAnalyzer:
                         'intercept': intercept_original
                     })
         
-        # 如果有 exp_id，保存指标到 CSV
-        if exp_id is not None and metrics_list:
+        # 如果没有 exp_id，保存指标到 CSV
+        if exp_id is None:
+            print("保存整体模型评估：")
+            csv_path = os.path.join(self.output_dir, "overall_regression_metrics.csv")
+            metrics_df = pd.DataFrame(metrics_list)
+            metrics_df.to_csv(csv_path, index=False)
+        else:
+            print("保存单个实验模型评估：")
             csv_path = os.path.join(self.output_dir, "all_experiments_regression_metrics.csv")
             metrics_df = pd.DataFrame(metrics_list)
             # 如果文件存在，追加数据；否则创建新文件
@@ -530,63 +540,9 @@ class PTTBloodPressureAnalyzer:
                 combined_df.to_csv(csv_path, index=False)
             else:
                 metrics_df.to_csv(csv_path, index=False)
-            print(f"💾 追加回归指标到 CSV: {csv_path}")
         
         return all_models, all_model_data
 
-
-    def create_regression_plots(self, models):
-        """创建回归分析图（英文专业版）"""
-        print('开始创建回归分析图')
-        try:
-            n_models = len(models)
-            if n_models == 0:
-                return
-            
-            fig, axes = plt.subplots(1, n_models, figsize=(6*n_models, 5))
-            if n_models == 1:
-                axes = [axes]
-            
-            for idx, (physio_col, model_data) in enumerate(models.items()):
-                ax = axes[idx]
-                
-                y_true = model_data['y_true']
-                y_pred = model_data['y_pred']
-                r2 = model_data['r2_score']
-                mae = model_data['mae']
-                
-                # 散点图
-                ax.scatter(y_true, y_pred, alpha=0.6, s=50, color='steelblue')
-                
-                # 理想线
-                min_val = min(y_true.min(), y_pred.min())
-                max_val = max(y_true.max(), y_pred.max())
-                ax.plot([min_val, max_val], [min_val, max_val], 'r--', lw=2, label='Perfect Prediction')
-                
-                # 格式化
-                physio_label = self._format_physio_label_en(physio_col)
-                ax.set_xlabel(f'Actual {physio_label}', fontweight='bold')
-                ax.set_ylabel(f'Predicted {physio_label}', fontweight='bold')
-                ax.set_title(f'{physio_label}\nR²={r2:.3f}, MAE={mae:.2f}', fontweight='bold')
-                ax.grid(True, alpha=0.3)
-                ax.legend()
-            
-            plt.suptitle('PTT-Based Physiological Parameter Prediction Models', 
-                        fontsize=16, fontweight='bold', y=1.02)
-            plt.tight_layout()
-            
-            # 保存图像
-            filename = f"{self.output_dir}/ptt_cardiovascular_regression_analysis.png"
-            plt.savefig(filename, dpi=300, bbox_inches='tight')
-            print(f"💾 保存回归分析图: {filename}")
-            
-            return fig
-        except Exception as e:
-            print(f"创建回归图时发生错误: {str(e)}")
-            import traceback
-            traceback.print_exc()  # 打印完整的错误堆栈信息
-            return None
-    
     def analyze_experiment(self, exp_id):
         """分析单个实验"""
         print(f"\n🔍 分析实验 {exp_id}")
@@ -620,11 +576,9 @@ class PTTBloodPressureAnalyzer:
         print("🔬 开始单个实验分析...")
         
         individual_results = {}
+        all_experiments = []
         
-        # 获取实验列表
-        exp_list = [1, 2, 7, 9, 10]  # 只分析有PTT数据的实验
-        
-        for exp_id in exp_list:
+        for exp_id in range(1, 12):
             print(f"\n🔍 单独分析实验 {exp_id}")
             
             # 分析单个实验
@@ -636,12 +590,24 @@ class PTTBloodPressureAnalyzer:
                 correlations = self.calculate_correlations(exp_result['sync_data'])
                 
                 # 创建单个实验的热图
-                self.create_focused_correlation_heatmap(correlations, f"_实验{exp_id}")
+                self.create_focused_correlation_heatmap(correlations, f"_exp{exp_id}")
                 
                 # 保存单个实验结果
                 self.save_individual_experiment_results(exp_result['sync_data'], correlations, exp_id)
+
+                # 用于结果合并
+                all_experiments.append(exp_result['sync_data'])
         
-        return individual_results
+        if not all_experiments:
+            print("❌ 没有有效的实验数据")
+            return None
+        
+        # 合并所有实验的数据
+        combined_df = pd.concat(all_experiments, ignore_index=True)
+        print(combined_df.head())
+        print(f"\n📊 合并数据: {len(combined_df)}个样本，来自{len(all_experiments)}个实验")
+        
+        return individual_results, combined_df
     
     def create_focused_correlation_heatmap(self, correlations, title_suffix=""):
         """创建聚焦的相关性热图（只显示重要指标）"""
@@ -738,114 +704,41 @@ class PTTBloodPressureAnalyzer:
         corr_df.to_csv(corr_file, index=False)
         print(f"💾 保存实验{exp_id}相关性: {corr_file}")
     
-    def compare_experiments(self, individual_results):
-        """比较不同实验的结果"""
-        print("\n📊 实验间对比分析...")
-        
-        # 收集所有实验的相关性数据
-        all_exp_correlations = []
-        
-        for exp_id, exp_data in individual_results.items():
-            correlations = self.calculate_correlations(exp_data)
-            
-            for sensor_pair, physio_data in correlations.items():
-                for physio_col, stats_data in physio_data.items():
-                    if stats_data['significant']:
-                        all_exp_correlations.append({
-                            'experiment': exp_id,
-                            'sensor_pair': sensor_pair,
-                            'parameter': physio_col,
-                            'correlation': stats_data['correlation'],
-                            'n_samples': stats_data['n_samples']
-                        })
-        
-        # 转换为DataFrame
-        comp_df = pd.DataFrame(all_exp_correlations)
-        
-        if len(comp_df) == 0:
-            print("⚠️ 没有足够的数据进行实验间比较")
-            return
-        
-        # 保存比较结果
-        comp_file = f"{self.output_dir}/experiment_comparison.csv"
-        comp_df.to_csv(comp_file, index=False)
-        print(f"💾 保存实验比较: {comp_file}")
-        
-        # 打印总结
-        print(f"\n📋 实验间比较总结:")
-        for exp_id in sorted(individual_results.keys()):
-            exp_corr = comp_df[comp_df['experiment'] == exp_id]
-            print(f"   实验{exp_id}: {len(exp_corr)}个显著相关性")
-            
-            if len(exp_corr) > 0:
-                strongest = exp_corr.loc[exp_corr['correlation'].abs().idxmax()]
-                print(f"     最强: {strongest['sensor_pair']}-{strongest['parameter']} (r={strongest['correlation']:.3f})")
-    
     def run_comprehensive_analysis(self):
-        """运行综合分析（整体+单个实验）"""
+        """运行综合分析（单个+跨实验实验）"""
         print("🔬 开始PTT与生理参数综合分析")
         print("📋 分析实验列表: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]")
+
+        # 1. 单个实验分析（新增功能）
+        print("\n=== 第一部分：单个实验分析 ===")
+        individual_results, combined_df = self.run_individual_experiment_analysis()
         
         # 1. 整体分析（原有功能）
-        print("\n=== 第一部分：整体分析 ===")
-        overall_results = self.run_overall_analysis()
+        print("\n=== 第二部分：整体分析 ===")
+        overall_results = self.run_overall_analysis(combined_df)
         
-        # 2. 单个实验分析（新增功能）
-        print("\n=== 第二部分：单个实验分析 ===")
-        individual_results = self.run_individual_experiment_analysis()
-        
-        # 3. 实验间比较（新增功能）
-        print("\n=== 第三部分：实验间比较 ===")
-        if individual_results:
-            self.compare_experiments(individual_results)
-        
-        # 4. 创建聚焦热图（优化显示）
-        print("\n=== 第四部分：创建聚焦热图 ===")
+        # 3. 创建聚焦热图（优化显示）
+        print("\n=== 第三部分：创建聚焦热图（只显示重要指标）===")
         if overall_results:
-            self.create_focused_correlation_heatmap(overall_results['correlations'], "_整体分析_聚焦")
+            self.create_focused_correlation_heatmap(overall_results['correlations'], "_overall_focus")
         
         return {
             'overall': overall_results,
             'individual': individual_results
         }
     
-    def run_overall_analysis(self):
+    def run_overall_analysis(self, combined_df):
         """运行整体分析（原有功能重命名）"""
-        # 原有的 run_comprehensive_analysis 内容
-        all_experiments = []
-        
-        # 分析所有实验
-        for exp_id in range(1, 12):  # 实验1-11
-            print(f"\n🔍 分析实验 {exp_id}")
-            exp_data = self.analyze_experiment(exp_id)
-            
-            if exp_data:
-                # 提取sync_data（DataFrame）
-                all_experiments.append(exp_data['sync_data'])
-        
-        if not all_experiments:
-            print("❌ 没有有效的实验数据")
-            return None
-        
-        # 合并所有实验的数据（修正：提取DataFrame）
-        combined_df = pd.concat(all_experiments, ignore_index=True)
-        print(combined_df.head())
-        print(f"\n📊 合并数据: {len(combined_df)}个样本，来自{len(all_experiments)}个实验")
-        
         # 计算整体相关性
         print("\n📈 计算整体相关性...")
         correlations = self.calculate_correlations(combined_df)
         
         # 创建相关性热图
-        self.create_correlation_heatmap(correlations, " (整体分析)")
+        self.create_correlation_heatmap(correlations, "overall")
         
         # 构建回归模型
         print("\n🎯 构建整体回归模型...")
         models = self.build_regression_models(combined_df, exp_id=None)
-        
-        # 创建回归图
-        if models is not None:
-            self.create_regression_plots(models)
         
         # 保存结果
         self.save_analysis_results(combined_df, correlations, models)
@@ -1117,58 +1010,6 @@ class PTTBloodPressureAnalyzer:
             best_df.to_csv(best_file, index=False)
             print(f"💾 保存跨实验最佳传感器对: {best_file}")
     
-    def create_sensor_pair_comparison(self, model_df):
-        """创建传感器对性能对比图"""
-        if model_df.empty:
-            return
-        
-        # 创建MAE和R²对比图
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(16, 12))
-        
-        # MAE对比热图
-        pivot_mae = model_df.pivot(index='sensor_label', columns='parameter_label', values='mae')
-        sns.heatmap(pivot_mae, annot=True, fmt='.1f', cmap='Reds', ax=ax1, cbar_kws={'label': 'MAE'})
-        ax1.set_title('各传感器对MAE对比 (越低越好)', fontsize=14, fontweight='bold')
-        ax1.set_xlabel('生理参数')
-        ax1.set_ylabel('传感器对')
-        
-        # R²对比热图
-        pivot_r2 = model_df.pivot(index='sensor_label', columns='parameter_label', values='r2_score')
-        sns.heatmap(pivot_r2, annot=True, fmt='.3f', cmap='Blues', ax=ax2, cbar_kws={'label': 'R² Score'})
-        ax2.set_title('各传感器对R²对比 (越高越好)', fontsize=14, fontweight='bold')
-        ax2.set_xlabel('生理参数')
-        ax2.set_ylabel('传感器对')
-        
-        plt.tight_layout()
-        comparison_file = f"{self.output_dir}/sensor_pair_performance_comparison.png"
-        plt.savefig(comparison_file, dpi=300, bbox_inches='tight')
-        plt.close()  # 关闭图形，不显示
-        print(f"💾 保存传感器对性能对比图: {comparison_file}")
-        
-        # 创建最佳传感器对排名
-        best_sensors = []
-        for param in pivot_r2.columns:
-            if param in pivot_r2.columns:
-                best_r2_idx = pivot_r2[param].idxmax()
-                best_r2_val = pivot_r2.loc[best_r2_idx, param]
-                best_mae_val = pivot_mae.loc[best_r2_idx, param]
-                best_sensors.append({
-                    'parameter': param,
-                    'best_sensor': best_r2_idx,
-                    'r2_score': best_r2_val,
-                    'mae': best_mae_val
-                })
-        
-        if best_sensors:
-            best_df = pd.DataFrame(best_sensors)
-            best_file = f"{self.output_dir}/best_sensor_pairs.csv"
-            best_df.to_csv(best_file, index=False)
-            print(f"💾 保存最佳传感器对排名: {best_file}")
-            
-            print(f"\n🏆 各生理参数的最佳传感器对:")
-            for _, row in best_df.iterrows():
-                print(f"   • {row['parameter']}: {row['best_sensor']} (R²={row['r2_score']:.3f}, MAE={row['mae']:.1f})")
-    
     def create_individual_model_comparison(self, model_df):
         """创建单独实验模型性能对比图"""
         if model_df.empty:
@@ -1248,24 +1089,7 @@ class PTTBloodPressureAnalyzer:
         corr_df = pd.DataFrame(corr_results)
         corr_file = f"{self.output_dir}/ptt_cardiovascular_correlations.csv"
         corr_df.to_csv(corr_file, index=False)
-        print(f"💾 保存相关性分析: {corr_file}")
-        
-        # 3. 保存模型评估结果
-        model_results = []
-        for physio_col, model_data in models.items():
-            model_results.append({
-                'physiological_parameter': physio_col,
-                'parameter_label': self._format_physio_label_en(physio_col),
-                'r2_score': model_data['r2_score'],
-                'mae': model_data['mae'],
-                'n_samples': model_data['n_samples']
-            })
-        
-        model_df = pd.DataFrame(model_results)
-        model_file = f"{self.output_dir}/ptt_cardiovascular_model_evaluation.csv"
-        model_df.to_csv(model_file, index=False)
-        print(f"💾 保存模型评估: {model_file}")
-
+        print(f"💾 保存相关性数据: {corr_file}")
 
 def main():
     """主函数"""
@@ -1276,35 +1100,24 @@ def main():
     analyzer = PTTBloodPressureAnalyzer()
     
     print("\n📋 请选择分析方式:")
-    print("1. 综合分析 (原始：池化所有实验数据拟合)")
-    print("2. 单独实验拟合分析 (每个实验单独建模)")
-    print("3. 传感器对单独拟合分析 (每个传感器对单独建模) ⭐推荐")
-    print("4. 完整对比分析 (包含1+2+3)")
+    print("1. 综合分析 (单实验+跨实验)")
+    print("2. 单实验分析")
+    print("3. 跨实验分析")
     
     try:
-        choice = input("\n请输入选择 (1/2/3/4, 默认3): ").strip()
+        choice = input("\n请输入选择 (1/2/3, 默认1): ").strip()
         if not choice:
-            choice = "3"  # 默认选择传感器对拟合
+            choice = "1"  # 默认综合分析
     except:
-        choice = "3"  # 默认选择
+        choice = "1"  # 默认选择
     
     if choice == "1":
-        print("\n🔬 运行综合分析（池化拟合）...")
+        print("\n🔬 运行综合分析...")
         # 运行综合分析
         results = analyzer.run_comprehensive_analysis()
         
         if results and results['overall']:
             overall_results = results['overall']
-            individual_results = results['individual']
-            
-            print("\n📋 Analysis Summary:")
-            print(f"   • Total samples: {len(overall_results['combined_data'])}")
-            physio_indicators = len([col for col in overall_results['combined_data'].columns 
-                                   if any(indicator in col for indicator in analyzer.physiological_indicators.keys())])
-            print(f"   • PTT combinations: {len(analyzer.ptt_combinations_en)}")
-            print(f"   • Physiological parameters: {physio_indicators}")
-            print(f"   • Regression models: {len(overall_results['models'])}")
-            print(f"   • Individual experiments analyzed: {len(individual_results) if individual_results else 0}")
             
             # 显示最佳相关性
             print(f"\n🏆 Top Significant Correlations (Overall Analysis):")
@@ -1324,17 +1137,6 @@ def main():
                 direction = "↑" if corr > 0 else "↓"
                 print(f"   {i+1:2d}. {sensor_label} ←→ {physio_label}")
                 print(f"       r={corr:+.3f} {direction}, p={p_val:.2e}, N={n_samples}")
-            
-            # 显示模型性能
-            if overall_results['models']:
-                print(f"\n📈 Best Prediction Models (池化拟合):")
-                model_performance = [(model_data['r2_score'], physio_col, model_data) 
-                                   for physio_col, model_data in overall_results['models'].items()]
-                model_performance.sort(reverse=True)
-                
-                for i, (r2, physio_col, model_data) in enumerate(model_performance[:5]):
-                    physio_label = analyzer._format_physio_label_en(physio_col)
-                    print(f"   {i+1}. {physio_label}: R²={r2:.3f}, MAE={model_data['mae']:.2f}")
     
     elif choice == "2":
         print("\n🎯 运行单独实验拟合分析...")
@@ -1348,8 +1150,8 @@ def main():
             print(f"   • 性能对比图: individual_model_performance_comparison.png")
     
     elif choice == "3":
-         print("\n🎯 运行实验×传感器对单独拟合分析...")
-         # 运行实验×传感器对单独拟合
+         print("\n🎯 运行跨实验拟合分析...")
+         # 运行跨实验拟合分析
          exp_sensor_models = analyzer.run_individual_experiment_sensor_regression_analysis()
          
          if exp_sensor_models:
@@ -1360,70 +1162,6 @@ def main():
              print(f"   • experiment_sensor_models.csv - 详细模型性能")
              print(f"   • experiment_sensor_performance_comparison.png - 性能对比图")
              print(f"   • best_sensors_across_experiments.csv - 跨实验最佳传感器对")
-    
-    elif choice == "4":
-         print("\n🔬 运行完整对比分析...")
-         # 先运行综合分析
-         print("\n第一部分：综合分析")
-         results = analyzer.run_comprehensive_analysis()
-         
-         # 再运行单独实验拟合
-         print("\n" + "="*60)
-         print("第二部分：单独实验分析")
-         individual_models = analyzer.run_individual_regression_analysis()
-         
-         # 最后运行实验×传感器对单独拟合
-         print("\n" + "="*60)
-         print("第三部分：实验×传感器对单独拟合")
-         exp_sensor_models = analyzer.run_individual_experiment_sensor_regression_analysis()
-         
-         # 对比总结
-         if results and results['overall'] and individual_models and exp_sensor_models:
-             print("\n" + "="*60)
-             print("第四部分：三种方法对比总结")
-             overall_models = results['overall']['models']
-             
-             print("\n📈 三种拟合方式对比:")
-             for physio_param in ['systolic_bp_mean', 'diastolic_bp_mean', 'mean_bp_mean']:
-                 if physio_param in overall_models:
-                     physio_label = analyzer._format_physio_label_en(physio_param)
-                     print(f"\n📊 {physio_label}:")
-                     
-                     # 池化拟合结果
-                     overall_mae = overall_models[physio_param]['mae']
-                     overall_r2 = overall_models[physio_param]['r2_score']
-                     overall_n = overall_models[physio_param]['n_samples']
-                     print(f"   池化拟合: R²={overall_r2:.3f}, MAE={overall_mae:.2f}, N={overall_n}")
-                     
-                     # 单独实验的平均性能
-                     individual_r2s = []
-                     individual_maes = []
-                     for exp_key, exp_models in individual_models.items():
-                         if physio_param in exp_models:
-                             individual_r2s.append(exp_models[physio_param]['r2_score'])
-                             individual_maes.append(exp_models[physio_param]['mae'])
-                     
-                     if individual_r2s:
-                         avg_r2 = np.mean(individual_r2s)
-                         avg_mae = np.mean(individual_maes)
-                         print(f"   单独实验: R²={avg_r2:.3f}±{np.std(individual_r2s):.3f}, MAE={avg_mae:.2f}±{np.std(individual_maes):.2f}")
-                     
-                     # 实验×传感器对的性能统计
-                     exp_sensor_r2s = []
-                     exp_sensor_maes = []
-                     for exp_key, exp_data in exp_sensor_models.items():
-                         for sensor_pair, sensor_models in exp_data.items():
-                             if physio_param in sensor_models:
-                                 exp_sensor_r2s.append(sensor_models[physio_param]['r2_score'])
-                                 exp_sensor_maes.append(sensor_models[physio_param]['mae'])
-                     
-                     if exp_sensor_r2s:
-                         best_r2 = max(exp_sensor_r2s)
-                         best_mae = min(exp_sensor_maes)
-                         avg_r2 = np.mean(exp_sensor_r2s)
-                         avg_mae = np.mean(exp_sensor_maes)
-                         print(f"   实验×传感器对: 最佳R²={best_r2:.3f}, 最佳MAE={best_mae:.2f}")
-                         print(f"                 平均R²={avg_r2:.3f}±{np.std(exp_sensor_r2s):.3f}, 平均MAE={avg_mae:.2f}±{np.std(exp_sensor_maes):.2f}")
     else:
         print("❌ 无效选择，默认运行综合分析")
         choice = "1"

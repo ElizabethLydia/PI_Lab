@@ -1,7 +1,5 @@
 # PI-Lab step3_ir_ptt_peak_detector README
 
-# PI-Lab step3_ir_ptt_peak_detector README
-
 ## 概述
 `step3_ir_ptt_peak_detector.py` 是一个专为脉搏传导时间（PTT）峰值检测设计的 Python 脚本，针对清华大学实验室的 HUB 设备红外（IR）通道数据进行处理，旨在为后续血压预测模型提供高质量的 PTT 数据。该脚本基于师兄的建议进行了优化，专注于 IR 通道信号的峰值检测，并结合傅里叶心率分析和严格的质量控制，生成标准化的输出文件，适用于血压预测研究。核心特性包括：
 
