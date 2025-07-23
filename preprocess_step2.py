@@ -58,7 +58,7 @@ import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
-%matplotlib inline
+# %matplotlib inline
 
 # 设置路径
 output_dir = 'D:\code\Python\PI_Lab\output'

@@ -137,7 +137,7 @@ def process_biopac_file(file_path, target_freq=100):
         # 1. 先降采样到目标频率（不去重）
         data = quick_downsample_biopac(data, target_freq=target_freq)
         
-        # 2. 再用插值处理重复时间戳（师兄要求）
+        # 2. 再用插值处理重复时间戳
         data = interpolate_duplicate_timestamps(data)
         
         # 3. 排序

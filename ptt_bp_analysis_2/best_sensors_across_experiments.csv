@@ -1,6 +1,0 @@
-parameter,best_sensor,avg_r2_score,avg_mae
-Cardiac Index (L/min/m²),Nose→Wrist,0.5868464150914854,0.006640752527986823
-Cardiac Output (L/min),Nose→Wrist,0.5867314729900484,0.0752498528706226
-Diastolic BP (mmHg),Nose→Wrist,0.5136069639743905,0.6242041502794897
-Mean Arterial Pressure (mmHg),Nose→Finger,0.5008732990413763,0.4939158919989992
-Systolic BP (mmHg),Nose→Finger,0.5122681561624498,0.8128585588965365
