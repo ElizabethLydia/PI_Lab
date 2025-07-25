@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-PTT与血压相关性分析 - 版本2（添加PTT筛选和IQR极值去除）
-基于NICU论文benchmark：PTT筛选（如<1/2 IBI）和箱线图去除极值
+PTT与血压相关性分析
+基于师兄建议：使用合理区间的PTT数据分析与血压的相关性
 """
 
 import os
@@ -25,8 +25,8 @@ plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 plt.ioff()  # 关闭交互模式
 
-class PTTBloodPressureAnalyzerV2:
-    """PTT与血压相关性分析器 - 版本2"""
+class PTTBloodPressureAnalyzer:
+    """PTT与血压相关性分析器"""
     
     def __init__(self, output_dir="ptt_bp_analysis"):
         self.output_dir = output_dir
@@ -56,15 +56,10 @@ class PTTBloodPressureAnalyzerV2:
             'sensor4-sensor5': 'Wrist→Ear'
         }
         
-        # 新增：PTT筛选阈值（基于论文<1/2 IBI，暂用固定500ms作为近似）
-        self.ptt_min = 0
-        self.ptt_max = 500  # ms，可后续基于IBI动态调整
-        
-        print("🔬 Enhanced PTT-Cardiovascular Parameters Correlation Analyzer V2")
+        print("🔬 Enhanced PTT-Cardiovascular Parameters Correlation Analyzer")
         print(f"📁 Results will be saved to: {self.output_dir}")
         print(f"📊 Analyzing {len(self.physiological_indicators)} physiological indicators")
         print(f"🎯 Using {len(self.ptt_combinations_en)} PTT sensor combinations")
-        print(f"🆕 V2 Features: PTT filtering (>0 and <500ms) and IQR outlier removal per window")
     
     def load_ground_truth_bp(self, exp_id):
         """加载生理指标数据（从CSV文件）"""
@@ -90,7 +85,7 @@ class PTTBloodPressureAnalyzerV2:
             return None
     
     def load_ptt_data(self, exp_id):
-        """加载有效窗口的PTT数据，并进行筛选"""
+        """加载有效窗口的PTT数据"""
         try:
             # 加载窗口验证数据
             window_file = f"{self.ptt_output_dir}/exp_{exp_id}/window_validation_exp_{exp_id}.csv"
@@ -113,13 +108,13 @@ class PTTBloodPressureAnalyzerV2:
             
             # 新增：基于IBI筛选PTT < 0.5 * reference_mean_ibi_ms
             if 'reference_mean_ibi_ms' in ptt_df.columns:
-                mask = (ptt_df['ptt_ms'] > self.ptt_min) & (ptt_df['ptt_ms'] < 0.5 * ptt_df['reference_mean_ibi_ms']) & (ptt_df['ptt_ms'] < self.ptt_max)
+                mask = (ptt_df['ptt_ms'] > 0) & (ptt_df['ptt_ms'] < 0.5 * ptt_df['reference_mean_ibi_ms'])
                 filtered_ptt = ptt_df[mask | ptt_df['reference_mean_ibi_ms'].isna()]  # 如果IBI NaN则保留
                 print(f"🆕 IBI-based筛选: 原始{len(ptt_df)} → 筛选后{len(filtered_ptt)}")
+                print(f"筛选合理比例: {len(filtered_ptt)/len(ptt_df)*100:.1f}%")  # 新增：输出筛选比例
             else:
-                print("⚠️ 无reference_mean_ibi_ms列，使用固定筛选")
-                filtered_ptt = ptt_df[(ptt_df['ptt_ms'] > self.ptt_min) & (ptt_df['ptt_ms'] < self.ptt_max)]
-            print(f"🆕 PTT筛选: 原始{len(ptt_df)} → 筛选后{len(filtered_ptt)} (去除<0或>{self.ptt_max}ms)")
+                print("⚠️ 无reference_mean_ibi_ms列，跳过IBI筛选")
+                filtered_ptt = ptt_df
             
             # 只保留有效窗口的PTT数据
             valid_ptt = filtered_ptt[filtered_ptt['window_id'].isin(valid_windows['window_id'])]
@@ -145,28 +140,17 @@ class PTTBloodPressureAnalyzerV2:
         return data_series[(data_series >= lower_bound) & (data_series <= upper_bound)]
     
     def synchronize_data(self, ptt_data, physio_data, exp_id):
-        """时间同步PTT和生理数据 - V2: 窗口级聚合，添加IQR极值去除"""
+        """时间同步PTT和生理数据"""
         synchronized_data = []
         
-        # 新增：窗口级分组
-        grouped_ptt = ptt_data['ptt_data'].groupby(['window_id', 'sensor_pair'])
-        
-        for (window_id, sensor_pair), group in grouped_ptt:
-            # PTT数据的时间信息（取组内平均）
-            start_time = group['window_start_s'].mean()
-            end_time = group['window_end_s'].mean()
+        for _, ptt_row in ptt_data['ptt_data'].iterrows():
+            # PTT数据的时间信息（修正列名）
+            start_time = ptt_row['window_start_s']
+            end_time = ptt_row['window_end_s']
             window_center = (start_time + end_time) / 2
             
-            # 新增：IQR去除极值后计算PTT mean
-            clean_ptt = self.remove_outliers_iqr(group['ptt_ms'])
-            if len(clean_ptt) < 3:  # 至少3个有效PTT
-                print(f"⚠️ 窗口{window_id} ({sensor_pair}): 有效PTT不足，跳过")
-                continue
-            ptt_mean = clean_ptt.mean()
-            ptt_count = len(clean_ptt)
-            print(f"🆕 窗口{window_id} ({sensor_pair}): PTT mean={ptt_mean:.2f}ms (去除{len(group)-ptt_count}极值)")
-            
             # 转换为时间戳（假设生理数据的timestamp是绝对时间戳）
+            # 需要找到生理数据时间戳的起始点
             physio_start_time = physio_data['timestamp'].iloc[0]
             start_timestamp = physio_start_time + start_time
             end_timestamp = physio_start_time + end_time
@@ -183,18 +167,20 @@ class PTTBloodPressureAnalyzerV2:
             for indicator in self.physiological_indicators.keys():
                 if indicator in physio_data.columns:
                     physio_values[f'{indicator}_mean'] = window_physio[indicator].mean()
+                    # physio_values[f'{indicator}_std'] = window_physio[indicator].std()
+                    # physio_values[f'{indicator}_min'] = window_physio[indicator].min()
+                    # physio_values[f'{indicator}_max'] = window_physio[indicator].max()
                     physio_values[f'{indicator}_count'] = len(window_physio)
             
-            # 构建同步数据行（窗口级）
+            # 构建同步数据行
             sync_row = {
                 'exp_id': exp_id,
-                'window_id': window_id,
+                'window_id': ptt_row['window_id'],
                 'start_time': start_time,
                 'end_time': end_time,
                 'window_center': window_center,
-                'sensor_pair': sensor_pair,
-                'ptt_ms_mean': ptt_mean,  # V2: 使用mean after outlier removal
-                'ptt_count': ptt_count,
+                'sensor_pair': ptt_row['sensor_pair'],
+                'ptt_ms': ptt_row['ptt_ms'],
                 **physio_values
             }
             
@@ -203,30 +189,41 @@ class PTTBloodPressureAnalyzerV2:
         sync_df = pd.DataFrame(synchronized_data)
         print(f"📊 同步完成: {len(sync_df)}个有效窗口")
         
-        # 新增：生成整体PTT箱线图
-        self.create_ptt_boxplot(sync_df)
+        # 新增：IQR去除极值（窗口级？但这里是心跳级，需分组）
+        # 假设分组计算mean after IQR
+        grouped = sync_df.groupby(['window_id', 'sensor_pair'])
+        cleaned_data = []
+        for name, group in grouped:
+            clean_ptt = self.remove_outliers_iqr(group['ptt_ms'])
+            if not clean_ptt.empty:
+                mean_ptt = clean_ptt.mean()
+                row = group.iloc[0].copy()
+                row['ptt_ms'] = mean_ptt
+                cleaned_data.append(row)
+        cleaned_df = pd.DataFrame(cleaned_data)
         
-        return sync_df
+        # 生成箱线图
+        self.create_ptt_boxplot(cleaned_df, exp_id)  # 修改：传入exp_id
+        
+        return cleaned_df
     
-    def create_ptt_boxplot(self, sync_df):
-        """生成整体PTT分布箱线图"""
-        try:
-            plt.figure(figsize=(12, 6))
-            sns.boxplot(x='sensor_pair', y='ptt_ms_mean', data=sync_df)
-            plt.title('PTT Distribution per Sensor Pair (After Filtering and Outlier Removal)', fontsize=16)
-            plt.xlabel('Sensor Pair')
-            plt.ylabel('PTT Mean (ms)')
-            plt.xticks(rotation=45)
-            plt.grid(alpha=0.3)
-            boxplot_file = f"{self.output_dir}/ptt_boxplot_overall.png"
-            plt.savefig(boxplot_file, dpi=300, bbox_inches='tight')
-            plt.close()
-            print(f"💾 保存PTT箱线图: {boxplot_file}")
-        except Exception as e:
-            print(f"⚠️ 箱线图生成失败: {e}")
+    def create_ptt_boxplot(self, df, exp_id=None):
+        """生成PTT箱线图"""
+        plt.figure(figsize=(10, 6))
+        sns.boxplot(x='sensor_pair', y='ptt_ms', data=df)
+        title = 'PTT Boxplot per Sensor Pair'
+        if exp_id:
+            title += f' (Exp {exp_id})'
+            filename = f'exp_{exp_id}_ptt_boxplot.png'
+        else:
+            title += ' (Overall)'
+            filename = 'overall_ptt_boxplot.png'
+        plt.title(title)
+        plt.savefig(os.path.join(self.output_dir, filename))
+        plt.close()
     
     def calculate_correlations(self, sync_df):
-        """计算PTT与所有生理指标的相关性 - V2: 使用ptt_ms_mean"""
+        """计算PTT与所有生理指标的相关性"""
         correlations = {}
         
         # 生理指标（只处理mean）
@@ -252,11 +249,11 @@ class PTTBloodPressureAnalyzerV2:
             
             for physio_col in physio_metrics:
                 # 提取有效数据
-                mask = ~(pair_data['ptt_ms_mean'].isna() | pair_data[physio_col].isna())
+                mask = ~(pair_data['ptt_ms'].isna() | pair_data[physio_col].isna())
                 if mask.sum() < 10:
                     continue
                 
-                ptt_vals = pair_data.loc[mask, 'ptt_ms_mean']
+                ptt_vals = pair_data.loc[mask, 'ptt_ms']
                 physio_vals = pair_data.loc[mask, physio_col]
                 
                 # 计算皮尔逊相关系数
@@ -298,6 +295,16 @@ class PTTBloodPressureAnalyzerV2:
                     corr_matrix[i, j] = correlations[sensor_pair][physio_col]['correlation']
                     p_matrix[i, j] = correlations[sensor_pair][physio_col]['p_value']
         
+        # 新增：预格式化annot字符串
+        annot_matrix = np.full((len(sensor_pairs), len(physio_cols)), '', dtype=object)
+        for i in range(len(sensor_pairs)):
+            for j in range(len(physio_cols)):
+                if not np.isnan(corr_matrix[i, j]):
+                    corr_str = f"{corr_matrix[i, j]:.3f}"
+                    if p_matrix[i, j] < 0.05:
+                        corr_str += '*'
+                    annot_matrix[i, j] = corr_str
+        
         # 创建图形
         fig, ax = plt.subplots(figsize=(16, 10))
         
@@ -306,17 +313,12 @@ class PTTBloodPressureAnalyzerV2:
         im = sns.heatmap(corr_matrix, 
                         xticklabels=[self._format_physio_label_en(col) for col in physio_cols],
                         yticklabels=[self._format_sensor_pair_label_en(pair) for pair in sensor_pairs],
-                        annot=True, fmt='.3f', cmap='RdBu_r', center=0,
+                        annot=annot_matrix, fmt='', cmap='RdBu_r', center=0,
                         mask=mask, square=False, linewidths=0.5,
                         cbar_kws={'label': 'Correlation Coefficient'},
                         annot_kws={'size': 8})
         
-        # 添加显著性标记
-        for i in range(len(sensor_pairs)):
-            for j in range(len(physio_cols)):
-                if not np.isnan(p_matrix[i, j]) and p_matrix[i, j] < 0.05:
-                    ax.text(j + 0.5, i + 0.5, '*', ha='center', va='center', 
-                           color='white', fontsize=8, fontweight='bold')
+        # 移除旧的ax.text
         
         plt.title(f'PTT-Cardiovascular Parameters Correlation Analysis{title_suffix}', 
                  fontsize=16, fontweight='bold', pad=20)
@@ -366,7 +368,7 @@ class PTTBloodPressureAnalyzerV2:
         return self.ptt_combinations_en.get(sensor_pair, sensor_pair)
     
     def build_regression_models(self, sync_df, correlations, exp_id=None):
-        """构建PTT→生理指标的回归模型，并返回模型和数据 - V2: 使用ptt_ms_mean"""
+        """构建PTT→生理指标的回归模型，并返回模型和数据"""
         # 确保输出目录存在
         os.makedirs(self.output_dir, exist_ok=True)
 
@@ -416,32 +418,47 @@ class PTTBloodPressureAnalyzerV2:
             # 过滤当前传感器对的数据
             pair_df = sync_df[sync_df['sensor_pair'] == sensor_pair].copy()
             
+            # 创建数据透视表 - 每个窗口一个PTT值
+            ptt_pivot = pair_df.pivot_table(
+                index=['exp_id', 'window_id'], 
+                values='ptt_ms',
+                aggfunc='mean'
+            ).reset_index().rename(columns={'ptt_ms': f'ptt_{sensor_pair}'})
+            
+            # 合并生理数据（取平均值）
+            physio_agg = pair_df.groupby(['exp_id', 'window_id']).agg({
+                col: 'mean' for col in main_physio_cols if col in pair_df.columns
+            }).reset_index()
+            
+            # 合并PTT和生理数据
+            model_data = pd.merge(ptt_pivot, physio_agg, on=['exp_id', 'window_id'], how='inner')
+            
             # 检查数据量
-            if len(pair_df) < 10:
-                print(f"⚠️ 数据不足: {sensor_pair} 只有{len(pair_df)}个样本")
+            if len(model_data) < 10:
+                print(f"⚠️ 数据不足: {sensor_pair} 只有{len(model_data)}个样本")
                 continue
                 
-            # 获取PTT特征列（V2: ptt_ms_mean）
-            ptt_col = 'ptt_ms_mean'
+            # 获取PTT特征列
+            ptt_col = f'ptt_{sensor_pair}'
             
             # 检查PTT列的NaN比例
-            nan_ratio = pair_df[ptt_col].isna().mean()
+            nan_ratio = model_data[ptt_col].isna().mean()
             print(f"📊 PTT列 {ptt_col} NaN比例: {nan_ratio:.2%}")
             
             # 为每个生理指标单独建模
             for physio_col in main_physio_cols:
-                if physio_col not in pair_df.columns:
+                if physio_col not in model_data.columns:
                     continue
                     
                 # 准备数据 - 移除NaN
-                mask = ~pair_df[physio_col].isna() & ~pair_df[ptt_col].isna()
+                mask = ~model_data[physio_col].isna() & ~model_data[ptt_col].isna()
                 
                 if mask.sum() < 5:  # 至少5个样本
                     print(f"⚠️ 数据不足: {sensor_pair}→{physio_col} 有效样本={mask.sum()}")
                     continue
                 
-                X = pair_df.loc[mask, ptt_col].values.reshape(-1, 1)
-                y = pair_df.loc[mask, physio_col].values
+                X = model_data.loc[mask, ptt_col].values.reshape(-1, 1)
+                y = model_data.loc[mask, physio_col].values
                 
                 # 数据标准化
                 scaler_X = StandardScaler()
@@ -536,7 +553,7 @@ class PTTBloodPressureAnalyzerV2:
                 print(f"💾 保存特征拟合图: {plot_path}")
                 
                 # 存储模型数据
-                all_model_data[model_key] = pair_df.loc[mask, [ptt_col, physio_col]]
+                all_model_data[model_key] = model_data.loc[mask, [ptt_col, physio_col]]
                 
                 # 收集指标数据用于 CSV
                 if exp_id is not None:
@@ -711,6 +728,16 @@ class PTTBloodPressureAnalyzerV2:
                     corr_matrix[i, j] = filtered_correlations[sensor_pair][physio_col]['correlation']
                     p_matrix[i, j] = filtered_correlations[sensor_pair][physio_col]['p_value']
         
+        # 新增：预格式化annot字符串
+        annot_matrix = np.full((len(sensor_pairs), len(physio_cols)), '', dtype=object)
+        for i in range(len(sensor_pairs)):
+            for j in range(len(physio_cols)):
+                if not np.isnan(corr_matrix[i, j]):
+                    corr_str = f"{corr_matrix[i, j]:.3f}"
+                    if p_matrix[i, j] < 0.05:
+                        corr_str += '*'
+                    annot_matrix[i, j] = corr_str
+        
         # 创建图形（更小更清晰）
         fig, ax = plt.subplots(figsize=(12, 8))
         
@@ -719,17 +746,12 @@ class PTTBloodPressureAnalyzerV2:
         im = sns.heatmap(corr_matrix, 
                         xticklabels=[self._format_physio_label_en(col) for col in physio_cols],
                         yticklabels=[self._format_sensor_pair_label_en(pair) for pair in sensor_pairs],
-                        annot=True, fmt='.3f', cmap='RdBu_r', center=0,
+                        annot=annot_matrix, fmt='', cmap='RdBu_r', center=0,
                         mask=mask, square=False, linewidths=0.5,
                         cbar_kws={'label': 'Correlation Coefficient'},
                         annot_kws={'size': 10})
         
-        # 添加显著性标记
-        for i in range(len(sensor_pairs)):
-            for j in range(len(physio_cols)):
-                if not np.isnan(p_matrix[i, j]) and p_matrix[i, j] < 0.05:
-                    ax.text(j + 0.5, i + 0.5, '*', ha='center', va='center', 
-                           color='white', fontsize=14, fontweight='bold')
+        # 移除旧的ax.text
         
         plt.title(f'PTT-Cardiovascular Correlation Analysis (Key Parameters){title_suffix}', 
                  fontsize=14, fontweight='bold', pad=20)
@@ -807,6 +829,9 @@ class PTTBloodPressureAnalyzerV2:
         
         # 保存结果
         self.save_analysis_results(combined_df, correlations, models)
+        
+        # 新增：整体箱线图
+        self.create_ptt_boxplot(combined_df, None)
         
         return {
             'combined_data': combined_df,
@@ -980,11 +1005,11 @@ class PTTBloodPressureAnalyzerV2:
 
 def main():
     """主函数"""
-    print("🩺 PTT-Cardiovascular Parameters Correlation Analysis V2")
+    print("🩺 PTT-Cardiovascular Parameters Correlation Analysis")
     print("="*60)
     
     # 创建分析器
-    analyzer = PTTBloodPressureAnalyzerV2()
+    analyzer = PTTBloodPressureAnalyzer()
     
     print("\n📋 请选择分析方式:")
     print("1. 综合分析 (单实验+跨实验)")
