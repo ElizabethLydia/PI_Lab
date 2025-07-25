@@ -1,217 +1,28 @@
 sensor_pair,sensor_combination,physiological_parameter,parameter_label,correlation_coefficient,p_value,n_samples,statistically_significant
-sensor2-sensor3,Nose→Finger,systolic_bp_mean,Systolic BP (mmHg),0.14566590347629305,0.0027684627145842045,420,True
-sensor2-sensor3,Nose→Finger,systolic_bp_std,Systolic BP (mmHg) (SD),0.17746655194899458,0.0002569844828120999,420,True
-sensor2-sensor3,Nose→Finger,systolic_bp_min,Systolic BP (mmHg) (Min),0.11642721502234968,0.016983720849063938,420,True
-sensor2-sensor3,Nose→Finger,systolic_bp_max,Systolic BP (mmHg) (Max),0.16958723346336468,0.0004821875529170536,420,True
-sensor2-sensor3,Nose→Finger,diastolic_bp_mean,Diastolic BP (mmHg),-0.0884265992992619,0.0702410837366993,420,False
-sensor2-sensor3,Nose→Finger,diastolic_bp_std,Diastolic BP (mmHg) (SD),0.030808746952202516,0.5289175870717944,420,False
-sensor2-sensor3,Nose→Finger,diastolic_bp_min,Diastolic BP (mmHg) (Min),-0.03698956636073704,0.4496131795382965,420,False
-sensor2-sensor3,Nose→Finger,diastolic_bp_max,Diastolic BP (mmHg) (Max),0.01837210920481406,0.7073438466462473,420,False
-sensor2-sensor3,Nose→Finger,mean_bp_mean,Mean Arterial Pressure (mmHg),-0.01043820712933714,0.8311024412726699,420,False
-sensor2-sensor3,Nose→Finger,mean_bp_std,Mean Arterial Pressure (mmHg) (SD),0.0843966040909154,0.08406996960073096,420,False
-sensor2-sensor3,Nose→Finger,mean_bp_min,Mean Arterial Pressure (mmHg) (Min),-0.12603568400991086,0.009721446669215615,420,True
-sensor2-sensor3,Nose→Finger,mean_bp_max,Mean Arterial Pressure (mmHg) (Max),0.0012716887375368822,0.9792699385760852,420,False
-sensor2-sensor3,Nose→Finger,bp_mean,Continuous BP (mmHg),-0.004313036497181663,0.9297750010862771,420,False
-sensor2-sensor3,Nose→Finger,bp_std,Continuous BP (mmHg) (SD),0.1279472948392052,0.008661789503829497,420,True
-sensor2-sensor3,Nose→Finger,bp_min,Continuous BP (mmHg) (Min),-0.11244860114122739,0.021168961310148584,420,True
-sensor2-sensor3,Nose→Finger,bp_max,Continuous BP (mmHg) (Max),0.1592926547183276,0.0010538603537378886,420,True
-sensor2-sensor3,Nose→Finger,cardiac_output_mean,Cardiac Output (L/min),-0.04083750893029929,0.40384501660051,420,False
-sensor2-sensor3,Nose→Finger,cardiac_output_std,Cardiac Output (L/min) (SD),0.17269062064319907,0.0003775432769526672,420,True
-sensor2-sensor3,Nose→Finger,cardiac_output_min,Cardiac Output (L/min) (Min),-0.12936116182820467,0.007945533876238791,420,True
-sensor2-sensor3,Nose→Finger,cardiac_output_max,Cardiac Output (L/min) (Max),0.1121946368767149,0.021464174381994626,420,True
-sensor2-sensor3,Nose→Finger,cardiac_index_mean,Cardiac Index (L/min/m²),-0.04172271091357817,0.3937234986699127,420,False
-sensor2-sensor3,Nose→Finger,cardiac_index_std,Cardiac Index (L/min/m²) (SD),0.17265533729354188,0.00037860374308406957,420,True
-sensor2-sensor3,Nose→Finger,cardiac_index_min,Cardiac Index (L/min/m²) (Min),-0.12961883662096796,0.007820846162044613,420,True
-sensor2-sensor3,Nose→Finger,cardiac_index_max,Cardiac Index (L/min/m²) (Max),0.11227656551817872,0.021368551025601028,420,True
-sensor2-sensor3,Nose→Finger,hr_mean,Heart Rate (bpm),-0.08047522567130078,0.0995563336663736,420,False
-sensor2-sensor3,Nose→Finger,hr_std,Heart Rate (bpm) (SD),0.13341498590337245,0.006175839397085878,420,True
-sensor2-sensor3,Nose→Finger,hr_min,Heart Rate (bpm) (Min),-0.1117789394962019,0.02195509887392759,420,True
-sensor2-sensor3,Nose→Finger,hr_max,Heart Rate (bpm) (Max),-0.033344929866003195,0.4955421189268719,420,False
-sensor2-sensor3,Nose→Finger,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),0.040913892372238775,0.40296556777921494,420,False
-sensor2-sensor3,Nose→Finger,systemic_vascular_resistance_std,Systemic Vascular Resistance (dyn·s/cm⁵) (SD),0.16148112482557703,0.0008958674376904634,420,True
-sensor2-sensor3,Nose→Finger,systemic_vascular_resistance_min,Systemic Vascular Resistance (dyn·s/cm⁵) (Min),-0.09968897991547832,0.041149892395608144,420,True
-sensor2-sensor3,Nose→Finger,systemic_vascular_resistance_max,Systemic Vascular Resistance (dyn·s/cm⁵) (Max),0.1155308931525383,0.01785755585445308,420,True
-sensor2-sensor3,Nose→Finger,rsp_mean,Respiration Rate (breaths/min),0.14402022312324858,0.0030946507820236563,420,True
-sensor2-sensor3,Nose→Finger,rsp_std,Respiration Rate (breaths/min) (SD),0.13894952597596402,0.004331094490500041,420,True
-sensor2-sensor3,Nose→Finger,rsp_min,Respiration Rate (breaths/min) (Min),,,420,False
-sensor2-sensor3,Nose→Finger,rsp_max,Respiration Rate (breaths/min) (Max),0.14361110942073174,0.003180982918354113,420,True
-sensor2-sensor4,Nose→Wrist,systolic_bp_mean,Systolic BP (mmHg),0.043809430907655496,0.4269573708510219,331,False
-sensor2-sensor4,Nose→Wrist,systolic_bp_std,Systolic BP (mmHg) (SD),0.11850218771036534,0.0311303567077477,331,True
-sensor2-sensor4,Nose→Wrist,systolic_bp_min,Systolic BP (mmHg) (Min),0.036719950792740035,0.5055656469364433,331,False
-sensor2-sensor4,Nose→Wrist,systolic_bp_max,Systolic BP (mmHg) (Max),-0.000289855091966041,0.9958083313399912,331,False
-sensor2-sensor4,Nose→Wrist,diastolic_bp_mean,Diastolic BP (mmHg),-0.14158132308874743,0.009905628705385831,331,True
-sensor2-sensor4,Nose→Wrist,diastolic_bp_std,Diastolic BP (mmHg) (SD),0.2946639638167377,4.6970538624491084e-08,331,True
-sensor2-sensor4,Nose→Wrist,diastolic_bp_min,Diastolic BP (mmHg) (Min),-0.3326929803293506,5.378692844865946e-10,331,True
-sensor2-sensor4,Nose→Wrist,diastolic_bp_max,Diastolic BP (mmHg) (Max),-0.1810677932039152,0.0009357239549493391,331,True
-sensor2-sensor4,Nose→Wrist,mean_bp_mean,Mean Arterial Pressure (mmHg),-0.021659966028403383,0.6945973262950175,331,False
-sensor2-sensor4,Nose→Wrist,mean_bp_std,Mean Arterial Pressure (mmHg) (SD),0.14640933263665318,0.007630442541739782,331,True
-sensor2-sensor4,Nose→Wrist,mean_bp_min,Mean Arterial Pressure (mmHg) (Min),-0.060982120216834704,0.2685944420289077,331,False
-sensor2-sensor4,Nose→Wrist,mean_bp_max,Mean Arterial Pressure (mmHg) (Max),0.027949861117392488,0.612380432559576,331,False
-sensor2-sensor4,Nose→Wrist,bp_mean,Continuous BP (mmHg),-0.02343927703987197,0.6709202027975311,331,False
-sensor2-sensor4,Nose→Wrist,bp_std,Continuous BP (mmHg) (SD),0.023184002854374615,0.6742978672009563,331,False
-sensor2-sensor4,Nose→Wrist,bp_min,Continuous BP (mmHg) (Min),-0.11072004392582108,0.04412018945191134,331,True
-sensor2-sensor4,Nose→Wrist,bp_max,Continuous BP (mmHg) (Max),0.022169964096751378,0.6877792046875797,331,False
-sensor2-sensor4,Nose→Wrist,cardiac_output_mean,Cardiac Output (L/min),-0.36287862524967157,9.721741310087558e-12,331,True
-sensor2-sensor4,Nose→Wrist,cardiac_output_std,Cardiac Output (L/min) (SD),0.06004751227999451,0.27601317873491793,331,False
-sensor2-sensor4,Nose→Wrist,cardiac_output_min,Cardiac Output (L/min) (Min),-0.2868287341333293,1.092353175315453e-07,331,True
-sensor2-sensor4,Nose→Wrist,cardiac_output_max,Cardiac Output (L/min) (Max),-0.205551663614914,0.00016599856178639745,331,True
-sensor2-sensor4,Nose→Wrist,cardiac_index_mean,Cardiac Index (L/min/m²),-0.36321182720382633,9.277993515025582e-12,331,True
-sensor2-sensor4,Nose→Wrist,cardiac_index_std,Cardiac Index (L/min/m²) (SD),0.05931025889592076,0.2819626310174856,331,False
-sensor2-sensor4,Nose→Wrist,cardiac_index_min,Cardiac Index (L/min/m²) (Min),-0.28391832589366395,1.4849167146565422e-07,331,True
-sensor2-sensor4,Nose→Wrist,cardiac_index_max,Cardiac Index (L/min/m²) (Max),-0.20497919886417956,0.0001732649603681774,331,True
-sensor2-sensor4,Nose→Wrist,hr_mean,Heart Rate (bpm),-0.21295104535342024,9.441047903209711e-05,331,True
-sensor2-sensor4,Nose→Wrist,hr_std,Heart Rate (bpm) (SD),-0.0441057320290537,0.4238341444692006,331,False
-sensor2-sensor4,Nose→Wrist,hr_min,Heart Rate (bpm) (Min),-0.18896011249555822,0.0005482389833869812,331,True
-sensor2-sensor4,Nose→Wrist,hr_max,Heart Rate (bpm) (Max),-0.2211566433015279,4.9338305057443e-05,331,True
-sensor2-sensor4,Nose→Wrist,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),0.292913781405014,5.6841241094883823e-08,331,True
-sensor2-sensor4,Nose→Wrist,systemic_vascular_resistance_std,Systemic Vascular Resistance (dyn·s/cm⁵) (SD),0.20769645982141374,0.00014123476796549467,331,True
-sensor2-sensor4,Nose→Wrist,systemic_vascular_resistance_min,Systemic Vascular Resistance (dyn·s/cm⁵) (Min),0.20731010510758455,0.00014542302952136104,331,True
-sensor2-sensor4,Nose→Wrist,systemic_vascular_resistance_max,Systemic Vascular Resistance (dyn·s/cm⁵) (Max),0.2596511214470729,1.6808039835096453e-06,331,True
-sensor2-sensor4,Nose→Wrist,rsp_mean,Respiration Rate (breaths/min),0.21805006738054056,6.326112163754433e-05,331,True
-sensor2-sensor4,Nose→Wrist,rsp_std,Respiration Rate (breaths/min) (SD),0.23919445924991403,1.0858839314805595e-05,331,True
-sensor2-sensor4,Nose→Wrist,rsp_min,Respiration Rate (breaths/min) (Min),,,331,False
-sensor2-sensor4,Nose→Wrist,rsp_max,Respiration Rate (breaths/min) (Max),0.2338471568865661,1.722510891848485e-05,331,True
-sensor2-sensor5,Nose→Ear,systolic_bp_mean,Systolic BP (mmHg),0.014915767541120225,0.802034900437116,285,False
-sensor2-sensor5,Nose→Ear,systolic_bp_std,Systolic BP (mmHg) (SD),0.006753306046400807,0.9096268928464563,285,False
-sensor2-sensor5,Nose→Ear,systolic_bp_min,Systolic BP (mmHg) (Min),0.0032013026283129586,0.957089067473313,285,False
-sensor2-sensor5,Nose→Ear,systolic_bp_max,Systolic BP (mmHg) (Max),-0.008330505323267696,0.8886446019599398,285,False
-sensor2-sensor5,Nose→Ear,diastolic_bp_mean,Diastolic BP (mmHg),-0.024809987827566243,0.6766313986034044,285,False
-sensor2-sensor5,Nose→Ear,diastolic_bp_std,Diastolic BP (mmHg) (SD),0.038453315889133526,0.51792136174159,285,False
-sensor2-sensor5,Nose→Ear,diastolic_bp_min,Diastolic BP (mmHg) (Min),-0.051657115709241336,0.3849455456633638,285,False
-sensor2-sensor5,Nose→Ear,diastolic_bp_max,Diastolic BP (mmHg) (Max),0.021105651685080527,0.722755887366214,285,False
-sensor2-sensor5,Nose→Ear,mean_bp_mean,Mean Arterial Pressure (mmHg),-0.022527180629066376,0.70492604743445,285,False
-sensor2-sensor5,Nose→Ear,mean_bp_std,Mean Arterial Pressure (mmHg) (SD),0.01687887221647813,0.7766279779489305,285,False
-sensor2-sensor5,Nose→Ear,mean_bp_min,Mean Arterial Pressure (mmHg) (Min),-0.07086726161973822,0.23301854106133374,285,False
-sensor2-sensor5,Nose→Ear,mean_bp_max,Mean Arterial Pressure (mmHg) (Max),-0.010327496299762443,0.8621903633130278,285,False
-sensor2-sensor5,Nose→Ear,bp_mean,Continuous BP (mmHg),-0.014666775376953323,0.8052729526441743,285,False
-sensor2-sensor5,Nose→Ear,bp_std,Continuous BP (mmHg) (SD),-0.0031967431260424804,0.957150125478863,285,False
-sensor2-sensor5,Nose→Ear,bp_min,Continuous BP (mmHg) (Min),-0.013855530096736422,0.8158456900381328,285,False
-sensor2-sensor5,Nose→Ear,bp_max,Continuous BP (mmHg) (Max),-0.008329881587554534,0.8886528854984805,285,False
-sensor2-sensor5,Nose→Ear,cardiac_output_mean,Cardiac Output (L/min),0.00595927234713018,0.9202150420593518,285,False
-sensor2-sensor5,Nose→Ear,cardiac_output_std,Cardiac Output (L/min) (SD),0.036355225712686914,0.541033003346501,285,False
-sensor2-sensor5,Nose→Ear,cardiac_output_min,Cardiac Output (L/min) (Min),-0.00287745212620491,0.9614264726297455,285,False
-sensor2-sensor5,Nose→Ear,cardiac_output_max,Cardiac Output (L/min) (Max),0.03244882463594414,0.585385337713758,285,False
-sensor2-sensor5,Nose→Ear,cardiac_index_mean,Cardiac Index (L/min/m²),0.005434619948733045,0.927218935141956,285,False
-sensor2-sensor5,Nose→Ear,cardiac_index_std,Cardiac Index (L/min/m²) (SD),0.035900469493760676,0.5461091375787231,285,False
-sensor2-sensor5,Nose→Ear,cardiac_index_min,Cardiac Index (L/min/m²) (Min),-0.0028465119480519385,0.9618409230963203,285,False
-sensor2-sensor5,Nose→Ear,cardiac_index_max,Cardiac Index (L/min/m²) (Max),0.03257728563173767,0.5839004818852811,285,False
-sensor2-sensor5,Nose→Ear,hr_mean,Heart Rate (bpm),0.016926686623131702,0.7760119893044873,285,False
-sensor2-sensor5,Nose→Ear,hr_std,Heart Rate (bpm) (SD),-0.01902943148517789,0.749066208458093,285,False
-sensor2-sensor5,Nose→Ear,hr_min,Heart Rate (bpm) (Min),0.004184965649069158,0.9439229167819065,285,False
-sensor2-sensor5,Nose→Ear,hr_max,Heart Rate (bpm) (Max),0.014662008060196935,0.8053349824706898,285,False
-sensor2-sensor5,Nose→Ear,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.022810316139015442,0.7013935657709189,285,False
-sensor2-sensor5,Nose→Ear,systemic_vascular_resistance_std,Systemic Vascular Resistance (dyn·s/cm⁵) (SD),0.02089912109893654,0.7253591180688862,285,False
-sensor2-sensor5,Nose→Ear,systemic_vascular_resistance_min,Systemic Vascular Resistance (dyn·s/cm⁵) (Min),-0.08899129037978265,0.13394671926379298,285,False
-sensor2-sensor5,Nose→Ear,systemic_vascular_resistance_max,Systemic Vascular Resistance (dyn·s/cm⁵) (Max),-0.01573848728360117,0.791360041167171,285,False
-sensor2-sensor5,Nose→Ear,rsp_mean,Respiration Rate (breaths/min),0.08656011699470773,0.14494588866491226,285,False
-sensor2-sensor5,Nose→Ear,rsp_std,Respiration Rate (breaths/min) (SD),0.08656011699470773,0.14494588866491226,285,False
-sensor2-sensor5,Nose→Ear,rsp_min,Respiration Rate (breaths/min) (Min),,,285,False
-sensor2-sensor5,Nose→Ear,rsp_max,Respiration Rate (breaths/min) (Max),0.08656011699470773,0.14494588866491226,285,False
-sensor3-sensor4,Finger→Wrist,systolic_bp_mean,Systolic BP (mmHg),0.16202835639239016,7.401143894073551e-20,3130,True
-sensor3-sensor4,Finger→Wrist,systolic_bp_std,Systolic BP (mmHg) (SD),-0.01808441594512198,0.3118075126832064,3130,False
-sensor3-sensor4,Finger→Wrist,systolic_bp_min,Systolic BP (mmHg) (Min),0.16248964320547124,5.803155668081923e-20,3130,True
-sensor3-sensor4,Finger→Wrist,systolic_bp_max,Systolic BP (mmHg) (Max),0.15733703887070602,8.434384883546467e-19,3130,True
-sensor3-sensor4,Finger→Wrist,diastolic_bp_mean,Diastolic BP (mmHg),-0.11102604992144793,4.715514682189852e-10,3130,True
-sensor3-sensor4,Finger→Wrist,diastolic_bp_std,Diastolic BP (mmHg) (SD),0.17284557822341984,2.043246377446282e-22,3130,True
-sensor3-sensor4,Finger→Wrist,diastolic_bp_min,Diastolic BP (mmHg) (Min),-0.15374908476955806,5.161321135926037e-18,3130,True
-sensor3-sensor4,Finger→Wrist,diastolic_bp_max,Diastolic BP (mmHg) (Max),-0.06490942214682059,0.00027924432727247805,3130,True
-sensor3-sensor4,Finger→Wrist,mean_bp_mean,Mean Arterial Pressure (mmHg),0.045559646313871154,0.010796915874974809,3130,True
-sensor3-sensor4,Finger→Wrist,mean_bp_std,Mean Arterial Pressure (mmHg) (SD),0.05712973429702316,0.0013860612180748122,3130,True
-sensor3-sensor4,Finger→Wrist,mean_bp_min,Mean Arterial Pressure (mmHg) (Min),0.030816525902985097,0.08474494810377203,3130,False
-sensor3-sensor4,Finger→Wrist,mean_bp_max,Mean Arterial Pressure (mmHg) (Max),0.08814761621180855,7.844827366287458e-07,3130,True
-sensor3-sensor4,Finger→Wrist,bp_mean,Continuous BP (mmHg),0.045480788956065055,0.010934441641096259,3130,True
-sensor3-sensor4,Finger→Wrist,bp_std,Continuous BP (mmHg) (SD),0.19266896224216737,1.485466992331347e-27,3130,True
-sensor3-sensor4,Finger→Wrist,bp_min,Continuous BP (mmHg) (Min),-0.13819421875743348,8.121644032149883e-15,3130,True
-sensor3-sensor4,Finger→Wrist,bp_max,Continuous BP (mmHg) (Max),0.15806261495601695,5.816991606830193e-19,3130,True
-sensor3-sensor4,Finger→Wrist,cardiac_output_mean,Cardiac Output (L/min),0.17896456175651088,6.117849265570089e-24,3130,True
-sensor3-sensor4,Finger→Wrist,cardiac_output_std,Cardiac Output (L/min) (SD),0.11565021523680169,8.617094209034636e-11,3130,True
-sensor3-sensor4,Finger→Wrist,cardiac_output_min,Cardiac Output (L/min) (Min),0.01779806372005059,0.319532642276851,3130,False
-sensor3-sensor4,Finger→Wrist,cardiac_output_max,Cardiac Output (L/min) (Max),0.17028823477738694,8.52660054021976e-22,3130,True
-sensor3-sensor4,Finger→Wrist,cardiac_index_mean,Cardiac Index (L/min/m²),0.17892449585176615,6.2626194925744024e-24,3130,True
-sensor3-sensor4,Finger→Wrist,cardiac_index_std,Cardiac Index (L/min/m²) (SD),0.11584072815283493,8.022582640903741e-11,3130,True
-sensor3-sensor4,Finger→Wrist,cardiac_index_min,Cardiac Index (L/min/m²) (Min),0.0173551097952708,0.3317269671522024,3130,False
-sensor3-sensor4,Finger→Wrist,cardiac_index_max,Cardiac Index (L/min/m²) (Max),0.17050821585754905,7.5471450593468785e-22,3130,True
-sensor3-sensor4,Finger→Wrist,hr_mean,Heart Rate (bpm),0.13910743847539464,5.38879933199467e-15,3130,True
-sensor3-sensor4,Finger→Wrist,hr_std,Heart Rate (bpm) (SD),0.03149953109265273,0.07806612843061057,3130,False
-sensor3-sensor4,Finger→Wrist,hr_min,Heart Rate (bpm) (Min),0.09596854424592438,7.474696409829022e-08,3130,True
-sensor3-sensor4,Finger→Wrist,hr_max,Heart Rate (bpm) (Max),0.125373871926982,1.9333877438743124e-12,3130,True
-sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.17664147255991478,2.3528988437261273e-23,3130,True
-sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_std,Systemic Vascular Resistance (dyn·s/cm⁵) (SD),0.11382940431804217,1.6964871356588726e-10,3130,True
-sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_min,Systemic Vascular Resistance (dyn·s/cm⁵) (Min),-0.16850138979512835,2.2834612084187913e-21,3130,True
-sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_max,Systemic Vascular Resistance (dyn·s/cm⁵) (Max),-0.1278593016822057,6.976399271767809e-13,3130,True
-sensor3-sensor4,Finger→Wrist,rsp_mean,Respiration Rate (breaths/min),0.16406462685855738,2.5156950896183767e-20,3130,True
-sensor3-sensor4,Finger→Wrist,rsp_std,Respiration Rate (breaths/min) (SD),0.1810755376044189,1.770381024642793e-24,3130,True
-sensor3-sensor4,Finger→Wrist,rsp_min,Respiration Rate (breaths/min) (Min),0.10758489438072552,1.5984721122289398e-09,3130,True
-sensor3-sensor4,Finger→Wrist,rsp_max,Respiration Rate (breaths/min) (Max),0.17767235839787854,1.2971506457892344e-23,3130,True
-sensor3-sensor5,Finger→Ear,systolic_bp_mean,Systolic BP (mmHg),0.3562911469510482,1.8361001701489712e-52,1714,True
-sensor3-sensor5,Finger→Ear,systolic_bp_std,Systolic BP (mmHg) (SD),-0.21471924544632232,2.517110352741108e-19,1714,True
-sensor3-sensor5,Finger→Ear,systolic_bp_min,Systolic BP (mmHg) (Min),0.3752157176375848,1.9938884080504295e-58,1714,True
-sensor3-sensor5,Finger→Ear,systolic_bp_max,Systolic BP (mmHg) (Max),0.306298271006446,1.4883900464221893e-38,1714,True
-sensor3-sensor5,Finger→Ear,diastolic_bp_mean,Diastolic BP (mmHg),0.16056828375686855,2.2906861499341276e-11,1714,True
-sensor3-sensor5,Finger→Ear,diastolic_bp_std,Diastolic BP (mmHg) (SD),-0.0045270475920559244,0.8514362530232568,1714,False
-sensor3-sensor5,Finger→Ear,diastolic_bp_min,Diastolic BP (mmHg) (Min),0.10881003996437234,6.334287163722406e-06,1714,True
-sensor3-sensor5,Finger→Ear,diastolic_bp_max,Diastolic BP (mmHg) (Max),0.08321812472139695,0.0005632079331197006,1714,True
-sensor3-sensor5,Finger→Ear,mean_bp_mean,Mean Arterial Pressure (mmHg),0.30104095906579786,3.0742592995742004e-37,1714,True
-sensor3-sensor5,Finger→Ear,mean_bp_std,Mean Arterial Pressure (mmHg) (SD),-0.1592208075429306,3.371866014234364e-11,1714,True
-sensor3-sensor5,Finger→Ear,mean_bp_min,Mean Arterial Pressure (mmHg) (Min),0.3170153289506919,2.5546683557565916e-41,1714,True
-sensor3-sensor5,Finger→Ear,mean_bp_max,Mean Arterial Pressure (mmHg) (Max),0.18805460176001204,4.160118275055583e-15,1714,True
-sensor3-sensor5,Finger→Ear,bp_mean,Continuous BP (mmHg),0.30237437517315846,1.4347426603566317e-37,1714,True
-sensor3-sensor5,Finger→Ear,bp_std,Continuous BP (mmHg) (SD),0.3079665428922904,5.6201208150074114e-39,1714,True
-sensor3-sensor5,Finger→Ear,bp_min,Continuous BP (mmHg) (Min),0.09944068526462996,3.7216400609175706e-05,1714,True
-sensor3-sensor5,Finger→Ear,bp_max,Continuous BP (mmHg) (Max),0.30338691912808613,8.022120154115317e-38,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_output_mean,Cardiac Output (L/min),0.2785975890594439,6.33002645682088e-32,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_output_std,Cardiac Output (L/min) (SD),-0.12127674266960864,4.757313475930465e-07,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_output_min,Cardiac Output (L/min) (Min),0.3559617961948518,2.3129587296871764e-52,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_output_max,Cardiac Output (L/min) (Max),0.09953946888543777,3.655637334799287e-05,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_index_mean,Cardiac Index (L/min/m²),0.2784730308121893,6.754011505276208e-32,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_index_std,Cardiac Index (L/min/m²) (SD),-0.12155634930371093,4.4751706762182936e-07,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_index_min,Cardiac Index (L/min/m²) (Min),0.3556330412782195,2.9116523862458162e-52,1714,True
-sensor3-sensor5,Finger→Ear,cardiac_index_max,Cardiac Index (L/min/m²) (Max),0.09985858109148288,3.449926322552757e-05,1714,True
-sensor3-sensor5,Finger→Ear,hr_mean,Heart Rate (bpm),0.3217283023666323,1.4280577746523231e-42,1714,True
-sensor3-sensor5,Finger→Ear,hr_std,Heart Rate (bpm) (SD),-0.13400086398683583,2.565213453494748e-08,1714,True
-sensor3-sensor5,Finger→Ear,hr_min,Heart Rate (bpm) (Min),0.30182948486727007,1.959886338934058e-37,1714,True
-sensor3-sensor5,Finger→Ear,hr_max,Heart Rate (bpm) (Max),0.29653835123603556,3.9132119658322254e-36,1714,True
-sensor3-sensor5,Finger→Ear,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.1663390289930958,4.21370515703708e-12,1714,True
-sensor3-sensor5,Finger→Ear,systemic_vascular_resistance_std,Systemic Vascular Resistance (dyn·s/cm⁵) (SD),-0.18012896755941646,5.755719235107051e-14,1714,True
-sensor3-sensor5,Finger→Ear,systemic_vascular_resistance_min,Systemic Vascular Resistance (dyn·s/cm⁵) (Min),-0.012751211696346833,0.5978168104331701,1714,False
-sensor3-sensor5,Finger→Ear,systemic_vascular_resistance_max,Systemic Vascular Resistance (dyn·s/cm⁵) (Max),-0.26723476549995734,2.0444379638942917e-29,1714,True
-sensor3-sensor5,Finger→Ear,rsp_mean,Respiration Rate (breaths/min),0.4237710246536649,1.1776374092708038e-75,1714,True
-sensor3-sensor5,Finger→Ear,rsp_std,Respiration Rate (breaths/min) (SD),0.30691777967313955,1.0374525387778401e-38,1714,True
-sensor3-sensor5,Finger→Ear,rsp_min,Respiration Rate (breaths/min) (Min),0.38341110181398375,3.895808739677439e-61,1714,True
-sensor3-sensor5,Finger→Ear,rsp_max,Respiration Rate (breaths/min) (Max),0.3930926047853086,1.9450136726109928e-64,1714,True
-sensor4-sensor5,Wrist→Ear,systolic_bp_mean,Systolic BP (mmHg),0.26618443504875794,1.290474634158044e-26,1554,True
-sensor4-sensor5,Wrist→Ear,systolic_bp_std,Systolic BP (mmHg) (SD),-0.2436039318644993,1.9867556381827859e-22,1554,True
-sensor4-sensor5,Wrist→Ear,systolic_bp_min,Systolic BP (mmHg) (Min),0.2806821641499269,1.585113519186538e-29,1554,True
-sensor4-sensor5,Wrist→Ear,systolic_bp_max,Systolic BP (mmHg) (Max),0.21548774099936163,8.775805913575448e-18,1554,True
-sensor4-sensor5,Wrist→Ear,diastolic_bp_mean,Diastolic BP (mmHg),0.21433890510789327,1.318327663309616e-17,1554,True
-sensor4-sensor5,Wrist→Ear,diastolic_bp_std,Diastolic BP (mmHg) (SD),-0.1038952570959925,4.070375424851276e-05,1554,True
-sensor4-sensor5,Wrist→Ear,diastolic_bp_min,Diastolic BP (mmHg) (Min),0.15088284168612184,2.2674444464164447e-09,1554,True
-sensor4-sensor5,Wrist→Ear,diastolic_bp_max,Diastolic BP (mmHg) (Max),0.13081168226582768,2.2815195066186071e-07,1554,True
-sensor4-sensor5,Wrist→Ear,mean_bp_mean,Mean Arterial Pressure (mmHg),0.27831618950300485,4.866024921293114e-29,1554,True
-sensor4-sensor5,Wrist→Ear,mean_bp_std,Mean Arterial Pressure (mmHg) (SD),-0.18547848224994193,1.708018124964008e-13,1554,True
-sensor4-sensor5,Wrist→Ear,mean_bp_min,Mean Arterial Pressure (mmHg) (Min),0.280671180231718,1.5934291947919886e-29,1554,True
-sensor4-sensor5,Wrist→Ear,mean_bp_max,Mean Arterial Pressure (mmHg) (Max),0.16105490633781225,1.7080089519589015e-10,1554,True
-sensor4-sensor5,Wrist→Ear,bp_mean,Continuous BP (mmHg),0.2813722783663777,1.1404611510298434e-29,1554,True
-sensor4-sensor5,Wrist→Ear,bp_std,Continuous BP (mmHg) (SD),0.20022735000006486,1.618010889498639e-15,1554,True
-sensor4-sensor5,Wrist→Ear,bp_min,Continuous BP (mmHg) (Min),0.1556877112931795,6.82662767230081e-10,1554,True
-sensor4-sensor5,Wrist→Ear,bp_max,Continuous BP (mmHg) (Max),0.21310049018336916,2.0389594102512824e-17,1554,True
-sensor4-sensor5,Wrist→Ear,cardiac_output_mean,Cardiac Output (L/min),0.14706800370627865,5.725920028381768e-09,1554,True
-sensor4-sensor5,Wrist→Ear,cardiac_output_std,Cardiac Output (L/min) (SD),-0.15542448828577035,7.297754901908301e-10,1554,True
-sensor4-sensor5,Wrist→Ear,cardiac_output_min,Cardiac Output (L/min) (Min),0.2375653520578871,2.2294746014682553e-21,1554,True
-sensor4-sensor5,Wrist→Ear,cardiac_output_max,Cardiac Output (L/min) (Max),0.023211128224648797,0.36051284461253735,1554,False
-sensor4-sensor5,Wrist→Ear,cardiac_index_mean,Cardiac Index (L/min/m²),0.14706365228013127,5.731896381603574e-09,1554,True
-sensor4-sensor5,Wrist→Ear,cardiac_index_std,Cardiac Index (L/min/m²) (SD),-0.1558895823038714,6.485526244337492e-10,1554,True
-sensor4-sensor5,Wrist→Ear,cardiac_index_min,Cardiac Index (L/min/m²) (Min),0.23747007856906494,2.3149279689916746e-21,1554,True
-sensor4-sensor5,Wrist→Ear,cardiac_index_max,Cardiac Index (L/min/m²) (Max),0.023385803905399762,0.3569087368099452,1554,False
-sensor4-sensor5,Wrist→Ear,hr_mean,Heart Rate (bpm),0.1900953771771881,4.134614597667975e-14,1554,True
-sensor4-sensor5,Wrist→Ear,hr_std,Heart Rate (bpm) (SD),-0.15987973617948542,2.3226987917886178e-10,1554,True
-sensor4-sensor5,Wrist→Ear,hr_min,Heart Rate (bpm) (Min),0.23937422957135301,1.088174015360454e-21,1554,True
-sensor4-sensor5,Wrist→Ear,hr_max,Heart Rate (bpm) (Max),0.16979332592735977,1.6171507800901768e-11,1554,True
-sensor4-sensor5,Wrist→Ear,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.0056694990238714375,0.8232878803436301,1554,False
-sensor4-sensor5,Wrist→Ear,systemic_vascular_resistance_std,Systemic Vascular Resistance (dyn·s/cm⁵) (SD),-0.19479548392402238,9.398368526644004e-15,1554,True
-sensor4-sensor5,Wrist→Ear,systemic_vascular_resistance_min,Systemic Vascular Resistance (dyn·s/cm⁵) (Min),0.0822220717257994,0.0011780319298541977,1554,True
-sensor4-sensor5,Wrist→Ear,systemic_vascular_resistance_max,Systemic Vascular Resistance (dyn·s/cm⁵) (Max),-0.1334779783500837,1.2832418326973807e-07,1554,True
-sensor4-sensor5,Wrist→Ear,rsp_mean,Respiration Rate (breaths/min),0.3053554645372305,6.796419233331948e-35,1554,True
-sensor4-sensor5,Wrist→Ear,rsp_std,Respiration Rate (breaths/min) (SD),0.1858736643444925,1.5148749589707278e-13,1554,True
-sensor4-sensor5,Wrist→Ear,rsp_min,Respiration Rate (breaths/min) (Min),0.2771840302215166,8.290606176843124e-29,1554,True
-sensor4-sensor5,Wrist→Ear,rsp_max,Respiration Rate (breaths/min) (Max),0.2629042368823895,5.55833861578767e-26,1554,True
+sensor3-sensor4,Finger→Wrist,systolic_bp_mean,Systolic BP (mmHg),0.24876015184821748,0.0053370154179927624,124,True
+sensor3-sensor4,Finger→Wrist,diastolic_bp_mean,Diastolic BP (mmHg),-0.2293106349512076,0.010411123733440587,124,True
+sensor3-sensor4,Finger→Wrist,mean_bp_mean,Mean Arterial Pressure (mmHg),0.007124553626953724,0.9374039423607909,124,False
+sensor3-sensor4,Finger→Wrist,bp_mean,Continuous BP (mmHg),0.004677893716852528,0.9588764734281172,124,False
+sensor3-sensor4,Finger→Wrist,cardiac_output_mean,Cardiac Output (L/min),0.32780109597895607,0.00020200100744178262,124,True
+sensor3-sensor4,Finger→Wrist,cardiac_index_mean,Cardiac Index (L/min/m²),0.32758105489135747,0.0002041227374363893,124,True
+sensor3-sensor4,Finger→Wrist,hr_mean,Heart Rate (bpm),0.3570760356478818,4.6810833771665215e-05,124,True
+sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.35659962688156294,4.799421600327733e-05,124,True
+sensor3-sensor4,Finger→Wrist,rsp_mean,Respiration Rate (breaths/min),0.2706288631709357,0.0023656711288845777,124,True
+sensor2-sensor3,Nose→Finger,systolic_bp_mean,Systolic BP (mmHg),0.28887901385024295,0.23033654973437995,19,False
+sensor2-sensor3,Nose→Finger,diastolic_bp_mean,Diastolic BP (mmHg),-0.5511774406682537,0.014443998727304999,19,True
+sensor2-sensor3,Nose→Finger,mean_bp_mean,Mean Arterial Pressure (mmHg),-0.5010924508867984,0.02885087168374573,19,True
+sensor2-sensor3,Nose→Finger,bp_mean,Continuous BP (mmHg),-0.5186247360417164,0.022901728944707662,19,True
+sensor2-sensor3,Nose→Finger,cardiac_output_mean,Cardiac Output (L/min),0.03918817481968631,0.8734474333665039,19,False
+sensor2-sensor3,Nose→Finger,cardiac_index_mean,Cardiac Index (L/min/m²),0.03427551581305796,0.8892124341458328,19,False
+sensor2-sensor3,Nose→Finger,hr_mean,Heart Rate (bpm),-0.029915935778018876,0.9032361780020786,19,False
+sensor2-sensor3,Nose→Finger,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.2902826504464859,0.22797737232945808,19,False
+sensor2-sensor3,Nose→Finger,rsp_mean,Respiration Rate (breaths/min),0.42681356345168175,0.06838522313759904,19,False
+sensor2-sensor4,Nose→Wrist,systolic_bp_mean,Systolic BP (mmHg),-0.5037134292036308,0.05557434490361325,15,False
+sensor2-sensor4,Nose→Wrist,diastolic_bp_mean,Diastolic BP (mmHg),-0.4488625873672092,0.09328535132552924,15,False
+sensor2-sensor4,Nose→Wrist,mean_bp_mean,Mean Arterial Pressure (mmHg),-0.6229742308580701,0.013106754149505732,15,True
+sensor2-sensor4,Nose→Wrist,bp_mean,Continuous BP (mmHg),-0.62150193269615,0.013387877803268989,15,True
+sensor2-sensor4,Nose→Wrist,cardiac_output_mean,Cardiac Output (L/min),-0.29056327166762497,0.29344088885158637,15,False
+sensor2-sensor4,Nose→Wrist,cardiac_index_mean,Cardiac Index (L/min/m²),-0.29576015484000573,0.28449422503691674,15,False
+sensor2-sensor4,Nose→Wrist,hr_mean,Heart Rate (bpm),0.08629187474374522,0.7597693442920743,15,False
+sensor2-sensor4,Nose→Wrist,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.13786495762154805,0.6241499846341367,15,False
+sensor2-sensor4,Nose→Wrist,rsp_mean,Respiration Rate (breaths/min),0.12649853447964382,0.6532616497797558,15,False

@@ -7,7 +7,7 @@
 1. ✅ 专注IR通道峰值检测（信号质量最佳）
 2. ✅ 使用库函数转化为IBI，避免误识别
 3. ✅ 分成20-30s片段，每个窗口内验证时频域一致性
-4. ✅ FFT心率和峰值检测心率差异<2BPM才认为有效
+4. ✅ FFT心率和峰值检测心率差异<5BPM才认为有效
 5. ✅ 只在有效窗口内计算PTT，提高准确性
 6. ✅ 输出包含窗口验证信息的详细结果
 
@@ -65,8 +65,6 @@ class IRWindowedPTTPeakDetector:
         self.filter_highcut = 3.0
         self.filter_order = 3
         self.ibi_tolerance = 0.15
-        self.window_size = 30  # 窗口大小（秒）
-        self.window_overlap = 0.5  # 窗口重叠比例
         
         # 窗口化参数（师兄建议） - 密集滑窗版本
         self.window_duration = 20  # 20秒窗口
@@ -487,6 +485,7 @@ class IRWindowedPTTPeakDetector:
             window_summary = []
             for sensor, windows in sensor_window_results.items():
                 for window in windows:
+                    mean_ibi = np.mean(window['ibi_ms']) if len(window['ibi_ms']) > 0 else np.nan  # 新增：计算窗口平均IBI
                     window_summary.append({
                         'exp_id': exp_id,
                         'sensor': sensor,
@@ -500,7 +499,8 @@ class IRWindowedPTTPeakDetector:
                         'fft_hr_bpm': window['fft_hr_bpm'],
                         'hr_diff_bpm': window['hr_diff_bpm'],
                         'is_valid': window['is_valid'],
-                        'validation_status': window['validation_status']
+                        'validation_status': window['validation_status'],
+                        'mean_ibi_ms': mean_ibi  # 新增
                     })
             
             if window_summary:
@@ -514,6 +514,7 @@ class IRWindowedPTTPeakDetector:
             for sensor, windows in sensor_window_results.items():
                 for window in windows:
                     if window['is_valid']:
+                        mean_ibi = np.mean(window['ibi_ms']) if len(window['ibi_ms']) > 0 else np.nan  # 新增
                         for i, (peak_time, peak_idx) in enumerate(zip(
                             window['global_peak_times'], window['global_peak_indices']
                         )):
@@ -527,7 +528,8 @@ class IRWindowedPTTPeakDetector:
                                 'global_peak_index': int(peak_idx),
                                 'window_peak_hr_bpm': window['peak_hr_bpm'],
                                 'window_fft_hr_bpm': window['fft_hr_bpm'],
-                                'window_hr_diff_bpm': window['hr_diff_bpm']
+                                'window_hr_diff_bpm': window['hr_diff_bpm'],
+                                'mean_ibi_ms': mean_ibi  # 新增：窗口平均IBI
                             })
             
             if valid_peaks:
@@ -547,7 +549,7 @@ class IRWindowedPTTPeakDetector:
                     print(f"💾 保存窗口化匹配心跳: {heartbeat_file}")
                     
                     # 计算PTT
-                    self.calculate_windowed_ptt(heartbeat_df, exp_id)
+                    self.calculate_windowed_ptt(heartbeat_df, exp_id, sensor_window_results)  # 修改：传入sensor_window_results
             
             # 4. 创建可视化
             self.create_windowed_visualizations(exp_id, sensor_window_results, sensor_signals)
@@ -555,8 +557,8 @@ class IRWindowedPTTPeakDetector:
         except Exception as e:
             print(f"❌ 保存窗口化结果失败: {e}")
     
-    def calculate_windowed_ptt(self, heartbeat_df, exp_id):
-        """计算窗口化PTT分析"""
+    def calculate_windowed_ptt(self, heartbeat_df, exp_id, sensor_window_results):
+        """计算窗口化PTT分析 - 添加参考平均IBI"""
         try:
             # 找到所有传感器列
             sensor_cols = [col for col in heartbeat_df.columns if col.endswith('_peak_time_s')]
@@ -581,6 +583,12 @@ class IRWindowedPTTPeakDetector:
                         for _, row in valid_data.iterrows():
                             ptt_ms = (row[col2] - row[col1]) * 1000
                             
+                            # 新增：获取参考传感器的窗口平均IBI
+                            window_id = row['window_id']
+                            ref_sensor = row['reference_sensor']
+                            ref_window = next((w for w in sensor_window_results[ref_sensor] if w['window_id'] == window_id), None)
+                            ref_mean_ibi = np.mean(ref_window['ibi_ms']) if ref_window and len(ref_window['ibi_ms']) > 0 else np.nan
+                            
                             ptt_data.append({
                                 'heartbeat_id': row['heartbeat_id'],
                                 'window_id': row['window_id'],
@@ -590,7 +598,9 @@ class IRWindowedPTTPeakDetector:
                                 f'{sensor1}_time_s': row[col1],
                                 f'{sensor2}_time_s': row[col2],
                                 'window_start_s': row['window_start_s'],
-                                'window_end_s': row['window_end_s']
+                                'window_end_s': row['window_end_s'],
+                                'reference_sensor': ref_sensor,
+                                'reference_mean_ibi_ms': ref_mean_ibi  # 新增
                             })
             
             if ptt_data:
