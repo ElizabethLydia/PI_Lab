@@ -1,10 +1,10 @@
-experiment_id, sensor_pair    , sensor_combination, physiological_parameter          , parameter_label                         , correlation_coefficient, p_value               , n_samples, statistically_significant
-            7, sensor3-sensor4, Finger→Wrist      , systolic_bp_mean                 , Systolic BP (mmHg)                      , 0.09476628406310743    , 0.5455276025175163    ,        43, False
-            7, sensor3-sensor4, Finger→Wrist      , diastolic_bp_mean                , Diastolic BP (mmHg)                     , -0.5947908541330187    , 2.5972365739857377e-05,        43, True
-            7, sensor3-sensor4, Finger→Wrist      , mean_bp_mean                     , Mean Arterial Pressure (mmHg)           , -0.6023405260893652    , 1.9241509666482484e-05,        43, True
-            7, sensor3-sensor4, Finger→Wrist      , bp_mean                          , Continuous BP (mmHg)                    , -0.6178252009575296    , 1.0148512695845912e-05,        43, True
-            7, sensor3-sensor4, Finger→Wrist      , cardiac_output_mean              , Cardiac Output (L/min)                  , 0.41769366925002605    , 0.005320711907072165  ,        43, True
-            7, sensor3-sensor4, Finger→Wrist      , cardiac_index_mean               , Cardiac Index (L/min/m²)                , 0.4176115417118621     , 0.005330639320840336  ,        43, True
-            7, sensor3-sensor4, Finger→Wrist      , hr_mean                          , Heart Rate (bpm)                        , 0.35350677857816626    , 0.02004868905906133   ,        43, True
-            7, sensor3-sensor4, Finger→Wrist      , systemic_vascular_resistance_mean, Systemic Vascular Resistance (dyn·s/cm⁵), -0.4971770278787503    , 0.0006946044356267532 ,        43, True
-            7, sensor3-sensor4, Finger→Wrist      , rsp_mean                         , Respiration Rate (breaths/min)          , -0.3054816090918191    , 0.04636541723804271   ,        43, True
+experiment_id,sensor_pair,sensor_combination,physiological_parameter,parameter_label,correlation_coefficient,p_value,n_samples,statistically_significant
+7,sensor3-sensor4,Finger→Wrist,systolic_bp_mean,Systolic BP (mmHg),0.09476628406310743,0.5455276025175163,43,False
+7,sensor3-sensor4,Finger→Wrist,diastolic_bp_mean,Diastolic BP (mmHg),-0.5947908541330187,2.5972365739857377e-05,43,True
+7,sensor3-sensor4,Finger→Wrist,mean_bp_mean,Mean Arterial Pressure (mmHg),-0.6023405260893652,1.9241509666482484e-05,43,True
+7,sensor3-sensor4,Finger→Wrist,bp_mean,Continuous BP (mmHg),-0.6178252009575296,1.0148512695845912e-05,43,True
+7,sensor3-sensor4,Finger→Wrist,cardiac_output_mean,Cardiac Output (L/min),0.41769366925002605,0.005320711907072165,43,True
+7,sensor3-sensor4,Finger→Wrist,cardiac_index_mean,Cardiac Index (L/min/m²),0.4176115417118621,0.005330639320840336,43,True
+7,sensor3-sensor4,Finger→Wrist,hr_mean,Heart Rate (bpm),0.35350677857816626,0.02004868905906133,43,True
+7,sensor3-sensor4,Finger→Wrist,systemic_vascular_resistance_mean,Systemic Vascular Resistance (dyn·s/cm⁵),-0.4971770278787503,0.0006946044356267532,43,True
+7,sensor3-sensor4,Finger→Wrist,rsp_mean,Respiration Rate (breaths/min),-0.3054816090918191,0.04636541723804271,43,True
