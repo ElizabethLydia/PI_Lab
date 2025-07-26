@@ -814,11 +814,14 @@ class IRWindowedPTTPeakDetector:
         
         all_results = {}
         
-        import multiprocessing
-        with multiprocessing.Pool() as pool:
-            results_list = list(tqdm(pool.imap(self.process_subject, subject_list), total=len(subject_list), desc="处理受试者"))
+        # import multiprocessing
+        # with multiprocessing.Pool() as pool:
+        #     results_list = list(tqdm(pool.imap(self.process_subject, subject_list), total=len(subject_list), desc="处理受试者"))
         
-        for subject, subject_results in zip(subject_list, results_list):
+        # for subject, subject_results in zip(subject_list, results_list):
+                    # 修改为串行处理
+        for subject in tqdm(subject_list, desc="处理受试者"):
+            subject_results = self.process_subject(subject)
             all_results[subject] = subject_results
         
         print(f"\n✅ 密集滑窗时频域验证PTT分析完成！")
@@ -848,7 +851,10 @@ def main():
     print("=" * 70)
     
     detector = IRWindowedPTTPeakDetector()
-    results = detector.run_windowed_analysis()
+    # results = detector.run_windowed_analysis() 处理所有人的数据
+    subject_ids = [50, 64, 82, 88, 89, 96, 97, 102]
+    subject_list = [f'00{num:03d}' for num in subject_ids]
+    results = detector.run_windowed_analysis(subject_list=subject_list)
     
     print("\n🎯 分析完成，师兄建议已实现:")
     print("1. 检查window_validation_exp_X.csv了解每个窗口的验证状态")
