@@ -51,11 +51,13 @@ def check_results():
     # 打印报告
     print('\n📊 结果文件检查报告:')
     complete_subjects = []
+    incomplete_subjects = []
     for subject, exp_missing in missing_files_report.items():
         if exp_missing:
             print(f'\n受试者 {subject}:')
             for exp_id, missing_list in exp_missing.items():
                 print(f'  实验 {exp_id}: 缺失 {len(missing_list)} 个文件 - {missing_list}')
+            incomplete_subjects.append(subject)
         else:
             print(f'✅ 受试者 {subject}: 所有实验文件完整')
             complete_subjects.append(subject)
@@ -66,6 +68,13 @@ def check_results():
         for subj in sorted(complete_subjects):
             f.write(f'{subj}\n')
     print(f'\n💾 已保存完整的受试者列表到: {txt_path}')
+    
+    # 保存未完成的受试者列表到TXT
+    incomplete_txt_path = '/root/PI_Lab/incomplete_subjects.txt'
+    with open(incomplete_txt_path, 'w') as f:
+        for subj in sorted(incomplete_subjects):
+            f.write(f'{subj}\n')
+    print(f'💾 已保存未完成的受试者列表到: {incomplete_txt_path}')
 
 if __name__ == '__main__':
     check_results() 

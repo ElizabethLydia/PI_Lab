@@ -852,7 +852,7 @@ def main():
     
     detector = IRWindowedPTTPeakDetector()
     # results = detector.run_windowed_analysis() 处理所有人的数据
-    subject_ids = [50, 64, 82, 88, 89, 96, 97, 102]
+    subject_ids = [16,54, 60, 62, 63, 64, 73, 77, 78, 88, 89, 96, 97, 104,105,106,107,108,109,110,111,112]
     subject_list = [f'00{num:03d}' for num in subject_ids]
     results = detector.run_windowed_analysis(subject_list=subject_list)
     
