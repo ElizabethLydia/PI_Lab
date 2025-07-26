@@ -130,7 +130,7 @@ def process_biopac_file(file_path, target_freq=100):
     try:
         file_name = os.path.basename(file_path)
         try:
-            data = pd.read_csv(file_path)
+        data = pd.read_csv(file_path)
         except UnicodeDecodeError:
             data = pd.read_csv(file_path, encoding='latin1')
         original_rows = len(data)
@@ -165,7 +165,7 @@ def process_hub_file(file_path):
     try:
         file_name = os.path.basename(file_path)
         try:
-            data = pd.read_csv(file_path)
+        data = pd.read_csv(file_path)
         except UnicodeDecodeError:
             data = pd.read_csv(file_path, encoding='latin1')
         original_rows = len(data)
@@ -244,30 +244,30 @@ def align_data_with_interpolation(data_dict, output_dir, csv_dir, subject):
     
     for experiment_name, experiment_data in data_dict.items():
         try:
-            print(f"\n对齐实验 {experiment_name}...")
-            
-            # 查找参考时间序列（优先使用sensor2）
-            ref_data = None
-            ref_name = ""
-            
+        print(f"\n对齐实验 {experiment_name}...")
+        
+        # 查找参考时间序列（优先使用sensor2）
+        ref_data = None
+        ref_name = ""
+        
             try:
                 hub_sensor2 = experiment_data['hub'].get('sensor2', pd.DataFrame())
                 if not hub_sensor2.empty and 'timestamp' in hub_sensor2.columns:
                     ref_data = hub_sensor2
-                    ref_name = "sensor2"
+            ref_name = "sensor2"
             except KeyError:
                 print(f"  警告: sensor2 缺少 timestamp 列")
             
             if ref_data is None:
-                min_len = float('inf')
-                for data_type in ['hub', 'biopac']:
-                    for key, data in experiment_data[data_type].items():
-                        if isinstance(data, pd.DataFrame) and not data.empty and 'timestamp' in data.columns:
-                            if len(data) < min_len:
-                                min_len = len(data)
-                                ref_data = data
-                                ref_name = f"{data_type}_{key}"
-            
+            min_len = float('inf')
+            for data_type in ['hub', 'biopac']:
+                for key, data in experiment_data[data_type].items():
+                    if isinstance(data, pd.DataFrame) and not data.empty and 'timestamp' in data.columns:
+                        if len(data) < min_len:
+                            min_len = len(data)
+                            ref_data = data
+                            ref_name = f"{data_type}_{key}"
+        
             if ref_data is None or ref_data.empty or 'timestamp' not in ref_data.columns:
                 print(f"  警告: experiment {experiment_name} 无有效参考数据或缺少 timestamp 列，跳过")
                 continue
@@ -276,57 +276,57 @@ def align_data_with_interpolation(data_dict, output_dir, csv_dir, subject):
                 ref_timestamps = ref_data['timestamp'].values
             except KeyError:
                 print(f"  错误: 参考数据缺少 timestamp 列，跳过 experiment {experiment_name}")
-                continue
-            
-            print(f"  使用 {ref_name} 作为参考 ({len(ref_data):,} 行)")
-            aligned_experiment = {'biopac': {}, 'hub': {}}
-            
-            # 插值对齐所有数据
-            for data_type in ['biopac', 'hub']:
-                for key, data in experiment_data[data_type].items():
-                    if isinstance(data, pd.DataFrame) and not data.empty and 'timestamp' in data.columns:
-                        print(f"    对齐 {data_type}_{key}...")
+            continue
+        
+        print(f"  使用 {ref_name} 作为参考 ({len(ref_data):,} 行)")
+        aligned_experiment = {'biopac': {}, 'hub': {}}
+        
+        # 插值对齐所有数据
+        for data_type in ['biopac', 'hub']:
+            for key, data in experiment_data[data_type].items():
+                if isinstance(data, pd.DataFrame) and not data.empty and 'timestamp' in data.columns:
+                    print(f"    对齐 {data_type}_{key}...")
+                    
+                    # 提取需要插值的列（除了timestamp）
+                    data_columns = [col for col in data.columns if col != 'timestamp']
+                    if data_columns:
+                        # 使用插值对齐
+                        interpolated_data = interpolate_with_reftime(
+                            data['timestamp'].values,
+                            data[data_columns].values,
+                            ref_timestamps
+                        )
                         
-                        # 提取需要插值的列（除了timestamp）
-                        data_columns = [col for col in data.columns if col != 'timestamp']
-                        if data_columns:
-                            # 使用插值对齐
-                            interpolated_data = interpolate_with_reftime(
-                                data['timestamp'].values,
-                                data[data_columns].values,
-                                ref_timestamps
-                            )
-                            
-                            if not interpolated_data.empty:
-                                # 重新设置列名
-                                interpolated_data.columns = data_columns + ['timestamp']
-                                aligned_experiment[data_type][key] = interpolated_data
-                                print(f"      对齐完成: {len(data):,} -> {len(interpolated_data):,} 行")
-                            else:
-                                print(f"      对齐失败，跳过")
-            
-            aligned_data[experiment_name] = aligned_experiment
-            
-            # 保存pkl格式
-            pkl_path = os.path.join(output_dir, f'experiment_{experiment_name}_aligned.pkl')
-            with open(pkl_path, 'wb') as f:
-                pickle.dump({experiment_name: aligned_experiment}, f)
-            print(f"  保存PKL: {pkl_path}")
-            
+                        if not interpolated_data.empty:
+                            # 重新设置列名
+                            interpolated_data.columns = data_columns + ['timestamp']
+                            aligned_experiment[data_type][key] = interpolated_data
+                            print(f"      对齐完成: {len(data):,} -> {len(interpolated_data):,} 行")
+                        else:
+                            print(f"      对齐失败，跳过")
+        
+        aligned_data[experiment_name] = aligned_experiment
+        
+        # 保存pkl格式
+        pkl_path = os.path.join(output_dir, f'experiment_{experiment_name}_aligned.pkl')
+        with open(pkl_path, 'wb') as f:
+            pickle.dump({experiment_name: aligned_experiment}, f)
+        print(f"  保存PKL: {pkl_path}")
+        
             # 保存npy格式
-            npy_path = os.path.join(output_dir, f'experiment_{experiment_name}_aligned.npy')
-            npy_data = {
-                experiment_name: {
-                    data_type: {
-                        key: df.to_dict() if isinstance(df, pd.DataFrame) else df
-                        for key, df in type_data.items()
-                    }
-                    for data_type, type_data in aligned_experiment.items()
+        npy_path = os.path.join(output_dir, f'experiment_{experiment_name}_aligned.npy')
+        npy_data = {
+            experiment_name: {
+                data_type: {
+                    key: df.to_dict() if isinstance(df, pd.DataFrame) else df
+                    for key, df in type_data.items()
                 }
+                for data_type, type_data in aligned_experiment.items()
             }
-            np.save(npy_path, npy_data, allow_pickle=True)
-            file_size = os.path.getsize(npy_path) / (1024 * 1024)  # MB
-            print(f"  保存NPY (单文件): {npy_path}, 大小: {file_size:.2f} MB")
+        }
+        np.save(npy_path, npy_data, allow_pickle=True)
+        file_size = os.path.getsize(npy_path) / (1024 * 1024)  # MB
+        print(f"  保存NPY (单文件): {npy_path}, 大小: {file_size:.2f} MB")
         except Exception as e:
             print(f'对齐 experiment {experiment_name} 失败: {e}')
             continue
@@ -410,7 +410,7 @@ def process_subject(date_folder, subject):
     print(f"数据对齐耗时: {align_time:.1f} 秒")
     print(f"总处理耗时: {total_time:.1f} 秒")
     if len(experiment_folders) > 0:
-        print(f"平均每个实验: {total_time/len(experiment_folders):.1f} 秒")
+    print(f"平均每个实验: {total_time/len(experiment_folders):.1f} 秒")
     
     for exp_name, exp_data in aligned_data.items():
         total_biopac = len(exp_data['biopac'])

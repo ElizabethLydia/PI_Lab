@@ -106,9 +106,9 @@ class PTTBloodPressureAnalyzer:
             # 加载PTT数据
             ptt_df = pd.read_csv(ptt_file)
             
-            # 新增：基于IBI筛选PTT < 0.5 * reference_mean_ibi_ms
+            # 新增：基于IBI筛选 abs(PTT) < 0.5 * reference_mean_ibi_ms
             if 'reference_mean_ibi_ms' in ptt_df.columns:
-                mask = (ptt_df['ptt_ms'] > 0) & (ptt_df['ptt_ms'] < 0.5 * ptt_df['reference_mean_ibi_ms'])
+                mask = np.abs(ptt_df['ptt_ms']) < 0.5 * ptt_df['reference_mean_ibi_ms']
                 filtered_ptt = ptt_df[mask | ptt_df['reference_mean_ibi_ms'].isna()]  # 如果IBI NaN则保留
                 print(f"🆕 IBI-based筛选: 原始{len(ptt_df)} → 筛选后{len(filtered_ptt)}")
                 print(f"筛选合理比例: {len(filtered_ptt)/len(ptt_df)*100:.1f}%")  # 新增：输出筛选比例

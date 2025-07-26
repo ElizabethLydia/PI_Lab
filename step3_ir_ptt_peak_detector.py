@@ -25,7 +25,6 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from scipy.signal import butter, filtfilt, find_peaks, welch
 import warnings
-import multiprocessing
 
 # 尝试导入专业库
 try:
@@ -47,9 +46,9 @@ warnings.filterwarnings('ignore')
 class IRWindowedPTTPeakDetector:
     """窗口化时频域验证的IR通道PTT峰值检测器"""
     
-    def __init__(self, data_path="output/csv_output", method="auto"):
-        self.data_path = data_path
-        self.output_dir = "ptt_output"
+    def __init__(self, root_path="/root/autodl-tmp/", method="auto"):
+        self.root_path = root_path
+        self.output_root = "ptt_output"
         self.sensors = ['sensor2', 'sensor3', 'sensor4', 'sensor5']
         self.target_channel = 'ir'
         self.sensor_mapping = {
@@ -79,8 +78,8 @@ class IRWindowedPTTPeakDetector:
         print(f"🎯 验证标准: 时频域心率差异<{self.hr_tolerance_bpm}BPM")
         
         # 确保输出目录存在
-        os.makedirs(self.output_dir, exist_ok=True)
-    
+        os.makedirs(self.output_root, exist_ok=True)
+        
     def calculate_sampling_rate(self, timestamps):
         """动态计算采样率，基于时间戳差值"""
         if len(timestamps) < 2:
@@ -103,7 +102,7 @@ class IRWindowedPTTPeakDetector:
         else:
             print(f"⚠️ 计算出的采样率 {sampling_rate:.1f}Hz 超出合理范围，使用默认值 {self.default_fs}Hz")
             return self.default_fs
-
+    
     def _select_method(self, method):
         """智能选择可用的峰值检测方法"""
         if method == "auto":
@@ -232,24 +231,24 @@ class IRWindowedPTTPeakDetector:
                 peak_hr_bpm = np.mean(60000 / valid_ibi)
             else:
                 peak_hr_bpm = 0
-        
-        return {
-            'peaks': peak_indices,
-            'peak_times': peak_times,
-            'ibi_ms': ibi_ms,
-            'peak_hr_bpm': peak_hr_bpm,
-            'filtered_signal': filtered_signal
-        }
+            
+            return {
+                'peaks': peak_indices,
+                'peak_times': peak_times,
+                'ibi_ms': ibi_ms,
+                'peak_hr_bpm': peak_hr_bpm,
+                'filtered_signal': filtered_signal
+            }
             
         except Exception as e:
             print(f"⚠️  窗口峰值检测失败: {e}")
-        return {
-            'peaks': np.array([]),
-            'peak_times': np.array([]),
-            'ibi_ms': np.array([]),
-            'peak_hr_bpm': 0,
-            'filtered_signal': signal
-        }
+            return {
+                'peaks': np.array([]),
+                'peak_times': np.array([]),
+                'ibi_ms': np.array([]),
+                'peak_hr_bpm': 0,
+                'filtered_signal': signal
+            }
     
     def create_windows(self, signal_length, fs):
         """创建密集滑窗"""
@@ -412,9 +411,9 @@ class IRWindowedPTTPeakDetector:
             print(f"⚠️  窗口化峰值匹配失败: {e}")
             return {}
     
-    def process_experiment(self, exp_id):
+    def process_experiment(self, subject, exp_id):
         """处理单个实验的窗口化分析"""
-        print(f"\n🔍 开始处理实验 {exp_id} - 窗口化时频域验证")
+        print(f"\n🔍 开始处理 {subject} 实验 {exp_id} - 窗口化时频域验证")
         
         exp_output_dir = os.path.join(self.output_dir, f"exp_{exp_id}")
         os.makedirs(exp_output_dir, exist_ok=True)
@@ -427,7 +426,7 @@ class IRWindowedPTTPeakDetector:
         # 读取和分析每个传感器
         for sensor in self.sensors:
             try:
-                file_path = os.path.join(self.data_path, f"{exp_id}_hub_{sensor}_aligned.csv")
+                file_path = os.path.join(self.data_path, f"{subject}_{exp_id}_hub_{sensor}_aligned.csv")
                 if not os.path.exists(file_path):
                     print(f"❌ 文件不存在: {file_path}")
                     continue
@@ -438,7 +437,7 @@ class IRWindowedPTTPeakDetector:
                     continue
                 
                 ir_signal = df.iloc[:, 2].values  # IR通道
-                    
+                
                 # 动态计算当前传感器的采样率
                 if 'timestamp' in df.columns:
                     current_fs = self.calculate_sampling_rate(df['timestamp'].values)
@@ -466,7 +465,7 @@ class IRWindowedPTTPeakDetector:
                       f"信号长度{len(ir_signal)/current_fs:.1f}s, "
                       f"窗口{len(window_results)}个, "
                       f"有效{len(valid_windows)}个")
-                    
+                
             except Exception as e:
                 print(f"❌ 处理 {sensor} 失败: {e}")
                 continue
@@ -756,21 +755,56 @@ class IRWindowedPTTPeakDetector:
             
             hr_plot_file = os.path.join(self.current_exp_output_dir, f"hr_validation_exp_{exp_id}.png")
             plt.savefig(hr_plot_file, dpi=300, bbox_inches='tight')
-                plt.close()
+            plt.close()
             print(f"📊 保存心率对比图: {hr_plot_file}")
             
         except Exception as e:
             print(f"❌ 心率对比图创建失败: {e}")
     
-    def run_windowed_analysis(self, experiment_list=None):
+    def process_subject(self, subject):
+        """处理单个受试者的所有实验"""
+        try:
+            self.data_path = os.path.join(self.root_path, subject, 'csv_output')
+            self.output_dir = os.path.join(self.root_path, subject, self.output_root)
+            os.makedirs(self.output_dir, exist_ok=True)
+            
+            experiment_list = sorted(list(set([f.split('_')[1].split('_')[0] for f in os.listdir(self.data_path) 
+                                              if f.startswith(subject + '_') and f.endswith('_hub_sensor2_aligned.csv')])))
+            
+            # 检查是否所有实验都已经处理（基于PNG文件）
+            all_processed = True
+            for exp_id in experiment_list:
+                png_file = os.path.join(self.output_dir, f'exp_{exp_id}', f'hr_validation_exp_{exp_id}.png')
+                if not os.path.exists(png_file):
+                    all_processed = False
+                    break
+            
+            if all_processed:
+                print(f"✅ 受试者 {subject} 已完全处理（所有PNG存在），跳过")
+                return {exp_id: {} for exp_id in experiment_list}
+            
+            print(f"\n处理 {subject} 的实验: {experiment_list}")
+            
+            subject_results = {}
+            for exp_id in tqdm(experiment_list, desc=f"处理 {subject} 实验"):
+                sensor_results, matched_results = self.process_experiment(subject, exp_id)
+                subject_results[exp_id] = {
+                    'sensor_window_results': sensor_results,
+                    'matched_results': matched_results
+                }
+            return subject_results
+        except Exception as e:
+            print(f"❌ 受试者 {subject} 处理失败: {e}")
+            return {}
+
+    def run_windowed_analysis(self, subject_list=None):
         """运行窗口化时频域验证分析"""
-        if experiment_list is None:
-            experiment_list = [f.split('_')[0] for f in os.listdir(self.data_path) 
-                             if f.endswith('_hub_sensor2_aligned.csv')]
-            experiment_list = sorted(list(set(experiment_list)))
+        if subject_list is None:
+            subject_list = sorted([d for d in os.listdir(self.root_path) 
+                                   if os.path.isdir(os.path.join(self.root_path, d)) and d.startswith('00')])
         
         print(f"\n🔬 开始窗口化时频域验证PTT分析（密集滑窗版）")
-        print(f"📋 实验列表: {experiment_list}")
+        print(f"📋 受试者列表: {subject_list}")
         print(f"🎯 验证策略:")
         print(f"   - {self.window_duration}s窗口, {self.window_step}s滑窗步长（密集覆盖）")
         print(f"   - 时域峰值检测 vs 频域FFT心率")
@@ -780,19 +814,15 @@ class IRWindowedPTTPeakDetector:
         
         all_results = {}
         
-        for exp_id in tqdm(experiment_list, desc="处理实验"):
-            try:
-                sensor_results, matched_results = self.process_experiment(exp_id)
-                all_results[exp_id] = {
-                    'sensor_window_results': sensor_results,
-                    'matched_results': matched_results
-                }
-            except Exception as e:
-                print(f"❌ 实验 {exp_id} 处理失败: {e}")
-                continue
+        import multiprocessing
+        with multiprocessing.Pool() as pool:
+            results_list = list(tqdm(pool.imap(self.process_subject, subject_list), total=len(subject_list), desc="处理受试者"))
+        
+        for subject, subject_results in zip(subject_list, results_list):
+            all_results[subject] = subject_results
         
         print(f"\n✅ 密集滑窗时频域验证PTT分析完成！")
-        print(f"📁 结果保存在: {self.output_dir}/exp_X")
+        print(f"📁 结果保存在: {self.root_path}/{{subject}}/{self.output_root}/exp_X")
         print(f"\n📊 输出文件说明:")
         print(f"   1. window_validation_exp_X.csv - 窗口验证详情")
         print(f"   2. valid_peaks_exp_X.csv - 有效窗口的峰值")
@@ -805,40 +835,26 @@ class IRWindowedPTTPeakDetector:
         
         return all_results
 
-def process_subject(date_folder, subject):
-    autodl_root = '/root/autodl-tmp/'
-    data_path = os.path.join(autodl_root, subject, 'csv_output')
-    output_dir = os.path.join(autodl_root, subject, 'ptt_output')
-    
-    if os.listdir(output_dir):
-        print(f"\nsubject {subject} 已处理（ptt_output 目录非空），跳过")
-        return
-    
-    if not os.path.exists(data_path):
-        print(f"⚠️ subject {subject} 无csv_output文件夹，跳过")
-        return
-    
-    print(f"\n处理subject: {subject}")
-    
-    detector = IRWindowedPTTPeakDetector(data_path=data_path, method="auto")
-    detector.output_dir = output_dir
-    
-    experiment_files = [f for f in os.listdir(data_path) if f.endswith('_hub_sensor2_aligned.csv') and f.startswith(subject + '_')]
-    experiment_list = sorted(list(set([f.split('_')[1] for f in experiment_files])))
-    
-    detector.run_windowed_analysis(experiment_list)
-
 def main():
-    autodl_root = '/root/autodl-tmp/'
+    """主函数"""
+    print("🩺 密集滑窗时频域验证PTT峰值检测器（优化版）")
+    print("=" * 70)
+    print("📖 密集滑窗优化实现:")
+    print("   • 30秒窗口，5秒密集滑窗步长")
+    print("   • 时域峰值检测 vs 频域FFT心率验证")
+    print("   • 心率差异<5BPM才认为窗口有效（放宽容忍度）")
+    print("   • 只在有效窗口内计算PTT")
+    print("   • 更多窗口，更细粒度的质量控制")
+    print("=" * 70)
     
-    # 获取所有日期文件夹 (可选，如果需要 date_folder)
-    # 但由于 subject 是独立的，可以直接遍历 subject
-    subject_folders = [f for f in os.listdir(autodl_root) if os.path.isdir(os.path.join(autodl_root, f)) and f.startswith('00')]
-    subject_folders.sort()
+    detector = IRWindowedPTTPeakDetector()
+    results = detector.run_windowed_analysis()
     
-    # 为了并行，需要 dummy date_folder 或调整，但既然 date_folder 不使用，可以用 None
-    with multiprocessing.Pool() as p:
-        p.starmap(process_subject, [(None, subject) for subject in subject_folders])
+    print("\n🎯 分析完成，师兄建议已实现:")
+    print("1. 检查window_validation_exp_X.csv了解每个窗口的验证状态")
+    print("2. 查看hr_validation_exp_X.png确认时频域心率一致性")
+    print("3. 使用ptt_windowed_exp_X.csv进行高质量PTT建模")
+    print("4. 只有通过验证的窗口才参与PTT计算，确保准确性！")
 
 if __name__ == "__main__":
-    main()
+    main() 
