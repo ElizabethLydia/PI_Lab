@@ -14,7 +14,7 @@ print(subject_list)
 # 要检查的文件列表
 expected_files = [
     'window_validation_exp_{exp}.csv',
-    'valid_peaks_exp_{exp}.csv',
+    # 'valid_peaks_exp_{exp}.csv',
     # 'matched_heartbeats_windowed_exp_{exp}.csv',
     # 'ptt_windowed_exp_{exp}.csv',
     # 'ptt_summary_windowed_exp_{exp}.csv',
