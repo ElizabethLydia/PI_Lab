@@ -8,11 +8,8 @@ import numpy as np
 import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
-
-# 设置路径
-output_dir = 'D:\code\Python\PI_Lab\output'
-pkl_files = [f for f in os.listdir(output_dir) if f.endswith('_aligned.pkl')]
-print(f'找到 {len(pkl_files)} 个.pkl文件: {pkl_files}')
+from scipy.interpolate import interp1d
+# %matplotlib inline
 
 # 加载并检查数据
 def load_and_verify_pkl(pkl_path):
@@ -30,46 +27,6 @@ def load_and_verify_pkl(pkl_path):
             print(f'  {key}: {len(df)} 行, 列: {list(df.columns)}')
 
     return data
-
-selected_file = pkl_files[0]  # 取第一个文件，可手动修改索引
-data = load_and_verify_pkl(os.path.join(output_dir, selected_file))
-
-# 可视化数据对齐情况
-experiment_name = list(data.keys())[0]
-biopac_df = data[experiment_name]['biopac'].get('bp', pd.DataFrame())
-hub_df = data[experiment_name]['hub'].get('sensor2', pd.DataFrame())
-
-if not biopac_df.empty and not hub_df.empty:
-    plt.figure(figsize=(12, 6))
-    plt.plot(biopac_df['timestamp'], biopac_df.get('bp', np.zeros(len(biopac_df))), label='Biopac BP')
-    plt.plot(hub_df['timestamp'], hub_df.get('red', np.zeros(len(hub_df))), label='HUB Sensor2 Red')
-    plt.xlabel('Timestamp')
-    plt.ylabel('Value')
-    plt.title(f'Alignment Check - {experiment_name}')
-    plt.legend()
-    plt.show()
-else:
-    print('警告: 缺少有效数据，无法绘制')
-
-# 导入必要的库
-import os
-import numpy as np
-import pandas as pd
-import pickle
-import matplotlib.pyplot as plt
-from scipy.interpolate import interp1d
-# %matplotlib inline
-
-# 设置路径
-output_dir = 'D:\code\Python\PI_Lab\output'
-csv_dir = os.path.join(output_dir, 'csv_output')
-os.makedirs(csv_dir, exist_ok=True)
-
-# 查找所有文件
-pkl_files = [f for f in os.listdir(output_dir) if f.endswith('_aligned.pkl')]
-npy_files = [f for f in os.listdir(output_dir) if f.endswith('_aligned.npy')]
-all_files = pkl_files + npy_files
-print(f'找到 {len(all_files)} 个文件: {all_files}')
 
 # 加载并检查数据
 def load_and_verify_file(file_path):
@@ -100,15 +57,36 @@ def load_and_verify_file(file_path):
     return data
 
 # 批量处理所有文件
+def main():
+    autodl_root = '/root/autodl-tmp/'
+    
+    # 获取所有subject文件夹
+    subject_folders = [f for f in os.listdir(autodl_root) if os.path.isdir(os.path.join(autodl_root, f)) and f.startswith('00')]
+    subject_folders.sort()
+    
+    for subject in subject_folders:
+        output_dir = os.path.join(autodl_root, subject, 'output')
+        csv_dir = os.path.join(autodl_root, subject, 'csv_output')
+        os.makedirs(csv_dir, exist_ok=True)
+        
+        print(f"\n处理subject: {subject}")
+        
+        # 查找所有文件
+        pkl_files = [f for f in os.listdir(output_dir) if f.endswith('_aligned.pkl')]
+        npy_files = [f for f in os.listdir(output_dir) if f.endswith('_aligned.npy')]
+        all_files = pkl_files + npy_files
+        print(f'找到 {len(all_files)} 个文件')
+
+# 批量处理所有文件
 for file in all_files:
     file_path = os.path.join(output_dir, file)
     data = load_and_verify_file(file_path)
     if data is None:
-        print(f'警告: {file} 格式不支持，跳过')
         continue
     
+            experiment_name = list(data.keys())[0]
+            
     # 可视化数据对齐情况
-    experiment_name = list(data.keys())[0]
     biopac_df = data[experiment_name]['biopac'].get('bp', pd.DataFrame())
     hub_df = data[experiment_name]['hub'].get('sensor2', pd.DataFrame())
 
@@ -136,7 +114,7 @@ for file in all_files:
                 merged_biopac = merged_biopac.merge(df[['timestamp', key]], on='timestamp', how='left')
         
         merged_biopac = merged_biopac.fillna(method='ffill').fillna(method='bfill')
-        biopac_csv_path = os.path.join(csv_dir, f'{experiment_name}_biopac_aligned.csv')
+                biopac_csv_path = os.path.join(csv_dir, f'{subject}_{experiment_name}_biopac_aligned.csv')
         merged_biopac.to_csv(biopac_csv_path, index=False)
         print(f'  保存整合Biopac CSV: {biopac_csv_path}')
 
@@ -146,8 +124,11 @@ for file in all_files:
             # 提取时间戳列并移到第一列
             columns = ['timestamp'] + [col for col in df.columns if col != 'timestamp']
             df_reordered = df[columns]
-            hub_csv_path = os.path.join(csv_dir, f'{experiment_name}_hub_{key}_aligned.csv')
+                    hub_csv_path = os.path.join(csv_dir, f'{subject}_{experiment_name}_hub_{key}_aligned.csv')
             df_reordered.to_csv(hub_csv_path, index=False)
             print(f'  保存HUB CSV: {hub_csv_path}')
+
+if __name__ == '__main__':
+    main()
 
 print('✅ 数据查看和保存完成！')

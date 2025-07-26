@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🩺 IR通道专门的PTT峰值检测器 - 优化输出与PTT准备（批量处理版，含傅里叶心率分析）
+🩺 IR通道PTT峰值检测器 - 窗口化时频域验证版本（师兄建议版）
 
-基于师兄建议的改进：
+师兄的核心建议：
 1. ✅ 专注IR通道峰值检测（信号质量最佳）
-2. ✅ 使用neurokit2计算IBI并验证
-3. ✅ 同一心跳区间的峰值匹配
-4. ✅ 输出峰值、IBI和PTT预览CSV，方便后续处理
-5. ✅ 批量处理所有实验，存储到expX子文件夹
-6. ✅ 新增傅里叶心率分析，严格照抄data_processor.py的get_hr和plot_psd_analysis
+2. ✅ 使用库函数转化为IBI，避免误识别
+3. ✅ 分成20-30s片段，每个窗口内验证时频域一致性
+4. ✅ FFT心率和峰值检测心率差异<5BPM才认为有效
+5. ✅ 只在有效窗口内计算PTT，提高准确性
+6. ✅ 输出包含窗口验证信息的详细结果
 
-核心原理：
-- PTT使用峰值时间差计算
-- IR通道信号最稳定
-- IBI验证确保峰值准确
-- 傅里叶分析验证心率一致性（与data_processor.py一致）
-- 4传感器生成6个PTT组合
+核心改进：
+- 30s滑动窗口分析
+- 每个窗口的时域（峰值）vs频域（FFT）心率验证
+- 质量控制：只在验证通过的窗口内计算PTT
+- 详细的窗口质量报告
 """
 
 import os
@@ -26,8 +25,9 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from scipy.signal import butter, filtfilt, find_peaks, welch
 import warnings
+import multiprocessing
 
-# 尝试导入专业库，如果没有安装就使用备选方案
+# 尝试导入专业库
 try:
     import neurokit2 as nk
     NEUROKIT_AVAILABLE = True
@@ -44,8 +44,8 @@ except ImportError:
 
 warnings.filterwarnings('ignore')
 
-class IRBasedPTTPeakDetector:
-    """基于IR通道的PTT峰值检测器 - 支持多种专业库及傅里叶分析"""
+class IRWindowedPTTPeakDetector:
+    """窗口化时频域验证的IR通道PTT峰值检测器"""
     
     def __init__(self, data_path="output/csv_output", method="auto"):
         self.data_path = data_path
@@ -67,10 +67,18 @@ class IRBasedPTTPeakDetector:
         self.filter_order = 3
         self.ibi_tolerance = 0.15
         
+        # 窗口化参数（师兄建议） - 密集滑窗版本
+        self.window_duration = 20  # 20秒窗口
+        self.window_step = 5       # 5秒滑窗步长（更密集）
+        self.hr_tolerance_bpm = 5  # 时频域心率差异容忍度（放宽）
+        
         # 选择峰值检测方法
         self.detection_method = self._select_method(method)
         print(f"🔧 峰值检测方法: {self.detection_method}")
+        print(f"🪟 窗口参数: {self.window_duration}s窗口, {self.window_step}s滑窗步长（密集滑窗）")
+        print(f"🎯 验证标准: 时频域心率差异<{self.hr_tolerance_bpm}BPM")
         
+        # 确保输出目录存在
         os.makedirs(self.output_dir, exist_ok=True)
     
     def calculate_sampling_rate(self, timestamps):
@@ -115,7 +123,6 @@ class IRBasedPTTPeakDetector:
     def bandpass_filter(self, data, lowcut=0.5, highcut=3.0, fs=100, order=3):
         """带通滤波 - 增强版，处理NaN值"""
         try:
-            # 检查输入数据
             if len(data) == 0:
                 return data
                 
@@ -123,7 +130,6 @@ class IRBasedPTTPeakDetector:
             data_array = np.array(data, dtype=float)
             nan_count = np.isnan(data_array).sum()
             if nan_count > 0:
-                # 使用线性插值填充NaN值
                 data_series = pd.Series(data_array)
                 data_interpolated = data_series.interpolate(method='linear')
                 data_clean = data_interpolated.fillna(method='bfill').fillna(method='ffill').values
@@ -145,7 +151,6 @@ class IRBasedPTTPeakDetector:
             b, a = butter(order, [low, high], btype='band')
             filtered_data = filtfilt(b, a, data_clean)
             
-            # 检查滤波结果
             if np.isnan(filtered_data).sum() > 0:
                 return data_clean
             
@@ -161,69 +166,33 @@ class IRBasedPTTPeakDetector:
             except:
                 return np.array(data, dtype=float)
 
-    def get_hr(self, y, sr=100, min=50, max=200):
-        """计算心率（直接照抄data_processor.py的get_hr）"""
+    def get_fft_hr(self, signal, fs=100, min_hr=50, max_hr=200):
+        """计算FFT心率（照抄data_processor.py的get_hr）"""
         try:
-            p, q = welch(y, sr, nfft=1e5/sr, nperseg=np.min((len(y)-1, 256)))
-            return p[(p>min/60)&(p<max/60)][np.argmax(q[(p>min/60)&(p<max/60)])]*60
+            p, q = welch(signal, fs, nfft=int(1e5/fs), nperseg=np.min((len(signal)-1, 256)))
+            freq_range = (p > min_hr/60) & (p < max_hr/60)
+            if np.any(freq_range):
+                peak_freq = p[freq_range][np.argmax(q[freq_range])]
+                return peak_freq * 60
+            else:
+                return 0.0
         except Exception as e:
-            print(f"⚠️  心率计算失败: {e}")
+            print(f"⚠️  FFT心率计算失败: {e}")
             return 0.0
     
-    def detect_peaks_neurokit2(self, signal, fs=100):
-        """使用NeuroKit2进行专业峰值检测"""
+    def detect_peaks_in_window(self, signal, fs=100):
+        """在单个窗口内进行峰值检测"""
         try:
             filtered_signal = self.bandpass_filter(signal, self.filter_lowcut, self.filter_highcut, fs)
-            peaks_dict, info_dict = nk.ppg_peaks(filtered_signal, sampling_rate=fs, method="elgendi")
-            peak_indices = np.where(peaks_dict['PPG_Peaks'] == 1)[0]
             
-            if len(peak_indices) < 2:
-                return self._empty_result(filtered_signal, signal)
-            
-            peak_times = peak_indices / fs
-            ibi_ms = np.diff(peak_times) * 1000
-            
-            try:
-                hrv_dict = nk.hrv_time(ibi_ms, sampling_rate=1000, show=False)
-                hrv_metrics = hrv_dict.to_dict('records')[0] if not hrv_dict.empty else {}
-            except:
-                hrv_metrics = {}
-            
-            return self._process_peak_results(peak_indices, peak_times, ibi_ms, filtered_signal, signal, hrv_metrics)
-            
-        except Exception as e:
-            print(f"⚠️  NeuroKit2峰值检测失败: {e}")
-            return self._empty_result(signal, signal, 'error')
-    
-    def detect_peaks_heartpy(self, signal, fs=100):
-        """使用HeartPy进行峰值检测"""
-        try:
-            filtered_signal = self.bandpass_filter(signal, self.filter_lowcut, self.filter_highcut, fs)
-            working_data, measures = hp.process(filtered_signal, sample_rate=fs)
+            if self.detection_method == "neurokit2":
+                peaks_dict, _ = nk.ppg_peaks(filtered_signal, sampling_rate=fs, method="elgendi")
+                peak_indices = np.where(peaks_dict['PPG_Peaks'] == 1)[0]
+            elif self.detection_method == "heartpy":
+                working_data, _ = hp.process(filtered_signal, sample_rate=fs)
             peak_indices = working_data['peaklist']
-            
-            if len(peak_indices) < 2:
-                return self._empty_result(filtered_signal, signal)
-            
-            peak_times = np.array(peak_indices) / fs
-            ibi_ms = np.diff(peak_times) * 1000
-            
-            hrv_metrics = {
-                'rmssd': measures.get('rmssd', 0),
-                'pnn50': measures.get('pnn50', 0),
-                'mean_hr': measures.get('bpm', 0)
-            }
-            
-            return self._process_peak_results(peak_indices, peak_times, ibi_ms, filtered_signal, signal, hrv_metrics)
-            
-        except Exception as e:
-            print(f"⚠️  HeartPy峰值检测失败: {e}")
-            return self._empty_result(signal, signal, 'error')
-    
-    def detect_peaks_scipy_advanced(self, signal, fs=100):
-        """改进的scipy峰值检测"""
-        try:
-            filtered_signal = self.bandpass_filter(signal, self.filter_lowcut, self.filter_highcut, fs)
+            else:
+                # scipy高级方法
             min_distance = int(self.refractory_period * fs)
             signal_std = np.std(filtered_signal)
             signal_mean = np.mean(filtered_signal)
@@ -242,222 +211,220 @@ class IRBasedPTTPeakDetector:
                     distance=min_distance,
                     prominence=prominence_threshold
                 )
-                if len(peak_indices) >= 5:
+                    if len(peak_indices) >= 3:
                     break
             
             if len(peak_indices) < 2:
-                return self._empty_result(filtered_signal, signal)
+                return {
+                    'peaks': np.array([]),
+                    'peak_times': np.array([]),
+                    'ibi_ms': np.array([]),
+                    'peak_hr_bpm': 0,
+                    'filtered_signal': filtered_signal
+                }
             
             peak_times = peak_indices / fs
             ibi_ms = np.diff(peak_times) * 1000
-            hrv_metrics = self._calculate_hrv_metrics(ibi_ms)
             
-            return self._process_peak_results(peak_indices, peak_times, ibi_ms, filtered_signal, signal, hrv_metrics)
-            
-        except Exception as e:
-            print(f"⚠️  Scipy峰值检测失败: {e}")
-            return self._empty_result(signal, signal, 'error')
-    
-    def _calculate_hrv_metrics(self, ibi_ms):
-        """计算HRV指标"""
-        if len(ibi_ms) < 2:
-            return {}
-        
-        try:
-            diff_ibi = np.diff(ibi_ms)
-            rmssd = np.sqrt(np.mean(diff_ibi**2))
-            pnn50 = np.sum(np.abs(diff_ibi) > 50) / len(diff_ibi) * 100
-            sdnn = np.std(ibi_ms)
-            
-            return {
-                'rmssd': rmssd,
-                'pnn50': pnn50,
-                'sdnn': sdnn
-            }
-        except:
-            return {}
-    
-    def _process_peak_results(self, peak_indices, peak_times, ibi_ms, filtered_signal, original_signal, hrv_metrics=None):
-        """处理峰值检测结果"""
-        valid_ibi_mask = (ibi_ms >= 300) & (ibi_ms <= 1200)
-        valid_ratio = np.sum(valid_ibi_mask) / len(ibi_ms) if len(ibi_ms) > 0 else 0
-        
-        if valid_ratio >= 0.7:
-            quality = 'excellent'
-        elif valid_ratio >= 0.5:
-            quality = 'good'
-        elif valid_ratio >= 0.3:
-            quality = 'fair'
+            # 计算时域心率（基于IBI）
+            valid_ibi = ibi_ms[(ibi_ms >= 300) & (ibi_ms <= 1200)]
+            if len(valid_ibi) > 0:
+                peak_hr_bpm = np.mean(60000 / valid_ibi)
         else:
-            quality = 'poor'
+                peak_hr_bpm = 0
         
         return {
             'peaks': peak_indices,
-            'ibi_ms': ibi_ms,
-            'filtered_signal': filtered_signal,
-            'original_signal': original_signal,
             'peak_times': peak_times,
-            'peak_count': len(peak_indices),
-            'quality': quality,
-            'valid_ibi_ratio': valid_ratio,
-            'hrv_metrics': hrv_metrics or {}
+            'ibi_ms': ibi_ms,
+            'peak_hr_bpm': peak_hr_bpm,
+            'filtered_signal': filtered_signal
         }
-    
-    def _empty_result(self, filtered_signal, original_signal, quality='poor'):
-        """返回空结果"""
+            
+        except Exception as e:
+            print(f"⚠️  窗口峰值检测失败: {e}")
         return {
             'peaks': np.array([]),
-            'ibi_ms': np.array([]),
-            'filtered_signal': filtered_signal,
-            'original_signal': original_signal,
             'peak_times': np.array([]),
-            'peak_count': 0,
-            'quality': quality,
-            'valid_ibi_ratio': 0,
-            'hrv_metrics': {}
+            'ibi_ms': np.array([]),
+            'peak_hr_bpm': 0,
+            'filtered_signal': signal
         }
     
-    def detect_peaks_robust(self, signal, fs=100):
-        """统一的峰值检测入口，自动选择最佳方法"""
-        if self.detection_method == "neurokit2":
-            return self.detect_peaks_neurokit2(signal, fs)
-        elif self.detection_method == "heartpy":
-            return self.detect_peaks_heartpy(signal, fs)
-        else:
-            return self.detect_peaks_scipy_advanced(signal, fs)
+    def create_windows(self, signal_length, fs):
+        """创建密集滑窗"""
+        window_samples = int(self.window_duration * fs)
+        step_samples = int(self.window_step * fs)
+        
+        windows = []
+        start = 0
+        window_id = 0
+        
+        while start + window_samples <= signal_length:
+            end = start + window_samples
+            windows.append({
+                'window_id': window_id,
+                'start_sample': start,
+                'end_sample': end,
+                'start_time_s': start / fs,
+                'end_time_s': end / fs,
+                'duration_s': self.window_duration
+            })
+            start += step_samples
+            window_id += 1
+        
+        return windows
     
-    def calculate_heart_rate_stats(self, ibi_ms):
-        """计算心率统计信息"""
-        if len(ibi_ms) == 0:
-            return {
-                'hr_mean': 0,
-                'hr_std': 0,
-                'ibi_mean': 0,
-                'ibi_std': 0,
-                'rmssd': 0,
-                'pnn50': 0
+    def analyze_sensor_windowed(self, signal, sensor_name, fs):
+        """对单个传感器进行窗口化分析"""
+        windows = self.create_windows(len(signal), fs)
+        window_results = []
+        
+        print(f"  📊 {sensor_name}: 创建了{len(windows)}个窗口")
+        
+        for window in windows:
+            start_idx = window['start_sample']
+            end_idx = window['end_sample']
+            window_signal = signal[start_idx:end_idx]
+            
+            # 时域峰值检测
+            peak_result = self.detect_peaks_in_window(window_signal, fs)
+            
+            # 频域FFT心率
+            fft_hr = self.get_fft_hr(window_signal, fs, self.min_hr, self.max_hr)
+            
+            # 时频域一致性验证
+            hr_diff = abs(peak_result['peak_hr_bpm'] - fft_hr)
+            is_valid = (
+                peak_result['peak_hr_bpm'] > 0 and 
+                fft_hr > 0 and 
+                hr_diff <= self.hr_tolerance_bpm and
+                len(peak_result['peaks']) >= 3
+            )
+            
+            # 调整峰值时间到全局时间
+            global_peak_times = peak_result['peak_times'] + window['start_time_s']
+            global_peak_indices = peak_result['peaks'] + start_idx
+            
+            window_result = {
+                **window,
+                'sensor': sensor_name,
+                'peak_count': len(peak_result['peaks']),
+                'peak_hr_bpm': peak_result['peak_hr_bpm'],
+                'fft_hr_bpm': fft_hr,
+                'hr_diff_bpm': hr_diff,
+                'is_valid': is_valid,
+                'global_peak_times': global_peak_times,
+                'global_peak_indices': global_peak_indices,
+                'ibi_ms': peak_result['ibi_ms'],
+                'validation_status': 'valid' if is_valid else 'invalid'
             }
+            
+            window_results.append(window_result)
         
-        hr_bpm = 60000 / ibi_ms
-        ibi_mean = np.mean(ibi_ms)
-        ibi_std = np.std(ibi_ms)
-        hr_mean = np.mean(hr_bpm)
-        hr_std = np.std(hr_bpm)
+        # 统计有效窗口
+        valid_windows = [w for w in window_results if w['is_valid']]
+        valid_ratio = len(valid_windows) / len(window_results) if window_results else 0
         
-        if len(ibi_ms) > 1:
-            diff_ibi = np.diff(ibi_ms)
-            rmssd = np.sqrt(np.mean(diff_ibi**2))
-            pnn50 = np.sum(np.abs(diff_ibi) > 50) / len(diff_ibi) * 100
-        else:
-            rmssd = 0
-            pnn50 = 0
+        print(f"    ✅ 有效窗口: {len(valid_windows)}/{len(window_results)} ({valid_ratio*100:.1f}%)")
         
-        return {
-            'hr_mean': hr_mean,
-            'hr_std': hr_std,
-            'ibi_mean': ibi_mean,
-            'ibi_std': ibi_std,
-            'rmssd': rmssd,
-            'pnn50': pnn50
-        }
+        return window_results, valid_windows
     
-    def match_peaks_across_sensors(self, sensor_results):
-        """匹配不同传感器间同一心跳的峰值"""
+    def match_peaks_across_sensors_windowed(self, sensor_window_results):
+        """在有效窗口内匹配不同传感器的峰值"""
         try:
-            valid_sensors = [s for s in self.sensors 
-                           if s in sensor_results 
-                           and sensor_results[s]['peak_count'] > 5
-                           and sensor_results[s]['quality'] in ['excellent', 'good']]
-            
-            if len(valid_sensors) < 2:
-                print("⚠️  高质量传感器数量不足，尝试放宽标准")
-                valid_sensors = [s for s in self.sensors 
-                               if s in sensor_results 
-                               and sensor_results[s]['peak_count'] > 3
-                               and sensor_results[s]['quality'] != 'error']
-            
-            if len(valid_sensors) < 2:
-                print("⚠️  有效传感器数量不足，无法进行峰值匹配")
+            # 找到所有传感器都有效的窗口
+            all_sensors = list(sensor_window_results.keys())
+            if len(all_sensors) < 2:
                 return {}
             
-            print(f"📍 有效传感器: {valid_sensors}")
+            # 按窗口ID组织数据
+            window_sensor_data = {}
+            for sensor, windows in sensor_window_results.items():
+                for window in windows:
+                    if window['is_valid']:
+                        window_id = window['window_id']
+                        if window_id not in window_sensor_data:
+                            window_sensor_data[window_id] = {}
+                        window_sensor_data[window_id][sensor] = window
             
-            reference_sensor = max(valid_sensors, 
-                                 key=lambda s: sensor_results[s]['valid_ibi_ratio'])
-            reference_peaks = sensor_results[reference_sensor]['peak_times']
+            # 找到至少有2个传感器有效的窗口
+            valid_multi_sensor_windows = {
+                wid: data for wid, data in window_sensor_data.items() 
+                if len(data) >= 2
+            }
             
-            print(f"📍 参考传感器: {reference_sensor} (质量: {sensor_results[reference_sensor]['quality']})")
+            print(f"📊 多传感器有效窗口: {len(valid_multi_sensor_windows)}")
             
-            heartbeat_windows = []
-            for i, ref_time in enumerate(reference_peaks):
-                if i == 0:
-                    window_start = 0
-                    if len(reference_peaks) > 1:
-                        window_end = ref_time + (reference_peaks[1] - reference_peaks[0])/2
-                    else:
-                        window_end = ref_time + 0.5
-                elif i == len(reference_peaks) - 1:
-                    window_start = ref_time - (reference_peaks[i] - reference_peaks[i-1])/2
-                    window_end = float('inf')
-                else:
-                    window_start = ref_time - (reference_peaks[i] - reference_peaks[i-1])/2
-                    window_end = ref_time + (reference_peaks[i+1] - reference_peaks[i])/2
+            matched_heartbeats = []
+            heartbeat_id = 0
+            
+            for window_id, sensor_data in valid_multi_sensor_windows.items():
+                # 选择峰值最多的传感器作为参考
+                reference_sensor = max(sensor_data.keys(), 
+                                     key=lambda s: sensor_data[s]['peak_count'])
+                reference_peaks = sensor_data[reference_sensor]['global_peak_times']
                 
-                heartbeat_windows.append({
-                    'heartbeat_id': i + 1,
-                    'reference_time': ref_time,
-                    'window_start': window_start,
-                    'window_end': window_end,
-                    'sensor_peaks': {reference_sensor: ref_time}
-                })
-            
-            for sensor in valid_sensors:
-                if sensor == reference_sensor:
-                    continue
+                # 为每个参考峰值匹配其他传感器的峰值
+                for ref_time in reference_peaks:
+                    heartbeat_data = {
+                        'heartbeat_id': heartbeat_id,
+                        'window_id': window_id,
+                        'reference_sensor': reference_sensor,
+                        'window_start_s': sensor_data[reference_sensor]['start_time_s'],
+                        'window_end_s': sensor_data[reference_sensor]['end_time_s']
+                    }
                     
-                sensor_peaks = sensor_results[sensor]['peak_times']
-                
-                for peak_time in sensor_peaks:
-                    best_window = None
-                    min_distance = float('inf')
+                    sensors_matched = 0
+                    for sensor, window_data in sensor_data.items():
+                        sensor_peaks = window_data['global_peak_times']
+                        
+                        # 在±0.2秒内查找最近的峰值
+                        if len(sensor_peaks) > 0:
+                            time_diffs = np.abs(sensor_peaks - ref_time)
+                            closest_idx = np.argmin(time_diffs)
+                            
+                            if time_diffs[closest_idx] <= 0.2:  # 200ms窗口
+                                heartbeat_data[f'{sensor}_peak_time_s'] = sensor_peaks[closest_idx]
+                                heartbeat_data[f'{sensor}_peak_idx'] = window_data['global_peak_indices'][closest_idx]
+                                sensors_matched += 1
+                            else:
+                                heartbeat_data[f'{sensor}_peak_time_s'] = np.nan
+                                heartbeat_data[f'{sensor}_peak_idx'] = np.nan
+                        else:
+                            heartbeat_data[f'{sensor}_peak_time_s'] = np.nan
+                            heartbeat_data[f'{sensor}_peak_idx'] = np.nan
                     
-                    for window in heartbeat_windows:
-                        if window['window_start'] <= peak_time <= window['window_end']:
-                            distance = abs(peak_time - window['reference_time'])
-                            if distance < min_distance:
-                                min_distance = distance
-                                best_window = window
-                    
-                    if best_window is not None and min_distance < 0.2:
-                        best_window['sensor_peaks'][sensor] = peak_time
+                    # 只保留至少有2个传感器匹配的心跳
+                    if sensors_matched >= 2:
+                        matched_heartbeats.append(heartbeat_data)
+                        heartbeat_id += 1
             
-            complete_heartbeats = [hb for hb in heartbeat_windows 
-                                 if len(hb['sensor_peaks']) >= 2]
-            
-            print(f"📊 完整心跳数量: {len(complete_heartbeats)}/{len(heartbeat_windows)}")
+            print(f"💓 匹配的心跳数量: {len(matched_heartbeats)}")
             
             return {
-                'heartbeat_windows': heartbeat_windows,
-                'complete_heartbeats': complete_heartbeats,
-                'valid_sensors': valid_sensors,
-                'reference_sensor': reference_sensor
+                'matched_heartbeats': matched_heartbeats,
+                'valid_windows': valid_multi_sensor_windows,
+                'total_valid_windows': len(valid_multi_sensor_windows)
             }
             
         except Exception as e:
-            print(f"⚠️  峰值匹配失败: {e}")
+            print(f"⚠️  窗口化峰值匹配失败: {e}")
             return {}
     
     def process_experiment(self, exp_id):
-        """处理单个实验的IR通道数据"""
-        print(f"\n🔍 开始处理实验 {exp_id} - 专注IR通道")
+        """处理单个实验的窗口化分析"""
+        print(f"\n🔍 开始处理实验 {exp_id} - 窗口化时频域验证")
         
         exp_output_dir = os.path.join(self.output_dir, f"exp_{exp_id}")
         os.makedirs(exp_output_dir, exist_ok=True)
         self.current_exp_output_dir = exp_output_dir
         
-        sensor_results = {}
-        all_signals = {}
+        sensor_signals = {}
+        sensor_window_results = {}
+        all_valid_windows = {}
         
+        # 读取和分析每个传感器
         for sensor in self.sensors:
             try:
                 file_path = os.path.join(self.data_path, f"{exp_id}_hub_{sensor}_aligned.csv")
@@ -466,9 +433,10 @@ class IRBasedPTTPeakDetector:
                     continue
                 
                 df = pd.read_csv(file_path)
-                all_signals[sensor] = df
+                if len(df.columns) < 3:
+                    print(f"⚠️  {sensor}: 数据列不足")
+                    continue
                 
-                if len(df.columns) >= 3:
                     ir_signal = df.iloc[:, 2].values  # IR通道
                     
                     # 动态计算当前传感器的采样率
@@ -479,231 +447,193 @@ class IRBasedPTTPeakDetector:
                         current_fs = self.default_fs
                         print(f"⚠️ {sensor} 缺少时间戳信息，使用默认采样率: {current_fs}Hz")
                     
-                    # 稳健的峰值检测
-                    peak_result = self.detect_peaks_robust(ir_signal, current_fs)
-                    
-                    # 计算心率统计
-                    hr_stats = self.calculate_heart_rate_stats(peak_result['ibi_ms'])
-                    
-                    # 计算傅里叶心率（照抄get_hr）
-                    fft_hr = self.get_hr(ir_signal, sr=current_fs, min=50, max=200)
-                    fft_freq = fft_hr / 60.0  # 转换为Hz
-                    
-                    # 合并结果
-                    peak_result.update({
-                        'sensor': sensor,
-                        'sensor_name': self.sensor_mapping[sensor],
-                        **hr_stats,
-                        'fft_hr_bpm': fft_hr,
-                        'fft_peak_freq_hz': fft_freq
-                    })
-                    
-                    sensor_results[sensor] = peak_result
-                    
-                    # 打印结果
-                    quality_emoji = {
-                        'excellent': '🟢', 'good': '🟡', 
-                        'fair': '🟠', 'poor': '🔴', 'error': '❌'
-                    }
-                    quality_symbol = quality_emoji.get(peak_result['quality'], '❓')
-                    
-                    if peak_result['peak_count'] > 0:
-                        ibi_range = f"{np.min(peak_result['ibi_ms']):.0f}-{np.max(peak_result['ibi_ms']):.0f}ms" if len(peak_result['ibi_ms']) > 0 else "N/A"
-                        print(f"  {quality_symbol} {sensor}({self.sensor_mapping[sensor]}): "
-                              f"{peak_result['peak_count']}峰值, "
-                              f"HR={hr_stats['hr_mean']:.1f}±{hr_stats['hr_std']:.1f}BPM, "
-                              f"FFT HR={fft_hr:.1f}BPM, "
-                              f"IBI={ibi_range}, "
-                              f"质量={peak_result['quality']}({peak_result.get('valid_ibi_ratio', 0)*100:.0f}%)")
-                    else:
-                        print(f"  {quality_symbol} {sensor}({self.sensor_mapping[sensor]}): 未检测到有效峰值")
-                        
-                else:
-                    print(f"⚠️  {sensor}: 数据列不足")
+                sensor_signals[sensor] = {
+                    'signal': ir_signal,
+                    'dataframe': df,
+                    'duration_s': len(ir_signal) / current_fs,
+                    'fs': current_fs
+                }
+                
+                # 窗口化分析
+                window_results, valid_windows = self.analyze_sensor_windowed(
+                    ir_signal, self.sensor_mapping[sensor], current_fs
+                )
+                
+                sensor_window_results[sensor] = window_results
+                all_valid_windows[sensor] = valid_windows
+                
+                print(f"  📊 {sensor}({self.sensor_mapping[sensor]}): "
+                      f"信号长度{len(ir_signal)/current_fs:.1f}s, "
+                      f"窗口{len(window_results)}个, "
+                      f"有效{len(valid_windows)}个")
                     
             except Exception as e:
                 print(f"❌ 处理 {sensor} 失败: {e}")
                 continue
         
-        matched_results = self.match_peaks_across_sensors(sensor_results)
-        self.save_results(exp_id, sensor_results, matched_results, all_signals)
+        # 跨传感器峰值匹配
+        matched_results = self.match_peaks_across_sensors_windowed(all_valid_windows)
         
-        return sensor_results, matched_results
+        # 保存结果
+        self.save_windowed_results(exp_id, sensor_window_results, matched_results, sensor_signals)
+        
+        return sensor_window_results, matched_results
     
-    def save_results(self, exp_id, sensor_results, matched_results, all_signals):
-        """保存检测结果 - 5个核心CSV文件，包含傅里叶心率"""
+    def save_windowed_results(self, exp_id, sensor_window_results, matched_results, sensor_signals):
+        """保存窗口化分析结果"""
         try:
-            # 1. 传感器质量汇总
-            sensor_summary = []
-            for sensor in sensor_results:
-                result = sensor_results[sensor]
-                
-                # 动态计算当前传感器的采样率
-                if 'timestamp' in all_signals[sensor].columns:
-                    current_fs = self.calculate_sampling_rate(all_signals[sensor]['timestamp'].values)
-                else:
-                    current_fs = self.default_fs
-                
-                signal_duration = len(all_signals[sensor].iloc[:, 2]) / current_fs
-                
-                sensor_summary.append({
+            # 1. 窗口验证汇总
+            window_summary = []
+            for sensor, windows in sensor_window_results.items():
+                for window in windows:
+                    mean_ibi = np.mean(window['ibi_ms']) if len(window['ibi_ms']) > 0 else np.nan  # 新增：计算窗口平均IBI
+                    window_summary.append({
+                        'exp_id': exp_id,
                     'sensor': sensor,
-                    'sensor_name': result['sensor_name'],
-                    'peak_count': result['peak_count'],
-                    'quality': result['quality'],
-                    'valid_ibi_ratio': result.get('valid_ibi_ratio', 0),
-                    'hr_mean_bpm': result['hr_mean'],
-                    'hr_std_bpm': result['hr_std'],
-                    'ibi_mean_ms': result['ibi_mean'],
-                    'ibi_std_ms': result['ibi_std'],
-                    'rmssd_ms': result['rmssd'],
-                    'pnn50_percent': result['pnn50'],
-                    'signal_duration_s': signal_duration,
-                    'fft_hr_bpm': result['fft_hr_bpm'],
-                    'fft_peak_freq_hz': result['fft_peak_freq_hz']
-                })
+                        'sensor_name': self.sensor_mapping[sensor],
+                        'window_id': window['window_id'],
+                        'start_time_s': window['start_time_s'],
+                        'end_time_s': window['end_time_s'],
+                        'duration_s': window['duration_s'],
+                        'peak_count': window['peak_count'],
+                        'peak_hr_bpm': window['peak_hr_bpm'],
+                        'fft_hr_bpm': window['fft_hr_bpm'],
+                        'hr_diff_bpm': window['hr_diff_bpm'],
+                        'is_valid': window['is_valid'],
+                        'validation_status': window['validation_status'],
+                        'mean_ibi_ms': mean_ibi  # 新增
+                    })
             
-            if sensor_summary:
-                summary_df = pd.DataFrame(sensor_summary)
-                summary_file = os.path.join(self.current_exp_output_dir, f"sensor_summary_exp_{exp_id}.csv")
+            if window_summary:
+                summary_df = pd.DataFrame(window_summary)
+                summary_file = os.path.join(self.current_exp_output_dir, f"window_validation_exp_{exp_id}.csv")
                 summary_df.to_csv(summary_file, index=False)
-                print(f"💾 保存传感器汇总: {summary_file}")
+                print(f"💾 保存窗口验证汇总: {summary_file}")
             
-            # 2. 所有峰值详细信息
-            all_peaks = []
-            for sensor in sensor_results:
-                result = sensor_results[sensor]
-                for i, (peak_idx, peak_time) in enumerate(zip(result['peaks'], result['peak_times'])):
-                    all_peaks.append({
+            # 2. 有效窗口的峰值详细信息
+            valid_peaks = []
+            for sensor, windows in sensor_window_results.items():
+                for window in windows:
+                    if window['is_valid']:
+                        mean_ibi = np.mean(window['ibi_ms']) if len(window['ibi_ms']) > 0 else np.nan  # 新增
+                        for i, (peak_time, peak_idx) in enumerate(zip(
+                            window['global_peak_times'], window['global_peak_indices']
+                        )):
+                            valid_peaks.append({
+                                'exp_id': exp_id,
                         'sensor': sensor,
-                        'sensor_name': result['sensor_name'],
-                        'peak_number': i + 1,
-                        'peak_index': int(peak_idx),
-                        'peak_time_s': peak_time,
-                        'quality': result['quality']
-                    })
+                                'sensor_name': self.sensor_mapping[sensor],
+                                'window_id': window['window_id'],
+                                'peak_number_in_window': i + 1,
+                                'global_peak_time_s': peak_time,
+                                'global_peak_index': int(peak_idx),
+                                'window_peak_hr_bpm': window['peak_hr_bpm'],
+                                'window_fft_hr_bpm': window['fft_hr_bpm'],
+                                'window_hr_diff_bpm': window['hr_diff_bpm'],
+                                'mean_ibi_ms': mean_ibi  # 新增：窗口平均IBI
+                            })
             
-            if all_peaks:
-                peaks_df = pd.DataFrame(all_peaks)
-                peaks_file = os.path.join(self.current_exp_output_dir, f"all_peaks_exp_{exp_id}.csv")
+            if valid_peaks:
+                peaks_df = pd.DataFrame(valid_peaks)
+                peaks_file = os.path.join(self.current_exp_output_dir, f"valid_peaks_exp_{exp_id}.csv")
                 peaks_df.to_csv(peaks_file, index=False)
-                print(f"💾 保存所有峰值: {peaks_file}")
+                print(f"💾 保存有效峰值: {peaks_file}")
             
-            # 3. 所有IBI详细信息
-            all_ibi = []
-            for sensor in sensor_results:
-                result = sensor_results[sensor]
-                for i, ibi_val in enumerate(result['ibi_ms']):
-                    all_ibi.append({
-                        'sensor': sensor,
-                        'sensor_name': result['sensor_name'],
-                        'ibi_number': i + 1,
-                        'ibi_ms': ibi_val,
-                        'hr_bpm': 60000 / ibi_val,
-                        'is_valid': 300 <= ibi_val <= 1200,
-                        'quality': result['quality']
-                    })
-            
-            if all_ibi:
-                ibi_df = pd.DataFrame(all_ibi)
-                ibi_file = os.path.join(self.current_exp_output_dir, f"all_ibi_exp_{exp_id}.csv")
-                ibi_df.to_csv(ibi_file, index=False)
-                print(f"💾 保存所有IBI: {ibi_file}")
-            
-            # 4. 匹配的心跳和PTT计算
-            if matched_results and 'complete_heartbeats' in matched_results:
-                heartbeat_data = []
-                for hb in matched_results['complete_heartbeats']:
-                    row = {'heartbeat_id': hb['heartbeat_id']}
-                    for sensor in matched_results['valid_sensors']:
-                        row[f'{sensor}_peak_time_s'] = hb['sensor_peaks'].get(sensor, np.nan)
-                    heartbeat_data.append(row)
+            # 3. 匹配的心跳和PTT计算
+            if matched_results and 'matched_heartbeats' in matched_results:
+                heartbeat_data = matched_results['matched_heartbeats']
                 
                 if heartbeat_data:
                     heartbeat_df = pd.DataFrame(heartbeat_data)
-                    heartbeat_file = os.path.join(self.current_exp_output_dir, f"matched_heartbeats_exp_{exp_id}.csv")
+                    heartbeat_file = os.path.join(self.current_exp_output_dir, f"matched_heartbeats_windowed_exp_{exp_id}.csv")
                     heartbeat_df.to_csv(heartbeat_file, index=False)
-                    print(f"💾 保存匹配心跳: {heartbeat_file}")
+                    print(f"💾 保存窗口化匹配心跳: {heartbeat_file}")
                     
-                    self.calculate_ptt_analysis(heartbeat_df, exp_id, matched_results['valid_sensors'])
+                    # 计算PTT
+                    self.calculate_windowed_ptt(heartbeat_df, exp_id, sensor_window_results)  # 修改：传入sensor_window_results
             
-            # 生成可视化
-            self.create_visualizations(exp_id, sensor_results, matched_results, all_signals)
+            # 4. 创建可视化
+            self.create_windowed_visualizations(exp_id, sensor_window_results, sensor_signals)
             
         except Exception as e:
-            print(f"❌ 保存结果失败: {e}")
+            print(f"❌ 保存窗口化结果失败: {e}")
     
-    def calculate_ptt_analysis(self, heartbeat_df, exp_id, valid_sensors):
-        """计算PTT分析 - 矩阵汇总 + 时间序列"""
+    def calculate_windowed_ptt(self, heartbeat_df, exp_id, sensor_window_results):
+        """计算窗口化PTT分析 - 添加参考平均IBI"""
         try:
-            sensor_combinations = []
-            for i in range(len(valid_sensors)):
-                for j in range(i+1, len(valid_sensors)):
-                    sensor_combinations.append((valid_sensors[i], valid_sensors[j]))
+            # 找到所有传感器列
+            sensor_cols = [col for col in heartbeat_df.columns if col.endswith('_peak_time_s')]
+            sensors = [col.replace('_peak_time_s', '') for col in sensor_cols]
             
-            print(f"\n📊 PTT分析 ({len(sensor_combinations)}个传感器组合):")
+            if len(sensors) < 2:
+                print("⚠️  传感器数量不足，无法计算PTT")
+                return
             
-            ptt_summary = []
-            ptt_timeseries_all = []
+            ptt_data = []
             
-            for sensor1, sensor2 in sensor_combinations:
+            # 生成所有传感器对组合
+            for i in range(len(sensors)):
+                for j in range(i+1, len(sensors)):
+                    sensor1, sensor2 = sensors[i], sensors[j]
                 col1 = f'{sensor1}_peak_time_s'
                 col2 = f'{sensor2}_peak_time_s'
                 
                 if col1 in heartbeat_df.columns and col2 in heartbeat_df.columns:
                     valid_data = heartbeat_df.dropna(subset=[col1, col2])
                     
-                    if len(valid_data) > 0:
-                        ptt_values = (valid_data[col2] - valid_data[col1]) * 1000
-                        
-                        ptt_summary.append({
-                            'sensor_pair': f"{sensor1}-{sensor2}",
-                            'sensor_names': f"{self.sensor_mapping[sensor1]}→{self.sensor_mapping[sensor2]}",
-                            'valid_heartbeats': len(valid_data),
-                            'mean_ptt_ms': np.mean(ptt_values),
-                            'std_ptt_ms': np.std(ptt_values),
-                            'min_ptt_ms': np.min(ptt_values),
-                            'max_ptt_ms': np.max(ptt_values),
-                            'median_ptt_ms': np.median(ptt_values),
-                            'q25_ptt_ms': np.percentile(ptt_values, 25),
-                            'q75_ptt_ms': np.percentile(ptt_values, 75)
-                        })
-                        
-                        for idx, (heartbeat_id, ptt_val) in enumerate(zip(valid_data['heartbeat_id'], ptt_values)):
-                            ptt_timeseries_all.append({
-                                'heartbeat_id': heartbeat_id,
+                        for _, row in valid_data.iterrows():
+                            ptt_ms = (row[col2] - row[col1]) * 1000
+                            
+                            # 新增：获取参考传感器的窗口平均IBI
+                            window_id = row['window_id']
+                            ref_sensor = row['reference_sensor']
+                            ref_window = next((w for w in sensor_window_results[ref_sensor] if w['window_id'] == window_id), None)
+                            ref_mean_ibi = np.mean(ref_window['ibi_ms']) if ref_window and len(ref_window['ibi_ms']) > 0 else np.nan
+                            
+                            ptt_data.append({
+                                'heartbeat_id': row['heartbeat_id'],
+                                'window_id': row['window_id'],
                                 'sensor_pair': f"{sensor1}-{sensor2}",
                                 'sensor_names': f"{self.sensor_mapping[sensor1]}→{self.sensor_mapping[sensor2]}",
-                                'ptt_ms': ptt_val,
-                                f'{sensor1}_time_s': valid_data[col1].iloc[idx],
-                                f'{sensor2}_time_s': valid_data[col2].iloc[idx]
+                                'ptt_ms': ptt_ms,
+                                f'{sensor1}_time_s': row[col1],
+                                f'{sensor2}_time_s': row[col2],
+                                'window_start_s': row['window_start_s'],
+                                'window_end_s': row['window_end_s'],
+                                'reference_sensor': ref_sensor,
+                                'reference_mean_ibi_ms': ref_mean_ibi  # 新增
                             })
-                        
-                        print(f"  📊 {self.sensor_mapping[sensor1]}→{self.sensor_mapping[sensor2]}: "
-                              f"{np.mean(ptt_values):.1f}±{np.std(ptt_values):.1f}ms "
-                              f"({len(valid_data)}心跳)")
             
-            if ptt_summary:
-                ptt_matrix_df = pd.DataFrame(ptt_summary)
-                ptt_matrix_file = os.path.join(self.current_exp_output_dir, f"ptt_matrix_exp_{exp_id}.csv")
-                ptt_matrix_df.to_csv(ptt_matrix_file, index=False)
-                print(f"💾 保存PTT矩阵: {ptt_matrix_file}")
-            
-            if ptt_timeseries_all:
-                ptt_timeseries_df = pd.DataFrame(ptt_timeseries_all)
-                ptt_timeseries_file = os.path.join(self.current_exp_output_dir, f"ptt_timeseries_exp_{exp_id}.csv")
-                ptt_timeseries_df.to_csv(ptt_timeseries_file, index=False)
-                print(f"💾 保存PTT时间序列: {ptt_timeseries_file}")
-                print(f"   📈 共{len(ptt_timeseries_all)}个PTT数据点，可用于血压建模")
+            if ptt_data:
+                ptt_df = pd.DataFrame(ptt_data)
+                ptt_file = os.path.join(self.current_exp_output_dir, f"ptt_windowed_exp_{exp_id}.csv")
+                ptt_df.to_csv(ptt_file, index=False)
+                print(f"💾 保存窗口化PTT: {ptt_file}")
+                
+                # PTT统计汇总
+                ptt_summary = ptt_df.groupby('sensor_pair').agg({
+                    'ptt_ms': ['count', 'mean', 'std', 'min', 'max', 'median'],
+                    'window_id': 'nunique'
+                }).round(2)
+                ptt_summary.columns = ['count', 'mean_ptt_ms', 'std_ptt_ms', 'min_ptt_ms', 'max_ptt_ms', 'median_ptt_ms', 'num_windows']
+                ptt_summary = ptt_summary.reset_index()
+                
+                ptt_summary_file = os.path.join(self.current_exp_output_dir, f"ptt_summary_windowed_exp_{exp_id}.csv")
+                ptt_summary.to_csv(ptt_summary_file, index=False)
+                print(f"💾 保存PTT统计汇总: {ptt_summary_file}")
+                print(f"📊 窗口化PTT统计:")
+                for _, row in ptt_summary.iterrows():
+                    print(f"  {row['sensor_pair']}: {row['mean_ptt_ms']:.1f}±{row['std_ptt_ms']:.1f}ms "
+                          f"({row['count']}心跳, {row['num_windows']}窗口)")
             
         except Exception as e:
-            print(f"⚠️  PTT分析失败: {e}")
+            print(f"⚠️  窗口化PTT计算失败: {e}")
     
-    def create_visualizations(self, exp_id, sensor_results, matched_results, all_signals):
-        """创建可视化 - IR信号峰值图 + PSD图（照抄plot_psd_analysis）"""
+    def create_windowed_visualizations(self, exp_id, sensor_window_results, sensor_signals):
+        """创建窗口化可视化"""
         try:
-            # 1. IR信号和峰值图
-            fig, axes = plt.subplots(len(self.sensors), 1, figsize=(16, 3*len(self.sensors)), sharex=True)
+            # 1. 窗口验证状态图
+            fig, axes = plt.subplots(len(self.sensors), 1, figsize=(20, 4*len(self.sensors)), sharex=True)
             if len(self.sensors) == 1:
                 axes = [axes]
             
@@ -712,37 +642,41 @@ class IRBasedPTTPeakDetector:
             for idx, sensor in enumerate(self.sensors):
                 ax = axes[idx]
                 
-                if sensor in all_signals and sensor in sensor_results:
-                    result = sensor_results[sensor]
-                    filtered_signal = result['filtered_signal']
-                    peaks = result['peaks']
-                    quality = result['quality']
-                    fft_hr = result['fft_hr_bpm']
+                if sensor in sensor_signals and sensor in sensor_window_results:
+                    signal_data = sensor_signals[sensor]
+                    time = np.arange(len(signal_data['signal'])) / signal_data['fs']
                     
-                    # 动态计算当前传感器的采样率
-                    if 'timestamp' in all_signals[sensor].columns:
-                        current_fs = self.calculate_sampling_rate(all_signals[sensor]['timestamp'].values)
-                    else:
-                        current_fs = self.default_fs
+                    # 绘制信号
+                    filtered_signal = self.bandpass_filter(signal_data['signal'], fs=signal_data['fs'])
+                    ax.plot(time, filtered_signal, color=colors[idx % len(colors)], 
+                           linewidth=0.8, alpha=0.6, label=f'{self.sensor_mapping[sensor]} IR')
                     
-                    time = np.arange(len(filtered_signal)) / current_fs
-                    
-                    ax.plot(time[:len(filtered_signal)], filtered_signal, 
-                           color=colors[idx % len(colors)], linewidth=1.5, alpha=0.8,
-                           label=f'{self.sensor_mapping[sensor]} IR')
-                    
-                    if len(peaks) > 0:
-                        peak_times = peaks / current_fs
-                        ax.scatter(peak_times, filtered_signal[peaks], 
-                                 color='red', s=40, zorder=5, alpha=0.9)
+                    # 绘制窗口状态
+                    windows = sensor_window_results[sensor]
+                    for window in windows:
+                        start_time = window['start_time_s']
+                        end_time = window['end_time_s']
                         
-                        for i, (pt, ps) in enumerate(zip(peak_times, filtered_signal[peaks])):
-                            if i % 10 == 0:
-                                ax.annotate(f'{i+1}', (pt, ps), xytext=(5, 5), 
-                                          textcoords='offset points', fontsize=8)
+                        if window['is_valid']:
+                            # 有效窗口 - 绿色背景
+                            ax.axvspan(start_time, end_time, alpha=0.2, color='green')
+                            
+                            # 标记峰值
+                            if len(window['global_peak_times']) > 0:
+                                peak_values = []
+                                for peak_idx in window['global_peak_indices']:
+                                    if 0 <= peak_idx < len(filtered_signal):
+                                        peak_values.append(filtered_signal[peak_idx])
+                                
+                                if peak_values:
+                                    ax.scatter(window['global_peak_times'], peak_values, 
+                                             color='red', s=30, zorder=5)
+                        else:
+                            # 无效窗口 - 红色背景
+                            ax.axvspan(start_time, end_time, alpha=0.1, color='red')
                     
-                    ax.set_title(f'{self.sensor_mapping[sensor]} IR - {quality} - HR: {sensor_results[sensor]["hr_mean"]:.1f} BPM (FFT: {fft_hr:.1f} BPM)', 
-                                fontsize=12, fontweight='bold')
+                    ax.set_title(f'{self.sensor_mapping[sensor]} IR - windowed_validation '
+                               f'(green=valid, red=invalid)', fontsize=12, fontweight='bold')
                     ax.set_ylabel('Signal', fontsize=10)
                     ax.grid(True, alpha=0.3)
                     ax.legend()
@@ -752,103 +686,97 @@ class IRBasedPTTPeakDetector:
                     ax.set_title(f'{self.sensor_mapping[sensor]} IR - No Data')
             
             axes[-1].set_xlabel('Time (seconds)', fontsize=12)
-            plt.suptitle(f'Experiment {exp_id} - IR Channel Peak Detection', 
+            plt.suptitle(f'Experiment {exp_id} - windowed_validation_result', 
                         fontsize=16, fontweight='bold')
             plt.tight_layout()
             
-            plot_file = os.path.join(self.current_exp_output_dir, f"ir_peaks_exp_{exp_id}.png")
+            plot_file = os.path.join(self.current_exp_output_dir, f"windowed_validation_exp_{exp_id}.png")
             plt.savefig(plot_file, dpi=300, bbox_inches='tight')
             plt.close()
-            print(f"📊 保存IR信号图: {plot_file}")
+            print(f"📊 保存窗口验证图: {plot_file}")
             
-            # 2. PSD可视化（照抄data_processor.py的plot_psd_analysis）
-            sensor_dfs = {}
-            for sensor in self.sensors:
-                if sensor in all_signals and sensor in sensor_results:
-                    df = all_signals[sensor][['timestamp', 'ir']].copy()
-                    sensor_dfs[sensor] = df
-            
-            if sensor_dfs:
-                n_sensors = len(sensor_dfs)
-                channels = ['ir']  # 仅处理IR通道
-                fig, axes = plt.subplots(n_sensors, 1, figsize=(15, 4 * n_sensors))
-                if n_sensors == 1:
-                    axes = [axes]
-                
-                for i, (sensor, df) in enumerate(sensor_dfs.items()):
-                    part = self.sensor_mapping[sensor]
-                    ts = df['timestamp'].values
-                    tsu = np.unique(ts)
-                    ax = axes[i]
-                    
-                    if len(tsu) < 2:
-                        ax.text(0.5, 0.5, '时间戳不足',
-                                ha='center', va='center')
-                        ax.set_title(f"{part}-ir")
-                        continue
-                    
-                    dt = np.median(np.diff(tsu))
-                    fs = 1.0 / dt
-                    
-                    col_idx = 1  # ir通道
-                    if df.shape[1] <= col_idx:
-                        ax.text(0.5, 0.5, 'No data',
-                                ha='center', va='center', transform=ax.transAxes)
-                        ax.set_title(f"{part}-ir")
-                        continue
-                    
-                    y = df.iloc[:, col_idx].values
-                    try:
-                        p, q = welch(y, fs, nfft=int(1e5/fs), nperseg=min(len(y)-1, 256))
-                        bpm = p * 60
-                        mask = (bpm >= 30) & (bpm <= 180)
-                        
-                        ax.plot(bpm[mask], q[mask], linewidth=1.5, color='C0')
-                        ax.set_title(f"{part}-ir")
-                        ax.grid(True, alpha=0.3)
-                        
-                        if np.any(mask) and len(q[mask]) > 0:
-                            peak_idx = np.argmax(q[mask])
-                            peak_bpm = bpm[mask][peak_idx]
-                            ax.axvline(peak_bpm, color='red', linestyle='--', alpha=0.5)
-                            ax.text(0.98, 0.95, f'{peak_bpm:.1f} BPM',
-                                    transform=ax.transAxes,
-                                    ha='right', va='top',
-                                    bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.7))
-                    except Exception as e:
-                        ax.text(0.5, 0.5, f"PSD 失败\n{str(e)[:30]}",
-                                ha='center', va='center', transform=ax.transAxes)
-                    
-                    ax.set_xlabel("Frequency (BPM)")
-                    ax.set_ylabel(f"{part}\nPSD", rotation=0, labelpad=30)
-                
-                plt.suptitle(f"Power Spectral Density Analysis (Experiment {exp_id} - IR signals)", fontsize=16)
-                plt.tight_layout(rect=[0, 0, 1, 0.96])
-                
-                psd_file = os.path.join(self.current_exp_output_dir, f"psd_exp_{exp_id}.png")
-                plt.savefig(psd_file, dpi=300, bbox_inches='tight')
-                plt.close()
-                print(f"📊 保存PSD图: {psd_file}")
+            # 2. 时频域心率对比图
+            self.create_hr_comparison_plot(exp_id, sensor_window_results)
             
         except Exception as e:
-            print(f"❌ 可视化创建失败: {e}")
+            print(f"❌ 窗口化可视化创建失败: {e}")
     
-    def run_analysis(self, experiment_list=None):
-        """运行IR通道PTT峰值检测分析（批量处理）"""
+    def create_hr_comparison_plot(self, exp_id, sensor_window_results):
+        """创建时频域心率对比图"""
+        try:
+            fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+            axes = axes.flatten()
+            
+            for idx, sensor in enumerate(self.sensors[:4]):
+                ax = axes[idx]
+                
+                if sensor in sensor_window_results:
+                    windows = sensor_window_results[sensor]
+                    valid_windows = [w for w in windows if w['is_valid']]
+                    invalid_windows = [w for w in windows if not w['is_valid']]
+                    
+                    # 绘制有效窗口
+                    if valid_windows:
+                        peak_hrs = [w['peak_hr_bpm'] for w in valid_windows]
+                        fft_hrs = [w['fft_hr_bpm'] for w in valid_windows]
+                        ax.scatter(peak_hrs, fft_hrs, color='green', alpha=0.7, s=50, 
+                                 label=f'Valid ({len(valid_windows)})')
+                    
+                    # 绘制无效窗口
+                    if invalid_windows:
+                        peak_hrs_invalid = [w['peak_hr_bpm'] for w in invalid_windows if w['peak_hr_bpm'] > 0]
+                        fft_hrs_invalid = [w['fft_hr_bpm'] for w in invalid_windows if w['fft_hr_bpm'] > 0]
+                        if peak_hrs_invalid and fft_hrs_invalid:
+                            ax.scatter(peak_hrs_invalid, fft_hrs_invalid, color='red', alpha=0.5, s=30,
+                                     label=f'Invalid ({len(invalid_windows)})')
+                    
+                    # 绘制理想线和容忍带
+                    hr_range = [self.min_hr, self.max_hr]
+                    ax.plot(hr_range, hr_range, 'k--', alpha=0.5, label='Perfect Match')
+                    
+                    # ±xBPM容忍带
+                    ax.fill_between(hr_range, 
+                                   [h - self.hr_tolerance_bpm for h in hr_range],
+                                   [h + self.hr_tolerance_bpm for h in hr_range],
+                                   alpha=0.2, color='gray', label='±5BPM Tolerance')
+                    
+                    ax.set_xlabel('Peak Detection HR (BPM)')
+                    ax.set_ylabel('FFT HR (BPM)')
+                    ax.set_title(f'{self.sensor_mapping[sensor]} - hr_validation_result')
+                    ax.grid(True, alpha=0.3)
+                    ax.legend()
+                    ax.set_xlim(self.min_hr, self.max_hr)
+                    ax.set_ylim(self.min_hr, self.max_hr)
+                else:
+                    ax.text(0.5, 0.5, 'No Data', ha='center', va='center', transform=ax.transAxes)
+                    ax.set_title(f'{self.sensor_mapping[sensor]} - No Data')
+            
+            plt.suptitle(f'Experiment {exp_id} - hr_validation_result', fontsize=16, fontweight='bold')
+            plt.tight_layout()
+            
+            hr_plot_file = os.path.join(self.current_exp_output_dir, f"hr_validation_exp_{exp_id}.png")
+            plt.savefig(hr_plot_file, dpi=300, bbox_inches='tight')
+                plt.close()
+            print(f"📊 保存心率对比图: {hr_plot_file}")
+            
+        except Exception as e:
+            print(f"❌ 心率对比图创建失败: {e}")
+    
+    def run_windowed_analysis(self, experiment_list=None):
+        """运行窗口化时频域验证分析"""
         if experiment_list is None:
             experiment_list = [f.split('_')[0] for f in os.listdir(self.data_path) 
                              if f.endswith('_hub_sensor2_aligned.csv')]
             experiment_list = sorted(list(set(experiment_list)))
         
-        print(f"\n🔬 开始IR通道PTT峰值检测分析（批量处理）")
+        print(f"\n🔬 开始窗口化时频域验证PTT分析（密集滑窗版）")
         print(f"📋 实验列表: {experiment_list}")
-        print(f"🎯 检测策略:")
-        print(f"   - 专注IR通道（信号质量最佳）")
-        print(f"   - 稳健峰值检测 + IBI质量控制")
-        print(f"   - 傅里叶心率分析验证（照抄data_processor.py）")
-        print(f"   - 心率范围: {self.min_hr}-{self.max_hr} BPM")
-        print(f"   - 滤波范围: {self.filter_lowcut}-{self.filter_highcut} Hz")
-        print(f"   - 输出5个标准CSV文件 + PSD图，按expX子文件夹存储")
+        print(f"🎯 验证策略:")
+        print(f"   - {self.window_duration}s窗口, {self.window_step}s滑窗步长（密集覆盖）")
+        print(f"   - 时域峰值检测 vs 频域FFT心率")
+        print(f"   - 心率差异<{self.hr_tolerance_bpm}BPM才认为窗口有效（放宽容忍度）")
+        print(f"   - 只在有效窗口内计算PTT")
+        print(f"   - 详细的窗口质量报告")
         
         all_results = {}
         
@@ -856,47 +784,57 @@ class IRBasedPTTPeakDetector:
             try:
                 sensor_results, matched_results = self.process_experiment(exp_id)
                 all_results[exp_id] = {
-                    'sensor_results': sensor_results,
+                    'sensor_window_results': sensor_results,
                     'matched_results': matched_results
                 }
             except Exception as e:
                 print(f"❌ 实验 {exp_id} 处理失败: {e}")
                 continue
         
-        print(f"\n✅ IR通道PTT峰值检测完成！")
+        print(f"\n✅ 密集滑窗时频域验证PTT分析完成！")
         print(f"📁 结果保存在: {self.output_dir}/exp_X")
         print(f"\n📊 输出文件说明:")
-        print(f"   1. sensor_summary_exp_X.csv - 传感器质量汇总（含傅里叶心率）")
-        print(f"   2. all_peaks_exp_X.csv - 所有峰值详细信息")
-        print(f"   3. all_ibi_exp_X.csv - 所有IBI详细信息")
-        print(f"   4. ptt_matrix_exp_X.csv - PTT矩阵汇总")
-        print(f"   5. ptt_timeseries_exp_X.csv - PTT时间序列（用于建模）")
-        print(f"   6. psd_exp_X.png - 各传感器IR通道PSD图（与data_processor.py一致）")
-        print(f"\n🎯 下一步: 使用ptt_timeseries_exp_X.csv进行血压建模，检查fft_hr_bpm验证心率一致性")
+        print(f"   1. window_validation_exp_X.csv - 窗口验证详情")
+        print(f"   2. valid_peaks_exp_X.csv - 有效窗口的峰值")
+        print(f"   3. matched_heartbeats_windowed_exp_X.csv - 窗口化匹配心跳")
+        print(f"   4. ptt_windowed_exp_X.csv - 窗口化PTT时间序列")
+        print(f"   5. ptt_summary_windowed_exp_X.csv - PTT统计汇总")
+        print(f"   6. windowed_validation_exp_X.png - 窗口验证状态图")
+        print(f"   7. hr_validation_exp_X.png - 时频域心率对比图")
+        print(f"\n🎯 密集滑窗验证完成！更多窗口，更高精度的PTT质量控制！")
         
         return all_results
 
+def process_subject(date_folder, subject):
+    autodl_root = '/root/autodl-tmp/'
+    data_path = os.path.join(autodl_root, subject, 'csv_output')
+    output_dir = os.path.join(autodl_root, subject, 'ptt_output')
+    
+    if not os.path.exists(data_path):
+        print(f"⚠️ subject {subject} 无csv_output文件夹，跳过")
+        return
+    
+    print(f"\n处理subject: {subject}")
+    
+    detector = IRWindowedPTTPeakDetector(data_path=data_path, method="auto")
+    detector.output_dir = output_dir
+    
+    experiment_files = [f for f in os.listdir(data_path) if f.endswith('_hub_sensor2_aligned.csv') and f.startswith(subject + '_')]
+    experiment_list = sorted(list(set([f.split('_')[1] for f in experiment_files])))
+    
+    detector.run_windowed_analysis(experiment_list)
+
 def main():
-    """主函数"""
-    print("🩺 IR通道专门的PTT峰值检测器（批量处理版，含傅里叶分析）")
-    print("=" * 60)
-    print("📖 优化特性:")
-    print("   • 专注IR通道峰值检测")
-    print("   • 稳健的IBI计算和质量控制")
-    print("   • 傅里叶心率分析验证（照抄data_processor.py）")
-    print("   • 智能心跳匹配")
-    print("   • 标准化CSV输出便于建模")
-    print("   • 批量处理所有实验，存储到expX子文件夹")
-    print("=" * 60)
+    autodl_root = '/root/autodl-tmp/'
     
-    detector = IRBasedPTTPeakDetector()
-    results = detector.run_analysis()
+    # 获取所有日期文件夹 (可选，如果需要 date_folder)
+    # 但由于 subject 是独立的，可以直接遍历 subject
+    subject_folders = [f for f in os.listdir(autodl_root) if os.path.isdir(os.path.join(autodl_root, f)) and f.startswith('00')]
+    subject_folders.sort()
     
-    print("\n🎯 分析完成，建议下一步:")
-    print("1. 检查每个exp_X/sensor_summary_exp_X.csv了解传感器质量和傅里叶心率")
-    print("2. 使用exp_X/ptt_timeseries_exp_X.csv进行血压建模")
-    print("3. 验证PTT与血压的相关性 (a*PTT + b)")
-    print("4. 检查exp_X/psd_exp_X.png确认傅里叶分析结果")
+    # 为了并行，需要 dummy date_folder 或调整，但既然 date_folder 不使用，可以用 None
+    with multiprocessing.Pool() as p:
+        p.starmap(process_subject, [(None, subject) for subject in subject_folders])
 
 if __name__ == "__main__":
     main()

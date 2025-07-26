@@ -1,2 +1,0 @@
-sensor_pair,count,mean_ptt_ms,std_ptt_ms,min_ptt_ms,max_ptt_ms,median_ptt_ms,num_windows
-sensor3-sensor4,72,44.12,26.13,-36.0,144.0,45.0,3
