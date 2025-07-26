@@ -190,29 +190,29 @@ class IRWindowedPTTPeakDetector:
                 peak_indices = np.where(peaks_dict['PPG_Peaks'] == 1)[0]
             elif self.detection_method == "heartpy":
                 working_data, _ = hp.process(filtered_signal, sample_rate=fs)
-            peak_indices = working_data['peaklist']
+                peak_indices = working_data['peaklist']
             else:
                 # scipy高级方法
-            min_distance = int(self.refractory_period * fs)
-            signal_std = np.std(filtered_signal)
-            signal_mean = np.mean(filtered_signal)
-            
-            thresholds = [
-                (signal_mean + 0.2 * signal_std, 0.1 * signal_std),
-                (signal_mean + 0.1 * signal_std, 0.05 * signal_std),
-                (signal_mean, 0.02 * signal_std)
-            ]
-            
-            peak_indices = np.array([])
-            for height_threshold, prominence_threshold in thresholds:
-                peak_indices, _ = find_peaks(
-                    filtered_signal,
-                    height=height_threshold,
-                    distance=min_distance,
-                    prominence=prominence_threshold
-                )
+                min_distance = int(self.refractory_period * fs)
+                signal_std = np.std(filtered_signal)
+                signal_mean = np.mean(filtered_signal)
+                
+                thresholds = [
+                    (signal_mean + 0.2 * signal_std, 0.1 * signal_std),
+                    (signal_mean + 0.1 * signal_std, 0.05 * signal_std),
+                    (signal_mean, 0.02 * signal_std)
+                ]
+                
+                peak_indices = np.array([])
+                for height_threshold, prominence_threshold in thresholds:
+                    peak_indices, _ = find_peaks(
+                        filtered_signal,
+                        height=height_threshold,
+                        distance=min_distance,
+                        prominence=prominence_threshold
+                    )
                     if len(peak_indices) >= 3:
-                    break
+                        break
             
             if len(peak_indices) < 2:
                 return {
@@ -230,7 +230,7 @@ class IRWindowedPTTPeakDetector:
             valid_ibi = ibi_ms[(ibi_ms >= 300) & (ibi_ms <= 1200)]
             if len(valid_ibi) > 0:
                 peak_hr_bpm = np.mean(60000 / valid_ibi)
-        else:
+            else:
                 peak_hr_bpm = 0
         
         return {
@@ -437,16 +437,16 @@ class IRWindowedPTTPeakDetector:
                     print(f"⚠️  {sensor}: 数据列不足")
                     continue
                 
-                    ir_signal = df.iloc[:, 2].values  # IR通道
+                ir_signal = df.iloc[:, 2].values  # IR通道
                     
-                    # 动态计算当前传感器的采样率
-                    if 'timestamp' in df.columns:
-                        current_fs = self.calculate_sampling_rate(df['timestamp'].values)
-                        print(f"📊 {sensor} 计算采样率: {current_fs:.1f}Hz")
-                    else:
-                        current_fs = self.default_fs
-                        print(f"⚠️ {sensor} 缺少时间戳信息，使用默认采样率: {current_fs}Hz")
-                    
+                # 动态计算当前传感器的采样率
+                if 'timestamp' in df.columns:
+                    current_fs = self.calculate_sampling_rate(df['timestamp'].values)
+                    print(f"📊 {sensor} 计算采样率: {current_fs:.1f}Hz")
+                else:
+                    current_fs = self.default_fs
+                    print(f"⚠️ {sensor} 缺少时间戳信息，使用默认采样率: {current_fs}Hz")
+                
                 sensor_signals[sensor] = {
                     'signal': ir_signal,
                     'dataframe': df,
@@ -489,7 +489,7 @@ class IRWindowedPTTPeakDetector:
                     mean_ibi = np.mean(window['ibi_ms']) if len(window['ibi_ms']) > 0 else np.nan  # 新增：计算窗口平均IBI
                     window_summary.append({
                         'exp_id': exp_id,
-                    'sensor': sensor,
+                        'sensor': sensor,
                         'sensor_name': self.sensor_mapping[sensor],
                         'window_id': window['window_id'],
                         'start_time_s': window['start_time_s'],
@@ -521,7 +521,7 @@ class IRWindowedPTTPeakDetector:
                         )):
                             valid_peaks.append({
                                 'exp_id': exp_id,
-                        'sensor': sensor,
+                                'sensor': sensor,
                                 'sensor_name': self.sensor_mapping[sensor],
                                 'window_id': window['window_id'],
                                 'peak_number_in_window': i + 1,
@@ -575,12 +575,12 @@ class IRWindowedPTTPeakDetector:
             for i in range(len(sensors)):
                 for j in range(i+1, len(sensors)):
                     sensor1, sensor2 = sensors[i], sensors[j]
-                col1 = f'{sensor1}_peak_time_s'
-                col2 = f'{sensor2}_peak_time_s'
-                
-                if col1 in heartbeat_df.columns and col2 in heartbeat_df.columns:
-                    valid_data = heartbeat_df.dropna(subset=[col1, col2])
+                    col1 = f'{sensor1}_peak_time_s'
+                    col2 = f'{sensor2}_peak_time_s'
                     
+                    if col1 in heartbeat_df.columns and col2 in heartbeat_df.columns:
+                        valid_data = heartbeat_df.dropna(subset=[col1, col2])
+                        
                         for _, row in valid_data.iterrows():
                             ptt_ms = (row[col2] - row[col1]) * 1000
                             
@@ -809,6 +809,10 @@ def process_subject(date_folder, subject):
     autodl_root = '/root/autodl-tmp/'
     data_path = os.path.join(autodl_root, subject, 'csv_output')
     output_dir = os.path.join(autodl_root, subject, 'ptt_output')
+    
+    if os.listdir(output_dir):
+        print(f"\nsubject {subject} 已处理（ptt_output 目录非空），跳过")
+        return
     
     if not os.path.exists(data_path):
         print(f"⚠️ subject {subject} 无csv_output文件夹，跳过")
