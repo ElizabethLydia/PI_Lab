@@ -64,8 +64,8 @@ class PTTBloodPressureAnalyzer:
     def load_ground_truth_bp(self, exp_id):
         """加载生理指标数据（从CSV文件）"""
         try:
-            # 加载CSV文件
-            csv_file = f"output/csv_output/{exp_id}_biopac_aligned.csv"
+            # 加载CSV文件（修正文件名）
+            csv_file = os.path.join(self.csv_output_dir, f'{self.subject}_{exp_id}_biopac_aligned.csv')
             if not os.path.exists(csv_file):
                 print(f"❌ 生理数据文件不存在: {csv_file}")
                 return None
@@ -167,9 +167,6 @@ class PTTBloodPressureAnalyzer:
             for indicator in self.physiological_indicators.keys():
                 if indicator in physio_data.columns:
                     physio_values[f'{indicator}_mean'] = window_physio[indicator].mean()
-                    # physio_values[f'{indicator}_std'] = window_physio[indicator].std()
-                    # physio_values[f'{indicator}_min'] = window_physio[indicator].min()
-                    # physio_values[f'{indicator}_max'] = window_physio[indicator].max()
                     physio_values[f'{indicator}_count'] = len(window_physio)
             
             # 构建同步数据行
@@ -218,6 +215,8 @@ class PTTBloodPressureAnalyzer:
         else:
             title += ' (Overall)'
             filename = 'overall_ptt_boxplot.png'
+        if hasattr(self, 'subject'):
+            title += f' (Subject {self.subject})'
         plt.title(title)
         plt.savefig(os.path.join(self.output_dir, filename))
         plt.close()
@@ -322,6 +321,8 @@ class PTTBloodPressureAnalyzer:
         
         plt.title(f'PTT-Cardiovascular Parameters Correlation Analysis{title_suffix}', 
                  fontsize=16, fontweight='bold', pad=20)
+        if hasattr(self, 'subject'):
+            plt.suptitle(f'Subject {self.subject}', y=1.02, fontsize=12)
         plt.xlabel('Physiological Parameters', fontsize=12, fontweight='bold')
         plt.ylabel('PTT Sensor Combinations', fontsize=12, fontweight='bold')
         plt.xticks(rotation=45, ha='right')
@@ -508,7 +509,7 @@ class PTTBloodPressureAnalyzer:
                 plt.figure(figsize=(10, 8))  # 增加图表高度以容纳更多信息
                 
                 # 1. 绘制原始数据点
-                plt.scatter(X, y, alpha=0.6, color='blue', label='原始数据')
+                plt.scatter(X, y, alpha=0.6, color='blue', label='Data Points')
                 
                 # 2. 绘制拟合直线
                 x_min, x_max = np.min(X), np.max(X)
@@ -518,7 +519,7 @@ class PTTBloodPressureAnalyzer:
                 y_range_scaled = model.predict(x_range_scaled)
                 y_range = scaler_y.inverse_transform(y_range_scaled.reshape(-1, 1)).flatten()
                 
-                plt.plot(x_range, y_range, 'r-', linewidth=2, label='拟合直线')
+                plt.plot(x_range, y_range, 'r-', linewidth=2, label='Fitted Line')
                 
                 # 3. 添加图例和标签
                 plt.xlabel(f'PTT ({sensor_pair}) (ms)')
@@ -533,9 +534,10 @@ class PTTBloodPressureAnalyzer:
                 intercept_original = scaler_y.mean_[0] - coef * (scaler_X.mean_[0] * scaler_y.scale_[0] / scaler_X.scale_[0]) + intercept * scaler_y.scale_[0]
                 
                 # 4. 更新标题，包含相关性信息
-                plt.title(f'{self._format_physio_label_en(physio_col)} vs PTT ({sensor_pair})\n'
-                        f'方程: y = {coef_original:.3f}·x + {intercept_original:.3f} | 相关性: r={ptt_correlation:.3f}, p={ptt_p_value:.2e}\n'
-                        f'R²={r2:.3f}, MAE={mae:.2f}, n={len(y)}')
+                title = f'{self._format_physio_label_en(physio_col)} vs PTT ({sensor_pair}) (Subject {self.subject})\n'
+                title += f'Equation: y = {coef_original:.3f}x + {intercept_original:.3f} | Correlation: r={ptt_correlation:.3f}, p={ptt_p_value:.2e}\n'
+                title += f'R²={r2:.3f}, MAE={mae:.2f}, n={len(y)}'
+                plt.title(title)
                 
                 plt.legend()
                 plt.grid(alpha=0.3)
@@ -755,6 +757,8 @@ class PTTBloodPressureAnalyzer:
         
         plt.title(f'PTT-Cardiovascular Correlation Analysis (Key Parameters){title_suffix}', 
                  fontsize=14, fontweight='bold', pad=20)
+        if hasattr(self, 'subject'):
+            plt.suptitle(f'Subject {self.subject}', y=1.02, fontsize=12)
         plt.xlabel('Physiological Parameters', fontsize=12, fontweight='bold')
         plt.ylabel('PTT Sensor Combinations', fontsize=12, fontweight='bold')
         plt.xticks(rotation=45, ha='right')
@@ -933,9 +937,11 @@ class PTTBloodPressureAnalyzer:
         # MAE对比
         pivot_mae = model_df.pivot(index='experiment', columns='parameter_label', values='mae')
         im1 = ax1.imshow(pivot_mae.values.T, cmap='Reds', aspect='auto')
-        ax1.set_title('各实验MAE对比 (越低越好)', fontsize=14, fontweight='bold')
-        ax1.set_xlabel('实验编号')
-        ax1.set_ylabel('生理参数')
+        ax1.set_title('MAE Comparison Across Experiments (Lower is Better)', fontsize=14, fontweight='bold')
+        if hasattr(self, 'subject'):
+            ax1.set_suptitle(f'Subject {self.subject}', y=1.02, fontsize=12)
+        ax1.set_xlabel('Experiment Number')
+        ax1.set_ylabel('Physiological Parameter')
         ax1.set_xticks(range(len(pivot_mae.index)))
         ax1.set_xticklabels(pivot_mae.index)
         ax1.set_yticks(range(len(pivot_mae.columns)))
@@ -953,9 +959,11 @@ class PTTBloodPressureAnalyzer:
         # R²对比
         pivot_r2 = model_df.pivot(index='experiment', columns='parameter_label', values='r2_score')
         im2 = ax2.imshow(pivot_r2.values.T, cmap='Blues', aspect='auto')
-        ax2.set_title('各实验R²对比 (越高越好)', fontsize=14, fontweight='bold')
-        ax2.set_xlabel('实验编号')
-        ax2.set_ylabel('生理参数')
+        ax2.set_title('R² Comparison Across Experiments (Higher is Better)', fontsize=14, fontweight='bold')
+        if hasattr(self, 'subject'):
+            ax2.set_suptitle(f'Subject {self.subject}', y=1.02, fontsize=12)
+        ax2.set_xlabel('Experiment Number')
+        ax2.set_ylabel('Physiological Parameter')
         ax2.set_xticks(range(len(pivot_r2.index)))
         ax2.set_xticklabels(pivot_r2.index)
         ax2.set_yticks(range(len(pivot_r2.columns)))
@@ -1008,31 +1016,52 @@ def main():
     print("🩺 PTT-Cardiovascular Parameters Correlation Analysis")
     print("="*60)
     
-    # 创建分析器
-    analyzer = PTTBloodPressureAnalyzer()
+    # # 创建分析器
+    # analyzer = PTTBloodPressureAnalyzer()
+    root_path = '/root/autodl-tmp/'
+    # 获取所有受试者文件夹
+    subject_list = sorted([d for d in os.listdir(root_path) 
+                           if os.path.isdir(os.path.join(root_path, d)) and d.startswith('00')])
+    print(f"📋 发现 {len(subject_list)} 个受试者")
     
-    print("\n📋 请选择分析方式:")
-    print("1. 综合分析 (单实验+跨实验)")
-    print("2. 单实验分析")
-    print("3. 跨实验分析")
+    # print("\n📋 请选择分析方式:")
+    # print("1. 综合分析 (单实验+跨实验)")
+    # print("2. 单实验分析")
+    # print("3. 跨实验分析")
     
-    try:
-        choice = input("\n请输入选择 (1/2/3, 默认1): ").strip()
-        if not choice:
-            choice = "1"  # 默认综合分析
-    except:
-        choice = "1"  # 默认选择
+    # try:
+    #     choice = input("\n请输入选择 (1/2/3, 默认1): ").strip()
+    #     if not choice:
+    #         choice = "1"  # 默认综合分析
+    # except:
+    #     choice = "1"  # 默认选择
     
-    if choice == "1":
-        print("\n🔬 运行综合分析...")
-        # 运行综合分析
+    # if choice == "1":
+    #     print("\n🔬 运行综合分析...")
+    #     # 运行综合分析
+    for subject in subject_list:
+        print(f"\n🔬 处理受试者: {subject}")
+        # 为每个受试者设置输出目录（绝对路径）
+        subject_output_dir = os.path.join(root_path, subject, 'ptt_bp_analysis')
+        os.makedirs(subject_output_dir, exist_ok=True)
+        
+        # 创建分析器实例
+        analyzer = PTTBloodPressureAnalyzer(output_dir=subject_output_dir)
+        
+        # 修改数据加载路径以包含subject（绝对路径）
+        analyzer.ptt_output_dir = os.path.join(root_path, subject, 'ptt_output')
+        analyzer.csv_output_dir = os.path.join(root_path, subject, 'csv_output')
+        analyzer.subject = subject  # 添加subject属性用于文件名
+        
+        # 运行综合分析（模式1）
         results = analyzer.run_comprehensive_analysis()
         
         if results and results['overall']:
             overall_results = results['overall']
             
             # 显示最佳相关性
-            print(f"\n🏆 Top Significant Correlations (Overall Analysis):")
+            # print(f"\n🏆 Top Significant Correlations (Overall Analysis):")
+            print(f"\n🏆 Top Significant Correlations (Overall Analysis for {subject}):")
             all_corrs = []
             for sensor_pair, physio_data in overall_results['correlations'].items():
                 for physio_col, stats_data in physio_data.items():
@@ -1050,33 +1079,35 @@ def main():
                 print(f"   {i+1:2d}. {sensor_label} ←→ {physio_label}")
                 print(f"       r={corr:+.3f} {direction}, p={p_val:.2e}, N={n_samples}")
     
-    elif choice == "2":
-        print("\n🎯 运行单独实验拟合分析...")
-        # 运行单独实验拟合
-        individual_models = analyzer.run_individual_regression_analysis()
+    #     elif choice == "2":
+    #     print("\n🎯 运行单独实验拟合分析...")
+    #     # 运行单独实验拟合
+    #     individual_models = analyzer.run_individual_regression_analysis()
         
-        if individual_models:
-            print(f"\n📊 单独实验拟合完成!")
-            print(f"   • 成功分析实验数: {len(individual_models)}")
-            print(f"   • 详细结果已保存: individual_experiment_models.csv")
-            print(f"   • 性能对比图: individual_model_performance_comparison.png")
+    #     if individual_models:
+    #         print(f"\n📊 单独实验拟合完成!")
+    #         print(f"   • 成功分析实验数: {len(individual_models)}")
+    #         print(f"   • 详细结果已保存: individual_experiment_models.csv")
+    #         print(f"   • 性能对比图: individual_model_performance_comparison.png")
     
-    elif choice == "3":
-         print("\n🎯 运行跨实验拟合分析...")
-         # 运行跨实验拟合分析
-         exp_sensor_models = analyzer.run_cross_experiments_analysis()
+    # elif choice == "3":
+    #      print("\n🎯 运行跨实验拟合分析...")
+    #      # 运行跨实验拟合分析
+    #      exp_sensor_models = analyzer.run_cross_experiments_analysis()
          
-         if exp_sensor_models:
-             print(f"\n✅ 跨实验拟合完成!")
-             print(f"📁 结果保存在: {analyzer.output_dir}")
-    else:
-        print("❌ 无效选择，默认运行综合分析")
-        choice = "1"
-        # 递归调用原始分析
-        analyzer.run_comprehensive_analysis()
+    #      if exp_sensor_models:
+    #          print(f"\n✅ 跨实验拟合完成!")
+    #          print(f"📁 结果保存在: {analyzer.output_dir}")
+    # else:
+    #     print("❌ 无效选择，默认运行综合分析")
+    #     choice = "1"
+    #     # 递归调用原始分析
+    #     analyzer.run_comprehensive_analysis()
     
-    print(f"\n✅ 分析完成!")
-    print(f"📁 所有结果保存在: {analyzer.output_dir}")
+    # print(f"\n✅ 分析完成!")
+    # print(f"📁 所有结果保存在: {analyzer.output_dir}")
+    print(f"\n✅ 所有受试者分析完成!")
+    print(f"📁 结果保存在每个受试者的 ptt_bp_analysis 目录中")
 
 if __name__ == "__main__":
     main() 
