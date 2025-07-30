@@ -1,13 +1,11 @@
-
-
-# PI-Lab step3_ir_ptt_peak_detector2 README
+# PI-Lab step2_ir_ptt_peak_detector README
 
 ## 概述
-`step3_ir_ptt_peak_detector2.py` 是一个专为脉搏传导时间（PTT）峰值检测设计的 Python 脚本，针对 HUB 设备红外（IR）通道数据进行处理，旨在为血压预测模型提供高质量的 PTT 数据。本脚本基于师兄的建议进行了优化，采用**窗口化时频域验证**策略，通过密集滑动窗口 **（20秒窗口，5秒步长）** 确保**时域峰值检测与频域傅里叶心率分析的一致性**，仅在验证通过的窗口内计算 PTT，从而提高数据可靠性。核心特性包括：
+`step2_ir_ptt_peak_detector.py` 是一个专为脉搏传导时间（PTT）峰值检测设计的 Python 脚本，针对 HUB 设备红外（IR）通道数据进行处理，旨在为血压预测模型提供高质量的 PTT 数据。本脚本基于师兄的建议进行了优化，采用**窗口化时频域验证**策略，通过密集滑动窗口 **（20秒窗口，5秒步长）** 确保**时域峰值检测与频域傅里叶心率分析的一致性**，仅在验证通过的窗口内计算 PTT，从而提高数据可靠性。核心特性包括：
 
 - **专注 IR 通道**：IR 信号质量最佳，优先用于峰值检测。
-- ==**窗口化分析**：使用 20 秒滑动窗口（5 秒步长），进行密集时频域验证。==
-- ==**时频域一致性**：时域心率（峰值检测）与频域心率（FFT）差异 < 5 BPM 的窗口才视为有效。==
+- **窗口化分析**：使用 20 秒滑动窗口（5 秒步长），进行密集时频域验证。==
+- **时频域一致性**：时域心率（峰值检测）与频域心率（FFT）差异 < 5 BPM 的窗口才视为有效。
 - **多方法峰值检测**：支持 `neurokit2`（优先）、`heartpy` 或改进的 `scipy` 方法，自动选择最佳方案。
 - **IBI 质量控制**：通过心跳间期（IBI，300-1200 ms）验证峰值可靠性，确保心率在 50-200 BPM 范围内。
 - **跨传感器心跳匹配**：对 4 个传感器（nose、finger、wrist、ear）生成 6 种 PTT 组合（如 nose→finger）。
@@ -48,13 +46,26 @@
 - **环境要求**：Python 3.6+，支持 `matplotlib` 的图形环境（若在非交互式环境中运行，图像将自动保存为 PNG 文件）。
 
 ### 运行脚本
-1. 修改脚本中的 `data_path` 变量（默认 `PI_Lab/output/csv_output`），确保指向 HUB 数据 CSV 文件目录：
+1. **修改 `subject_ids`**：
+   编辑 `step2_ir_ptt_peak_detector.py`，设置目标受试者 ID：
    ```python
-   detector = IRWindowedPTTPeakDetector(data_path='/your/csv/path')
+   subject_ids = [16, 54, 60]  # 示例：处理 00016, 00054 和 00060
    ```
-2. 执行脚本：
+   - 这会生成 subject_list 如 ['00016', '00054', '00060']，并过滤只处理这些受试者。
+   - **批量处理所有受试者**：注释掉以下行：
+     ```python
+     # subject_ids = [16,54, 60, ...]
+     # subject_list = [f'00{num:03d}' for num in subject_ids]
+     ```
+     然后调用：
+     ```python
+     results = detector.run_windowed_analysis()  # 处理所有受试者
+     ```
+     这将处理根目录下的所有 '00xxx' 格式受试者。修改后保存文件并重新运行。
+
+2. **执行脚本**：
    ```bash
-   python step3_ir_ptt_peak_detector2.py
+   python step2_ir_ptt_peak_detector.py
    ```
 3. 脚本运行流程：
    - 扫描 `data_path` 目录，识别所有实验（如 `1`, `2`, ...）的 HUB 数据文件（基于 `X_hub_sensor2_aligned.csv`）。
@@ -78,6 +89,12 @@
 - **`hr_tolerance_bpm = 5`**：时频域心率差异容忍度（BPM）。
 - **`method = 'auto'`**：峰值检测方法，自动选择 `neurokit2`（优先）、`heartpy` 或 `scipy_advanced`。
 - **`ibi_tolerance = 0.15`**：IBI 容差，用于心跳匹配。
+- `root_path = '/root/autodl-tmp/'`：数据根目录。
+- `window_duration = 20`：窗口大小（秒）。
+- `window_step = 5`：滑动步长（秒）。
+- `hr_tolerance_bpm = 5`：心率差异容忍度（BPM）。
+- `method = 'auto'`：峰值检测方法。
+- `subject_ids = [16,54,...]`：指定受试者 ID 列表；注释掉相关逻辑可处理所有受试者（如上所述）。
 
 ## 输出说明
 ### 日志输出
@@ -119,6 +136,27 @@
      - 窗口验证状态图，显示每个传感器的 IR 信号、有效窗口（绿色背景）、无效窗口（红色背景）和检测到的峰值（红点）。
   7. **`hr_validation_exp_X.png`**：
      - 时频域心率对比图，显示每个传感器的有效窗口（绿色点）和无效窗口（红色点），标注 ±5 BPM 容忍带。
+
+### 文件层级结构
+
+#### 输入数据结构
+- 数据根目录：`/root/autodl-tmp/{subject_id}/`
+  - CSV 输出文件夹：`csv_output/` 包含对齐后的HUB数据
+    - HUB CSV：`{subject_id}_{exp_id}_hub_sensor2_aligned.csv`（nose）
+    - HUB CSV：`{subject_id}_{exp_id}_hub_sensor3_aligned.csv`（finger）
+    - HUB CSV：`{subject_id}_{exp_id}_hub_sensor4_aligned.csv`（wrist）
+    - HUB CSV：`{subject_id}_{exp_id}_hub_sensor5_aligned.csv`（ear）
+
+#### 输出数据结构
+- 输出根目录：`/root/autodl-tmp/{subject_id}/ptt_output/`
+  - 实验文件夹：`exp_{exp_id}/` 包含分析结果
+    - `window_validation_exp_{exp_id}.csv`：窗口验证详情
+    - `valid_peaks_exp_{exp_id}.csv`：有效峰值
+    - `matched_heartbeats_windowed_exp_{exp_id}.csv`：匹配心跳
+    - `ptt_windowed_exp_{exp_id}.csv`：PTT时间序列
+    - `ptt_summary_windowed_exp_{exp_id}.csv`：PTT统计汇总
+    - `windowed_validation_exp_{exp_id}.png`：窗口验证图
+    - `hr_validation_exp_{exp_id}.png`：心率对比图
 
 ### 示例输出
 ```

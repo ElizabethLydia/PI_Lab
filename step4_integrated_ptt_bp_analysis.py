@@ -190,12 +190,13 @@ class IntegratedPTTBloodPressureAnalyzer:
         """绘制 r 的分布图 (violin plot with gradient)"""
         valid_sensors = list(self.ptt_combinations_en.values())
         for physio, physio_label in self.physiological_indicators.items():
+            physio_col = f'{physio}_mean'
             data = []
             for subject in subjects:
                 subj_df = corr_df[corr_df['subject'] == subject]
                 for _, row in subj_df.iterrows():
                     sensor_label = row['sensor_combination']
-                    if sensor_label in valid_sensors:
+                    if sensor_label in valid_sensors and row['physiological_parameter'] == physio_col:
                         data.append({
                             'sensor_pair': sensor_label,
                             'correlation': row['correlation_coefficient']
@@ -206,8 +207,36 @@ class IntegratedPTTBloodPressureAnalyzer:
             os.makedirs(subdir, exist_ok=True)
             plt.figure(figsize=(12, 8))
             sns.violinplot(data=df, x='sensor_pair', y='correlation', palette='viridis', inner='box')
+            
+            # 添加水平参考线
+            lines = [(0, 'black'), (0.4, 'green'), (-0.4, 'green'), (0.7, 'red'), (-0.7, 'red')]
+            for val, color in lines:
+                plt.axhline(val, color=color, linestyle='--', linewidth=1)
+            
+            # 计算并标注 Q1, median, Q3 和最宽点 (峰值)
+            from scipy.stats import gaussian_kde
+            quantiles = df.groupby('sensor_pair')['correlation'].quantile([0.25, 0.5, 0.75]).unstack()
+            for i, pair in enumerate(df['sensor_pair'].unique()):
+                pair_data = df[df['sensor_pair'] == pair]['correlation']
+                if pair in quantiles.index and not pair_data.empty:
+                    q1, median, q3 = quantiles.loc[pair, [0.25, 0.5, 0.75]]
+                    # 标注 Q1 和 Q3 (调整位置以提高清晰度)
+                    plt.text(i + 0.2, q1 - 0.05, f'Q1: {q1:.2f}', ha='left', va='top', fontsize=8, color='blue', bbox=dict(facecolor='white', alpha=0.5, edgecolor='none'))
+                    plt.text(i + 0.2, q3 + 0.05, f'Q3: {q3:.2f}', ha='left', va='bottom', fontsize=8, color='blue', bbox=dict(facecolor='white', alpha=0.5, edgecolor='none'))
+                    # 中位数用白色标注
+                    plt.text(i, median + 0.05, f'Med: {median:.2f}', ha='center', va='bottom', fontsize=8, color='white', bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
+                    # 标注最宽点 (密度峰值)
+                    if len(pair_data) > 1:
+                        pair_data = pair_data.dropna()  # 移除 NaN 以避免 KDE 错误
+                        if not pair_data.empty and np.isfinite(pair_data).all():
+                            kde = gaussian_kde(pair_data)
+                            y_vals = np.linspace(pair_data.min(), pair_data.max(), 100)
+                            kde_vals = kde(y_vals)
+                            peak_y = y_vals[np.argmax(kde_vals)]
+                            plt.text(i - 0.2, peak_y, f'Peak: {peak_y:.2f}', ha='right', va='center', fontsize=8, color='red', bbox=dict(facecolor='white', alpha=0.5, edgecolor='none'))
+            
             plt.title(f'Distribution of Correlations for {physio_label} {title_suffix}')
-            plt.ylim(-1, 1)
+            plt.ylim(-1.1, 1.1)  # 略微扩展 y 轴以容纳标注
             plt.xlabel('Sensor Pair')
             plt.ylabel('Pearson Correlation')
             plt.xticks(rotation=45, ha='right')

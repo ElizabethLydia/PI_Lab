@@ -1,4 +1,4 @@
-# PI-Lab step4_ptt_bp_analysis README
+# PI-Lab step3_ptt_bp_analysis README
 
 `ptt_bp_analysis.py` 是一个专为 PTT（脉搏传导时间）与血压及相关生理指标相关性分析设计的 Python 脚本，基于师兄建议使用合理区间的 PTT 数据进行分析，旨在为新生儿血压预测模型提供数据支持。本脚本通过窗口化验证的 PTT 数据（来自 `ptt_output2` 目录）与 Biopac 生理数据同步，计算相关性并构建回归模型。核心特性包括：
 
@@ -38,10 +38,21 @@
 - **环境要求**：Python 3.6+，支持 `matplotlib` 的图形环境。
 
 ### 运行脚本
-1. 修改脚本中的 `output_dir` 变量（默认 `ptt_bp_analysis`），确保指向结果保存目录。
-2. 执行脚本：
+1. **修改 subject_list**：
+   编辑 `step3_ptt_bp_analysis.py`，设置目标受试者：
+   ```python
+   subject_list = ['00112', '00113']  # 示例：处理 00112 和 00113
+   ```
+   - 这将只处理指定的受试者文件夹。
+   - **批量处理所有受试者**：使用默认代码：
+     ```python
+     subject_list = sorted([d for d in os.listdir(root_path) if os.path.isdir(os.path.join(root_path, d)) and d.startswith('00')])
+     ```
+     这将处理根目录下的所有 '00xxx' 格式受试者。修改后保存文件并重新运行。
+
+2. **执行脚本**：
    ```bash
-   python ptt_bp_analysis.py
+   python step3_ptt_bp_analysis.py
    ```
 3. 选择分析模式：
    - 输入 `1`：运行综合分析（单实验 + 跨实验）。
@@ -54,6 +65,7 @@
 - **`ptt_output_dir`**：PTT 数据目录（默认 `ptt_output2`）。
 - **生理指标**：支持 `systolic_bp`、`diastolic_bp` 等，自动识别可用指标。
 - **传感器组合**：6 种 PTT 组合（如 `nose→finger`）。
+- `subject_list`：指定受试者文件夹列表；默认处理所有 '00xxx' 格式文件夹（如上所述）。
 
 ## 输出说明
 ### 日志输出
@@ -196,6 +208,12 @@
 📁 所有结果保存在: ptt_bp_analysis
 ```
 
+## 概述
+
+- **输出格式**：
+  - 保存同步数据、相关性结果、回归模型评估为 CSV 文件。
+  - 生成相关性热图、拟合曲线图和性能对比图为 PNG 图像。
+
 ## 注意事项
 1. **依赖库**：
    - 确保 `matplotlib` 支持中文字体，避免标签显示为方框。
@@ -213,3 +231,25 @@
    - 使用 `overall_regression_metrics.csv` 选择最佳传感器对，尝试非线性模型（如随机森林）。
 
 - **时间**：2025年7月22日
+
+### 文件层级结构
+
+#### 输入数据结构
+- 数据根目录：`/root/autodl-tmp/{subject_id}/`
+  - PTT 输出文件夹：`ptt_output/exp_{exp_id}/` 包含PTT分析文件
+    - `ptt_windowed_exp_{exp_id}.csv`：PTT时间序列
+    - `window_validation_exp_{exp_id}.csv`：窗口验证详情
+    - 等其他文件
+  - CSV 输出文件夹：`csv_output/` 包含生理数据
+    - `{subject_id}_{exp_id}_biopac_aligned.csv`：生理指标数据
+
+#### 输出数据结构
+- 输出根目录：`/root/autodl-tmp/{subject_id}/ptt_bp_analysis/`
+  - `synchronized_ptt_cardiovascular_data.csv`：同步数据
+  - `ptt_cardiovascular_correlations.csv`：相关性结果
+  - `overall_regression_metrics.csv`：整体回归评估
+  - `individual_experiment_models.csv`：单实验模型评估
+  - `ptt_cardiovascular_correlation_heatmap_overall.png`：整体热图
+  - `ptt_cardiovascular_correlation_focused_overall_focus.png`：聚焦热图
+  - `individual_model_performance_comparison.png`：性能对比图
+  - `*_vs_*_fit.png`：拟合曲线图
