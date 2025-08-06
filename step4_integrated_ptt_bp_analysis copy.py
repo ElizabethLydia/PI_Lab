@@ -18,25 +18,26 @@ import seaborn as sns
 from scipy import stats
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
-from sklearn.preprocessing import StandardScaler
 import warnings
 warnings.filterwarnings('ignore')
+from sklearn.preprocessing import StandardScaler
 
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 plt.ioff()
 
 class IntegratedPTTBloodPressureAnalyzer:
-    def __init__(self, root_path="/root/autodl-tmp/", output_dir="integrated_analysis"):
+    def __init__(self, root_path="/root/autodl-tmp/", output_dir="integrated_analysis2"):
         self.root_path = root_path
         self.output_dir = os.path.join(root_path, output_dir)
-        self.step3_dir = "ptt_bp_analysis"  # step3 输出目录（每个受试者下）
+        self.step3_dir = "ptt_bp_analysis2"  # step3 输出目录（每个受试者下）
         os.makedirs(self.output_dir, exist_ok=True)
         
+        # 只保留血压相关指标（与step3一致）
         self.physiological_indicators = {
             'systolic_bp': 'Systolic BP (mmHg)',
             'diastolic_bp': 'Diastolic BP (mmHg)', 
-            'mean_bp': 'Mean Arterial Pressure (mmHg)',
+            'mean_bp': 'Mean Arterial Pressure (mmHg)'
         }
         
         self.ptt_combinations_en = {
@@ -58,12 +59,14 @@ class IntegratedPTTBloodPressureAnalyzer:
                        if os.path.isdir(os.path.join(self.root_path, d)) and d.startswith('00')])
     
     def load_step3_correlations(self, subject, exp_id=None):
-        """从受试者的 ptt_bp_analysis/ 加载 correlations CSV"""
+        """从受试者的 ptt_bp_analysis2/ 加载 correlations CSV"""
         print(f"📂 加载 {subject} 的 correlations CSV")
         subject_dir = os.path.join(self.root_path, subject, self.step3_dir)
         if exp_id is not None:
-            corr_file = os.path.join(subject_dir, f'ptt_cardiovascular_correlations_exp_{exp_id}.csv')
+            # 从exp_X文件夹中读取
+            corr_file = os.path.join(subject_dir, f'exp_{exp_id}', f'ptt_cardiovascular_correlations_exp_{exp_id}.csv')
         else:
+            # 整体相关性文件在根目录
             corr_file = os.path.join(subject_dir, 'ptt_cardiovascular_correlations.csv')
         if not os.path.exists(corr_file):
             print(f"⚠️ 文件不存在: {corr_file}")

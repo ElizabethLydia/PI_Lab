@@ -19,8 +19,8 @@ from sklearn.metrics import r2_score, mean_absolute_error
 from sklearn.preprocessing import StandardScaler
 import warnings
 warnings.filterwarnings('ignore')
-import multiprocessing
-from tqdm import tqdm
+import multiprocessing as mp
+from functools import partial
 
 # 设置中文字体和图片保存模式
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans']
@@ -30,16 +30,16 @@ plt.ioff()  # 关闭交互模式
 class PTTBloodPressureAnalyzer:
     """PTT与血压相关性分析器"""
     
-    def __init__(self, output_dir="ptt_bp_analysis"):
+    def __init__(self, output_dir="ptt_bp_analysis2"):
         self.output_dir = output_dir
-        self.ptt_output_dir = "ptt_output"  # 窗口化PTT数据目录
+        self.ptt_output_dir = "ptt_output2"  # 窗口化PTT数据目录
         os.makedirs(self.output_dir, exist_ok=True)
         
-        # 血压相关生理指标映射（英文专业术语）
+        # 只保留血压相关指标
         self.physiological_indicators = {
             'systolic_bp': 'Systolic BP (mmHg)',
             'diastolic_bp': 'Diastolic BP (mmHg)', 
-            'mean_bp': 'Mean Arterial Pressure (mmHg)',
+            'mean_bp': 'Mean Arterial Pressure (mmHg)'
         }
         
         # PTT传感器组合（英文标签）
@@ -81,9 +81,9 @@ class PTTBloodPressureAnalyzer:
             return None
     
     def load_ptt_data(self, exp_id):
-        """加载有效窗口的PTT数据"""
+        """加载有效窗口的PTT数据 - 使用step2 copy版本"""
         try:
-            # 加载窗口验证数据
+            # 加载窗口验证数据 - 使用step2 copy版本的数据
             window_file = f"{self.ptt_output_dir}/exp_{exp_id}/window_validation_exp_{exp_id}.csv"
             ptt_file = f"{self.ptt_output_dir}/exp_{exp_id}/ptt_windowed_exp_{exp_id}.csv"
             
@@ -93,7 +93,7 @@ class PTTBloodPressureAnalyzer:
             
             # 加载窗口验证信息
             window_df = pd.read_csv(window_file)
-            # 筛选有效窗口（时频域心率误差合理）
+            # 筛选有效窗口（时域心率误差合理）
             valid_windows = window_df[
                 (window_df['is_valid'] == True) & 
                 (window_df['hr_diff_bpm'].abs() <= 5)  # 心率误差≤5BPM
@@ -182,18 +182,24 @@ class PTTBloodPressureAnalyzer:
         sync_df = pd.DataFrame(synchronized_data)
         print(f"📊 同步完成: {len(sync_df)}个有效窗口")
         
-        # 新增：IQR去除极值（窗口级？但这里是心跳级，需分组）
-        # 假设分组计算mean after IQR
-        grouped = sync_df.groupby(['window_id', 'sensor_pair'])
+        # 新增：IQR去除极值 - 按传感器对分别进行
         cleaned_data = []
-        for name, group in grouped:
-            clean_ptt = self.remove_outliers_iqr(group['ptt_ms'])
-            if not clean_ptt.empty:
-                mean_ptt = clean_ptt.mean()
-                row = group.iloc[0].copy()
-                row['ptt_ms'] = mean_ptt
-                cleaned_data.append(row)
-        cleaned_df = pd.DataFrame(cleaned_data)
+        for sensor_pair in sync_df['sensor_pair'].unique():
+            pair_data = sync_df[sync_df['sensor_pair'] == sensor_pair].copy()
+            pair_original = len(pair_data)
+            
+            # 对每个传感器对进行IQR筛选
+            clean_ptt_series = self.remove_outliers_iqr(pair_data['ptt_ms'])
+            # 使用布尔掩码筛选数据
+            mask = pair_data['ptt_ms'].isin(clean_ptt_series)
+            cleaned_pair = pair_data[mask]
+            pair_filtered = len(cleaned_pair)
+            
+            cleaned_data.append(cleaned_pair)
+            print(f"  {sensor_pair} IQR筛选: 原始{pair_original} → 筛选后{pair_filtered} ({pair_filtered/pair_original*100:.1f}%)")
+        
+        cleaned_df = pd.concat(cleaned_data, ignore_index=True)
+        print(f"📊 IQR筛选完成: 原始{len(sync_df)} → 筛选后{len(cleaned_df)}")
         
         # 生成箱线图
         self.create_ptt_boxplot(cleaned_df, exp_id)  # 修改：传入exp_id
@@ -207,17 +213,21 @@ class PTTBloodPressureAnalyzer:
         title = 'PTT Boxplot per Sensor Pair'
         if exp_id:
             title += f' (Exp {exp_id})'
-            # 保存到对应的exp_X文件夹
-            exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
-            os.makedirs(exp_output_dir, exist_ok=True)
-            filename = os.path.join(exp_output_dir, f'exp_{exp_id}_ptt_boxplot.png')
+            filename = f'exp_{exp_id}_ptt_boxplot.png'
         else:
             title += ' (Overall)'
-            filename = os.path.join(self.output_dir, 'overall_ptt_boxplot.png')
+            filename = 'overall_ptt_boxplot.png'
         if hasattr(self, 'subject'):
             title += f' (Subject {self.subject})'
         plt.title(title)
-        plt.savefig(filename)
+        # 如果有exp_id，则保存到exp_id目录下
+        if exp_id:
+            # 如果exp_id目录不存在，则创建
+            if not os.path.exists(os.path.join(self.output_dir, f'exp_{exp_id}')):
+                os.makedirs(os.path.join(self.output_dir, f'exp_{exp_id}'))
+            plt.savefig(os.path.join(self.output_dir, f'exp_{exp_id}', filename))
+        else:
+            plt.savefig(os.path.join(self.output_dir, filename))
         plt.close()
     
     def calculate_correlations(self, sync_df):
@@ -395,7 +405,7 @@ class PTTBloodPressureAnalyzer:
                     'p_value': stats_data['p_value']
                 }
         
-        # 主要血压指标（均值）
+        # 只处理血压相关指标
         main_physio_cols = []
         for indicator in ['systolic_bp', 'diastolic_bp', 'mean_bp']:
             col_name = f'{indicator}_mean'
@@ -541,14 +551,14 @@ class PTTBloodPressureAnalyzer:
                 plt.legend()
                 plt.grid(alpha=0.3)
                 
-                # 保存图表到对应的exp_X文件夹
+                # 保存图表
                 safe_physio = physio_col.replace(' ', '_').replace('/', '_')
                 safe_pair = sensor_pair.replace(' ', '_').replace('/', '_')
                 if exp_id is not None:
-                    # 创建实验特定的文件夹
-                    exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
-                    os.makedirs(exp_output_dir, exist_ok=True)
-                    plot_path = os.path.join(exp_output_dir, f"exp_{exp_id}_{safe_physio}_vs_{safe_pair}_fit.png")
+                    # 如果exp_id目录不存在，则创建
+                    if not os.path.exists(os.path.join(self.output_dir, f'exp_{exp_id}')):
+                        os.makedirs(os.path.join(self.output_dir, f'exp_{exp_id}'))
+                    plot_path = os.path.join(self.output_dir, f'exp_{exp_id}', f"exp_{exp_id}_{safe_physio}_vs_{safe_pair}_fit.png")
                 else:
                     plot_path = os.path.join(self.output_dir, f"{safe_physio}_vs_{safe_pair}_fit.png")
                 plt.savefig(plot_path, bbox_inches='tight', dpi=150)
@@ -676,10 +686,7 @@ class PTTBloodPressureAnalyzer:
                 correlations = self.calculate_correlations(exp_result['sync_data'])
                 
                 # 创建单个实验的热图
-                self.create_focused_correlation_heatmap(correlations, f"_exp{exp_id}")
-                
-                # 创建单个实验的Bland-Altman图
-                self.create_bland_altman_plots(exp_result['sync_data'], exp_id=exp_id)
+                self.create_focused_correlation_heatmap(correlations, exp_id)
                 
                 # 保存单个实验结果
                 self.save_individual_experiment_results(exp_result['sync_data'], correlations, exp_id)
@@ -698,9 +705,9 @@ class PTTBloodPressureAnalyzer:
         
         return individual_results, combined_df
     
-    def create_focused_correlation_heatmap(self, correlations, title_suffix=""):
+    def create_focused_correlation_heatmap(self, correlations, exp_id=None):
         """创建聚焦的相关性热图（只显示重要指标）"""
-        # 选择重要的血压指标（减少图像大小）
+        # 只显示血压相关指标
         important_indicators = [
             'systolic_bp_mean', 'diastolic_bp_mean', 'mean_bp_mean'
         ]
@@ -758,7 +765,7 @@ class PTTBloodPressureAnalyzer:
         
         # 移除旧的ax.text
         
-        plt.title(f'PTT-Cardiovascular Correlation Analysis (Key Parameters){title_suffix}', 
+        plt.title(f'PTT-Cardiovascular Correlation Analysis (Key Parameters)', 
                  fontsize=14, fontweight='bold', pad=20)
         if hasattr(self, 'subject'):
             plt.suptitle(f'Subject {self.subject}', y=1.02, fontsize=12)
@@ -768,27 +775,18 @@ class PTTBloodPressureAnalyzer:
         plt.yticks(rotation=0)
         plt.tight_layout()
         
-        # 保存图像 - 根据title_suffix判断是否为单个实验
-        if "_exp" in title_suffix:
-            # 提取实验ID
-            exp_id = title_suffix.split("_exp")[1]
-            exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
-            os.makedirs(exp_output_dir, exist_ok=True)
-            filename = f"{exp_output_dir}/ptt_cardiovascular_correlation_focused{title_suffix.replace(' ', '_')}.png"
+        # 保存图像
+        if exp_id is not None:  
+            filename = f"{self.output_dir}/exp_{exp_id}/ptt_cardiovascular_correlation_focused_{exp_id}.png"
         else:
-            filename = f"{self.output_dir}/ptt_cardiovascular_correlation_focused{title_suffix.replace(' ', '_')}.png"
-        
+            filename = f"{self.output_dir}/ptt_cardiovascular_correlation_focused_overall.png"
         plt.savefig(filename, dpi=300, bbox_inches='tight')
         print(f"💾 保存聚焦热图: {filename}")
         
         return fig
     
     def save_individual_experiment_results(self, sync_data, correlations, exp_id):
-        """保存单个实验的结果到exp_X文件夹"""
-        # 创建实验特定的文件夹
-        exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
-        os.makedirs(exp_output_dir, exist_ok=True)
-        
+        """保存单个实验的结果"""
         # 保存相关性结果
         corr_results = []
         for sensor_pair, physio_data in correlations.items():
@@ -806,7 +804,7 @@ class PTTBloodPressureAnalyzer:
                 })
         
         corr_df = pd.DataFrame(corr_results)
-        corr_file = f"{exp_output_dir}/ptt_cardiovascular_correlations_exp_{exp_id}.csv"
+        corr_file = f"{self.output_dir}/exp_{exp_id}/ptt_cardiovascular_correlations_exp_{exp_id}.csv"
         corr_df.to_csv(corr_file, index=False)
         print(f"💾 保存实验{exp_id}相关性: {corr_file}")
     
@@ -826,7 +824,7 @@ class PTTBloodPressureAnalyzer:
         # 3. 创建聚焦热图（优化显示）
         print("\n=== 第三部分：创建聚焦热图（只显示重要指标）===")
         if overall_results:
-            self.create_focused_correlation_heatmap(overall_results['correlations'], "_overall_focus")
+            self.create_focused_correlation_heatmap(overall_results['correlations'], exp_id=None)
         
         # 4. 创建整体Bland-Altman图
         print("\n=== 第四部分：创建整体Bland-Altman图 ===")
@@ -888,7 +886,7 @@ class PTTBloodPressureAnalyzer:
         overall_results = self.run_overall_analysis(combined_df)
 
         if overall_results:
-            self.create_focused_correlation_heatmap(overall_results['correlations'], "_overall_focus")
+            self.create_focused_correlation_heatmap(overall_results['correlations'], exp_id=None)
         
         return {
             'overall': overall_results,
@@ -1239,71 +1237,103 @@ class PTTBloodPressureAnalyzer:
             print(f"❌ Bland-Altman图创建失败: {e}")
             return None
 
-def process_subject_wrapper(subject):
+def process_single_subject(subject, root_path):
+    """并行处理单个受试者"""
     try:
         print(f"\n🔬 处理受试者: {subject}")
-        subject_output_dir = os.path.join(root_path, subject, 'ptt_bp_analysis')
+        # 为每个受试者设置输出目录（绝对路径）- 对应step2 copy版本
+        subject_output_dir = os.path.join(root_path, subject, 'ptt_bp_analysis2')
         os.makedirs(subject_output_dir, exist_ok=True)
+        
+        # 创建分析器实例
         analyzer = PTTBloodPressureAnalyzer(output_dir=subject_output_dir)
-        analyzer.ptt_output_dir = os.path.join(root_path, subject, 'ptt_output')
+        
+        # 修改数据加载路径以包含subject（绝对路径）- 使用step2 copy版本数据
+        analyzer.ptt_output_dir = os.path.join(root_path, subject, 'ptt_output2')
         analyzer.csv_output_dir = os.path.join(root_path, subject, 'csv_output')
-        analyzer.subject = subject
+        analyzer.subject = subject  # 添加subject属性用于文件名
+        
+        # 为每个实验单独创建Bland-Altman图
+        print(f"\n📊 为受试者 {subject} 创建单独实验的Bland-Altman图...")
+        for exp_id in range(1, 12):  # 实验1-11
+            print(f"🔍 处理实验 {exp_id}")
+            
+            # 分析单个实验
+            exp_result = analyzer.analyze_experiment(exp_id)
+            if exp_result and len(exp_result['sync_data']) >= 10:
+                # 创建Bland-Altman图
+                analyzer.create_bland_altman_plots(exp_result['sync_data'], exp_id=exp_id)
+                print(f"✅ 实验 {exp_id} Bland-Altman图创建完成")
+            else:
+                print(f"⚠️ 实验 {exp_id} 数据不足，跳过")
+        
+        # 运行综合分析（模式1）
         results = analyzer.run_comprehensive_analysis()
-        if results:
-            return subject  # 成功返回subject
-        return None
+        
+        if results and results['overall']:
+            overall_results = results['overall']
+            
+            # 显示最佳相关性
+            print(f"\n🏆 Top Significant Correlations (Overall Analysis for {subject}):")
+            all_corrs = []
+            for sensor_pair, physio_data in overall_results['correlations'].items():
+                for physio_col, stats_data in physio_data.items():
+                    if stats_data['significant']:
+                        all_corrs.append((abs(stats_data['correlation']), 
+                                        analyzer._format_sensor_pair_label_en(sensor_pair),
+                                        analyzer._format_physio_label_en(physio_col),
+                                        stats_data['correlation'],
+                                        stats_data['p_value'],
+                                        stats_data['n_samples']))
+            
+            all_corrs.sort(reverse=True)
+            for i, (abs_corr, sensor_label, physio_label, corr, p_val, n_samples) in enumerate(all_corrs[:10]):
+                direction = "↑" if corr > 0 else "↓"
+                print(f"   {i+1:2d}. {sensor_label} ←→ {physio_label}")
+                print(f"       r={corr:+.3f} {direction}, p={p_val:.2e}, N={n_samples}")
+        
+        return f"✅ 受试者 {subject} 处理完成"
+        
     except Exception as e:
-        print(f"❌ 处理 {subject} 失败: {e}")
-        return None
+        return f"❌ 受试者 {subject} 处理失败: {e}"
 
 def main():
     """主函数"""
     print("🩺 PTT-Cardiovascular Parameters Correlation Analysis")
     print("="*60)
     
-    global root_path
     root_path = '/root/autodl-tmp/'
-    # # 所有subjects
-    # # target_ids = range(101, 113)
-    # subject_list = sorted([f'00{num:03d}' for num in target_ids if os.path.isdir(os.path.join(root_path, f'00{num:03d}'))])
-    # print(f"📋 指定处理 {len(subject_list)} 个受试者: {subject_list}")
-
-    # 扫描所有可用的受试者目录
-    all_subjects = []
-    for item in os.listdir(root_path):
-        item_path = os.path.join(root_path, item)
-        if os.path.isdir(item_path) and item.startswith('00'):
-            all_subjects.append(item)
+    # 获取所有受试者文件夹
+    subject_list = sorted([d for d in os.listdir(root_path) 
+                           if os.path.isdir(os.path.join(root_path, d)) and d.startswith('00')])
+    print(f"📋 发现 {len(subject_list)} 个受试者")
     
-    subject_list = sorted(all_subjects)
-    print(f"📋 发现 {len(subject_list)} 个受试者目录: {subject_list}")
+    # 设置并行处理参数
+    n_cores = min(8, len(subject_list))  # 使用8核或受试者数量（取较小值）
+    print(f"🚀 使用 {n_cores} 个核心进行并行处理")
     
-    # 读取已处理的subjects
-    processed_txt = '/root/processed_subjects.txt'
-    processed_subjects = set()
-    if os.path.exists(processed_txt):
-        with open(processed_txt, 'r') as f:
-            processed_subjects = set(line.strip() for line in f)
-        print(f"✅ 已处理 {len(processed_subjects)} 个subjects")
+    # 创建部分函数，固定root_path参数
+    process_func = partial(process_single_subject, root_path=root_path)
     
-    # 过滤未处理的
-    to_process = [s for s in subject_list if s not in processed_subjects]
-    print(f"🚀 将处理 {len(to_process)} 个新subjects")
+    # 使用进程池进行并行处理
+    with mp.Pool(processes=n_cores) as pool:
+        results = pool.map(process_func, subject_list)
     
-    # 启用8核并行处理
-    n_cores = min(8, multiprocessing.cpu_count())
-    print(f"🚀 启用 {n_cores} 核并行处理")
+    # 打印处理结果
+    print("\n📊 并行处理结果:")
+    for result in results:
+        print(result)
     
-    with multiprocessing.Pool(processes=n_cores) as pool:
-        results = list(tqdm(pool.imap(process_subject_wrapper, to_process), total=len(to_process), desc="处理subjects"))
-    
-    # 记录成功的到TXT
-    successful = [r for r in results if r is not None]
-    with open(processed_txt, 'a') as f:
-        for subj in successful:
-            f.write(f'{subj}\n')
-    print(f"\n✅ 本次成功处理 {len(successful)} 个subjects，已追加到 {processed_txt}")
-    print(f"📁 结果保存在每个受试者的 ptt_bp_analysis 目录中")
+    print(f"\n✅ 所有受试者分析完成!")
+    print(f"📁 结果保存在每个受试者的 ptt_bp_analysis2 目录中")
+    print(f"🎯 新增功能:")
+    print(f"   • 删除了'bp'相关统计（师兄建议无意义）")
+    print(f"   • 使用step2 copy版本的PTT数据（时域心率验证）")
+    print(f"   • 添加了Bland-Altman图（6x6布局，每个传感器对左右两个图）")
+    print(f"   • 六个传感器对的血压预测一致性分析")
+    print(f"   • 每个实验单独保存到对应文件夹")
+    print(f"   • 误差带统计保存为CSV文件")
+    print(f"   • 并行处理优化（利用{n_cores}核处理器）")
 
 if __name__ == "__main__":
     main() 
