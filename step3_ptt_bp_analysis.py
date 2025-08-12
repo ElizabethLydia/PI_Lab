@@ -205,14 +205,19 @@ class PTTBloodPressureAnalyzer:
         title = 'PTT Boxplot per Sensor Pair'
         if exp_id:
             title += f' (Exp {exp_id})'
+            # 创建实验特定的文件夹
+            exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
+            os.makedirs(exp_output_dir, exist_ok=True)
             filename = f'exp_{exp_id}_ptt_boxplot.png'
+            filepath = os.path.join(exp_output_dir, filename)
         else:
             title += ' (Overall)'
             filename = 'overall_ptt_boxplot.png'
+            filepath = os.path.join(self.output_dir, filename)
         if hasattr(self, 'subject'):
             title += f' (Subject {self.subject})'
         plt.title(title)
-        plt.savefig(os.path.join(self.output_dir, filename))
+        plt.savefig(filepath)
         plt.close()
     
     def calculate_correlations(self, sync_df):
@@ -324,7 +329,14 @@ class PTTBloodPressureAnalyzer:
         plt.tight_layout()
         
         # 保存图像
-        filename = f"{self.output_dir}/ptt_cardiovascular_correlation_heatmap{title_suffix.replace(' ', '_')}.png"
+        if title_suffix and title_suffix.startswith("_exp"):
+            # 提取实验ID
+            exp_id = title_suffix.replace("_exp", "").replace(" ", "_")
+            exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
+            os.makedirs(exp_output_dir, exist_ok=True)
+            filename = f"{exp_output_dir}/ptt_cardiovascular_correlation_heatmap_{exp_id}.png"
+        else:
+            filename = f"{self.output_dir}/ptt_cardiovascular_correlation_heatmap{title_suffix.replace(' ', '_')}.png"
         plt.savefig(filename, dpi=300, bbox_inches='tight')
         print(f"💾 保存相关性热图: {filename}")
         
@@ -540,7 +552,10 @@ class PTTBloodPressureAnalyzer:
                 safe_physio = physio_col.replace(' ', '_').replace('/', '_')
                 safe_pair = sensor_pair.replace(' ', '_').replace('/', '_')
                 if exp_id is not None:
-                    plot_path = os.path.join(self.output_dir, f"exp_{exp_id}_{safe_physio}_vs_{safe_pair}_fit.png")
+                    # 创建实验特定的文件夹
+                    exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
+                    os.makedirs(exp_output_dir, exist_ok=True)
+                    plot_path = os.path.join(exp_output_dir, f"exp_{exp_id}_{safe_physio}_vs_{safe_pair}_fit.png")
                 else:
                     plot_path = os.path.join(self.output_dir, f"{safe_physio}_vs_{safe_pair}_fit.png")
                 plt.savefig(plot_path, bbox_inches='tight', dpi=150)
@@ -761,7 +776,14 @@ class PTTBloodPressureAnalyzer:
         plt.tight_layout()
         
         # 保存图像
-        filename = f"{self.output_dir}/ptt_cardiovascular_correlation_focused{title_suffix.replace(' ', '_')}.png"
+        if title_suffix and title_suffix.startswith("_exp"):
+            # 提取实验ID
+            exp_id = title_suffix.replace("_exp", "").replace(" ", "_")
+            exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
+            os.makedirs(exp_output_dir, exist_ok=True)
+            filename = f"{exp_output_dir}/ptt_cardiovascular_correlation_focused_{exp_id}.png"
+        else:
+            filename = f"{self.output_dir}/ptt_cardiovascular_correlation_focused{title_suffix.replace(' ', '_')}.png"
         plt.savefig(filename, dpi=300, bbox_inches='tight')
         print(f"💾 保存聚焦热图: {filename}")
         
@@ -786,7 +808,10 @@ class PTTBloodPressureAnalyzer:
                 })
         
         corr_df = pd.DataFrame(corr_results)
-        corr_file = f"{self.output_dir}/ptt_cardiovascular_correlations_exp_{exp_id}.csv"
+        # 创建实验特定的文件夹
+        exp_output_dir = os.path.join(self.output_dir, f'exp_{exp_id}')
+        os.makedirs(exp_output_dir, exist_ok=True)
+        corr_file = f"{exp_output_dir}/ptt_cardiovascular_correlations_exp_{exp_id}.csv"
         corr_df.to_csv(corr_file, index=False)
         print(f"💾 保存实验{exp_id}相关性: {corr_file}")
     

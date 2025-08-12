@@ -62,7 +62,9 @@ class IntegratedPTTBloodPressureAnalyzer:
         print(f"📂 加载 {subject} 的 correlations CSV")
         subject_dir = os.path.join(self.root_path, subject, self.step3_dir)
         if exp_id is not None:
-            corr_file = os.path.join(subject_dir, f'ptt_cardiovascular_correlations_exp_{exp_id}.csv')
+            # 文件在 exp_X 子文件夹中
+            exp_subdir = os.path.join(subject_dir, f'exp_{exp_id}')
+            corr_file = os.path.join(exp_subdir, f'ptt_cardiovascular_correlations_exp_{exp_id}.csv')
         else:
             corr_file = os.path.join(subject_dir, 'ptt_cardiovascular_correlations.csv')
         if not os.path.exists(corr_file):
