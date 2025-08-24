@@ -1,0 +1,127 @@
+subject,status_file_exists,status,timestamp,output_directory,error_message,raw_content
+00003,False,NO_FILE,N/A,N/A,状态文件不存在,
+00016,False,NO_FILE,N/A,N/A,状态文件不存在,
+00017,False,NO_FILE,N/A,N/A,状态文件不存在,
+00023,False,NO_FILE,N/A,N/A,状态文件不存在,
+00041,False,NO_FILE,N/A,N/A,状态文件不存在,
+00042,False,NO_FILE,N/A,N/A,状态文件不存在,
+00043,False,NO_FILE,N/A,N/A,状态文件不存在,
+00044,False,NO_FILE,N/A,N/A,状态文件不存在,
+00045,False,NO_FILE,N/A,N/A,状态文件不存在,
+00046,False,NO_FILE,N/A,N/A,状态文件不存在,
+00047,False,NO_FILE,N/A,N/A,状态文件不存在,
+00048,False,NO_FILE,N/A,N/A,状态文件不存在,
+00049,False,NO_FILE,N/A,N/A,状态文件不存在,
+00050,False,NO_FILE,N/A,N/A,状态文件不存在,
+00051,False,NO_FILE,N/A,N/A,状态文件不存在,
+00052,False,NO_FILE,N/A,N/A,状态文件不存在,
+00053,False,NO_FILE,N/A,N/A,状态文件不存在,
+00054,False,NO_FILE,N/A,N/A,状态文件不存在,
+00055,False,NO_FILE,N/A,N/A,状态文件不存在,
+00056,False,NO_FILE,N/A,N/A,状态文件不存在,
+00057,False,NO_FILE,N/A,N/A,状态文件不存在,
+00058,False,NO_FILE,N/A,N/A,状态文件不存在,
+00059,False,NO_FILE,N/A,N/A,状态文件不存在,
+00060,False,NO_FILE,N/A,N/A,状态文件不存在,
+00061,False,NO_FILE,N/A,N/A,状态文件不存在,
+00062,False,NO_FILE,N/A,N/A,状态文件不存在,
+00063,False,NO_FILE,N/A,N/A,状态文件不存在,
+00064,False,NO_FILE,N/A,N/A,状态文件不存在,
+00065,False,NO_FILE,N/A,N/A,状态文件不存在,
+00066,False,NO_FILE,N/A,N/A,状态文件不存在,
+00067,False,NO_FILE,N/A,N/A,状态文件不存在,
+00068,False,NO_FILE,N/A,N/A,状态文件不存在,
+00069,False,NO_FILE,N/A,N/A,状态文件不存在,
+00070,False,NO_FILE,N/A,N/A,状态文件不存在,
+00071,False,NO_FILE,N/A,N/A,状态文件不存在,
+00072,False,NO_FILE,N/A,N/A,状态文件不存在,
+00073,False,NO_FILE,N/A,N/A,状态文件不存在,
+00074,False,NO_FILE,N/A,N/A,状态文件不存在,
+00075,False,NO_FILE,N/A,N/A,状态文件不存在,
+00076,False,NO_FILE,N/A,N/A,状态文件不存在,
+00077,False,NO_FILE,N/A,N/A,状态文件不存在,
+00078,False,NO_FILE,N/A,N/A,状态文件不存在,
+00079,False,NO_FILE,N/A,N/A,状态文件不存在,
+00080,False,NO_FILE,N/A,N/A,状态文件不存在,
+00081,False,NO_FILE,N/A,N/A,状态文件不存在,
+00082,False,NO_FILE,N/A,N/A,状态文件不存在,
+00083,False,NO_FILE,N/A,N/A,状态文件不存在,
+00084,False,NO_FILE,N/A,N/A,状态文件不存在,
+00085,False,NO_FILE,N/A,N/A,状态文件不存在,
+00086,False,NO_FILE,N/A,N/A,状态文件不存在,
+00087,False,NO_FILE,N/A,N/A,状态文件不存在,
+00088,False,NO_FILE,N/A,N/A,状态文件不存在,
+00089,False,NO_FILE,N/A,N/A,状态文件不存在,
+00090,False,NO_FILE,N/A,N/A,状态文件不存在,
+00091,False,NO_FILE,N/A,N/A,状态文件不存在,
+00092,False,NO_FILE,N/A,N/A,状态文件不存在,
+00093,False,NO_FILE,N/A,N/A,状态文件不存在,
+00094,False,NO_FILE,N/A,N/A,状态文件不存在,
+00095,False,NO_FILE,N/A,N/A,状态文件不存在,
+00096,False,NO_FILE,N/A,N/A,状态文件不存在,
+00097,False,NO_FILE,N/A,N/A,状态文件不存在,
+00098,True,ERROR,2025-08-23 17:47:42.148693,/root/autodl-tmp/00098/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00098 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:42.148693
+Output Directory: /root/autodl-tmp/00098/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00099,False,NO_FILE,N/A,N/A,状态文件不存在,
+00100,True,ERROR,2025-08-23 17:47:43.619522,/root/autodl-tmp/00100/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00100 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:43.619522
+Output Directory: /root/autodl-tmp/00100/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00101,True,ERROR,2025-08-23 17:47:45.239344,/root/autodl-tmp/00101/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00101 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:45.239344
+Output Directory: /root/autodl-tmp/00101/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00102,False,NO_FILE,N/A,N/A,状态文件不存在,
+00103,False,NO_FILE,N/A,N/A,状态文件不存在,
+00104,True,ERROR,2025-08-23 17:47:43.636441,/root/autodl-tmp/00104/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00104 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:43.636441
+Output Directory: /root/autodl-tmp/00104/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00105,False,NO_FILE,N/A,N/A,状态文件不存在,
+00106,True,ERROR,2025-08-23 17:47:40.338577,/root/autodl-tmp/00106/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00106 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:40.338577
+Output Directory: /root/autodl-tmp/00106/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00107,False,NO_FILE,N/A,N/A,状态文件不存在,
+00108,True,ERROR,2025-08-23 17:47:42.032247,/root/autodl-tmp/00108/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00108 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:42.032247
+Output Directory: /root/autodl-tmp/00108/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00109,True,ERROR,2025-08-23 17:47:45.014345,/root/autodl-tmp/00109/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00109 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:45.014345
+Output Directory: /root/autodl-tmp/00109/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00110,True,ERROR,2025-08-23 17:47:45.449708,/root/autodl-tmp/00110/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00110 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:45.449708
+Output Directory: /root/autodl-tmp/00110/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00111,True,ERROR,2025-08-23 17:47:47.849288,/root/autodl-tmp/00111/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00111 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:47.849288
+Output Directory: /root/autodl-tmp/00111/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00112,True,ERROR,2025-08-23 17:47:51.017982,/root/autodl-tmp/00112/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00112 - PTT Analysis Error
+Timestamp: 2025-08-23 17:47:51.017982
+Output Directory: /root/autodl-tmp/00112/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"

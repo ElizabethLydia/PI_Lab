@@ -1,0 +1,402 @@
+subject,status_file_exists,status,timestamp,output_directory,error_message,raw_content
+00003,True,SUCCESS,2025-08-16 18:00:54.364640,/root/autodl-tmp/00003/ptt_bp_analysis_moved,,"Subject 00003 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:00:54.364640
+Output Directory: /root/autodl-tmp/00003/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00016,True,SUCCESS,2025-08-16 18:01:17.287053,/root/autodl-tmp/00016/ptt_bp_analysis_moved,,"Subject 00016 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:17.287053
+Output Directory: /root/autodl-tmp/00016/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00017,True,ERROR,2025-08-16 18:00:10.741974,/root/autodl-tmp/00017/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00017 - PTT Analysis Error
+Timestamp: 2025-08-16 18:00:10.741974
+Output Directory: /root/autodl-tmp/00017/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00023,True,ERROR,2025-08-16 18:00:10.766056,/root/autodl-tmp/00023/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00023 - PTT Analysis Error
+Timestamp: 2025-08-16 18:00:10.766056
+Output Directory: /root/autodl-tmp/00023/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00041,True,SUCCESS,2025-08-16 18:00:40.651877,/root/autodl-tmp/00041/ptt_bp_analysis_moved,,"Subject 00041 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:00:40.651877
+Output Directory: /root/autodl-tmp/00041/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00042,True,SUCCESS,2025-08-16 18:01:20.275120,/root/autodl-tmp/00042/ptt_bp_analysis_moved,,"Subject 00042 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:20.275120
+Output Directory: /root/autodl-tmp/00042/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00043,True,SUCCESS,2025-08-16 18:00:44.732516,/root/autodl-tmp/00043/ptt_bp_analysis_moved,,"Subject 00043 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:00:44.732516
+Output Directory: /root/autodl-tmp/00043/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00044,True,SUCCESS,2025-08-16 18:00:58.714765,/root/autodl-tmp/00044/ptt_bp_analysis_moved,,"Subject 00044 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:00:58.714765
+Output Directory: /root/autodl-tmp/00044/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00045,True,SUCCESS,2025-08-16 18:01:01.985482,/root/autodl-tmp/00045/ptt_bp_analysis_moved,,"Subject 00045 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:01.985482
+Output Directory: /root/autodl-tmp/00045/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00046,True,SUCCESS,2025-08-16 18:01:20.934471,/root/autodl-tmp/00046/ptt_bp_analysis_moved,,"Subject 00046 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:20.934471
+Output Directory: /root/autodl-tmp/00046/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00047,True,SUCCESS,2025-08-16 18:01:38.647690,/root/autodl-tmp/00047/ptt_bp_analysis_moved,,"Subject 00047 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:38.647690
+Output Directory: /root/autodl-tmp/00047/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00048,True,SUCCESS,2025-08-16 18:01:35.865877,/root/autodl-tmp/00048/ptt_bp_analysis_moved,,"Subject 00048 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:35.865877
+Output Directory: /root/autodl-tmp/00048/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00049,True,SUCCESS,2025-08-16 18:01:51.474712,/root/autodl-tmp/00049/ptt_bp_analysis_moved,,"Subject 00049 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:51.474712
+Output Directory: /root/autodl-tmp/00049/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00050,True,SUCCESS,2025-08-16 18:01:36.662979,/root/autodl-tmp/00050/ptt_bp_analysis_moved,,"Subject 00050 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:36.662979
+Output Directory: /root/autodl-tmp/00050/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00051,True,SUCCESS,2025-08-16 18:01:49.005992,/root/autodl-tmp/00051/ptt_bp_analysis_moved,,"Subject 00051 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:01:49.005992
+Output Directory: /root/autodl-tmp/00051/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00052,True,SUCCESS,2025-08-16 18:02:14.356634,/root/autodl-tmp/00052/ptt_bp_analysis_moved,,"Subject 00052 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:14.356634
+Output Directory: /root/autodl-tmp/00052/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00053,True,SUCCESS,2025-08-16 18:02:10.586202,/root/autodl-tmp/00053/ptt_bp_analysis_moved,,"Subject 00053 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:10.586202
+Output Directory: /root/autodl-tmp/00053/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00054,True,ERROR,2025-08-16 18:01:20.954919,/root/autodl-tmp/00054/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00054 - PTT Analysis Error
+Timestamp: 2025-08-16 18:01:20.954919
+Output Directory: /root/autodl-tmp/00054/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00055,True,SUCCESS,2025-08-16 18:02:04.784025,/root/autodl-tmp/00055/ptt_bp_analysis_moved,,"Subject 00055 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:04.784025
+Output Directory: /root/autodl-tmp/00055/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00056,True,SUCCESS,2025-08-16 18:02:20.769727,/root/autodl-tmp/00056/ptt_bp_analysis_moved,,"Subject 00056 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:20.769727
+Output Directory: /root/autodl-tmp/00056/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00057,True,SUCCESS,2025-08-16 18:02:04.344977,/root/autodl-tmp/00057/ptt_bp_analysis_moved,,"Subject 00057 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:04.344977
+Output Directory: /root/autodl-tmp/00057/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00058,True,SUCCESS,2025-08-16 18:02:16.597072,/root/autodl-tmp/00058/ptt_bp_analysis_moved,,"Subject 00058 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:16.597072
+Output Directory: /root/autodl-tmp/00058/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00059,True,ERROR,2025-08-16 18:01:49.057738,/root/autodl-tmp/00059/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00059 - PTT Analysis Error
+Timestamp: 2025-08-16 18:01:49.057738
+Output Directory: /root/autodl-tmp/00059/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00060,True,ERROR,2025-08-16 18:01:49.120796,/root/autodl-tmp/00060/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00060 - PTT Analysis Error
+Timestamp: 2025-08-16 18:01:49.120796
+Output Directory: /root/autodl-tmp/00060/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00061,True,ERROR,2025-08-16 18:01:49.154548,/root/autodl-tmp/00061/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00061 - PTT Analysis Error
+Timestamp: 2025-08-16 18:01:49.154548
+Output Directory: /root/autodl-tmp/00061/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00062,True,SUCCESS,2025-08-16 18:02:40.476327,/root/autodl-tmp/00062/ptt_bp_analysis_moved,,"Subject 00062 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:40.476327
+Output Directory: /root/autodl-tmp/00062/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00063,True,SUCCESS,2025-08-16 18:02:48.070385,/root/autodl-tmp/00063/ptt_bp_analysis_moved,,"Subject 00063 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:48.070385
+Output Directory: /root/autodl-tmp/00063/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00064,True,SUCCESS,2025-08-16 18:02:25.185940,/root/autodl-tmp/00064/ptt_bp_analysis_moved,,"Subject 00064 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:25.185940
+Output Directory: /root/autodl-tmp/00064/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00065,True,SUCCESS,2025-08-16 18:03:01.159680,/root/autodl-tmp/00065/ptt_bp_analysis_moved,,"Subject 00065 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:01.159680
+Output Directory: /root/autodl-tmp/00065/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00066,True,SUCCESS,2025-08-16 18:02:50.760337,/root/autodl-tmp/00066/ptt_bp_analysis_moved,,"Subject 00066 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:50.760337
+Output Directory: /root/autodl-tmp/00066/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00067,True,ERROR,2025-08-16 18:02:14.431415,/root/autodl-tmp/00067/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00067 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:14.431415
+Output Directory: /root/autodl-tmp/00067/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00068,True,ERROR,2025-08-16 18:02:14.476455,/root/autodl-tmp/00068/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00068 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:14.476455
+Output Directory: /root/autodl-tmp/00068/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00069,True,ERROR,2025-08-16 18:02:14.559588,/root/autodl-tmp/00069/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00069 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:14.559588
+Output Directory: /root/autodl-tmp/00069/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00070,True,ERROR,2025-08-16 18:02:14.659619,/root/autodl-tmp/00070/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00070 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:14.659619
+Output Directory: /root/autodl-tmp/00070/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00071,True,ERROR,2025-08-16 18:02:15.815634,/root/autodl-tmp/00071/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00071 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:15.815634
+Output Directory: /root/autodl-tmp/00071/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00072,True,SUCCESS,2025-08-16 18:03:01.067731,/root/autodl-tmp/00072/ptt_bp_analysis_moved,,"Subject 00072 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:01.067731
+Output Directory: /root/autodl-tmp/00072/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00073,True,SUCCESS,2025-08-16 18:02:48.660669,/root/autodl-tmp/00073/ptt_bp_analysis_moved,,"Subject 00073 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:48.660669
+Output Directory: /root/autodl-tmp/00073/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00074,True,SUCCESS,2025-08-16 18:02:52.176882,/root/autodl-tmp/00074/ptt_bp_analysis_moved,,"Subject 00074 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:02:52.176882
+Output Directory: /root/autodl-tmp/00074/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00075,True,ERROR,2025-08-16 18:02:25.226725,/root/autodl-tmp/00075/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00075 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:25.226725
+Output Directory: /root/autodl-tmp/00075/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00076,True,SUCCESS,2025-08-16 18:03:09.945583,/root/autodl-tmp/00076/ptt_bp_analysis_moved,,"Subject 00076 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:09.945583
+Output Directory: /root/autodl-tmp/00076/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00077,True,ERROR,2025-08-16 18:02:41.370460,/root/autodl-tmp/00077/ptt_bp_analysis_moved,No columns to parse from file,"Subject 00077 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:41.370460
+Output Directory: /root/autodl-tmp/00077/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: No columns to parse from file
+"
+00078,True,SUCCESS,2025-08-16 18:03:09.485824,/root/autodl-tmp/00078/ptt_bp_analysis_moved,,"Subject 00078 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:09.485824
+Output Directory: /root/autodl-tmp/00078/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00079,True,SUCCESS,2025-08-16 18:03:27.598759,/root/autodl-tmp/00079/ptt_bp_analysis_moved,,"Subject 00079 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:27.598759
+Output Directory: /root/autodl-tmp/00079/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00080,True,ERROR,2025-08-16 18:02:48.690875,/root/autodl-tmp/00080/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00080 - PTT Analysis Error
+Timestamp: 2025-08-16 18:02:48.690875
+Output Directory: /root/autodl-tmp/00080/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00081,True,SUCCESS,2025-08-16 18:03:43.452120,/root/autodl-tmp/00081/ptt_bp_analysis_moved,,"Subject 00081 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:43.452120
+Output Directory: /root/autodl-tmp/00081/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00082,True,SUCCESS,2025-08-16 18:03:26.522217,/root/autodl-tmp/00082/ptt_bp_analysis_moved,,"Subject 00082 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:26.522217
+Output Directory: /root/autodl-tmp/00082/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00083,True,SUCCESS,2025-08-16 18:03:29.602756,/root/autodl-tmp/00083/ptt_bp_analysis_moved,,"Subject 00083 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:29.602756
+Output Directory: /root/autodl-tmp/00083/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00084,True,SUCCESS,2025-08-16 18:03:55.482217,/root/autodl-tmp/00084/ptt_bp_analysis_moved,,"Subject 00084 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:55.482217
+Output Directory: /root/autodl-tmp/00084/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00085,True,SUCCESS,2025-08-16 18:03:55.366268,/root/autodl-tmp/00085/ptt_bp_analysis_moved,,"Subject 00085 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:55.366268
+Output Directory: /root/autodl-tmp/00085/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00086,True,SUCCESS,2025-08-16 18:03:43.927793,/root/autodl-tmp/00086/ptt_bp_analysis_moved,,"Subject 00086 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:43.927793
+Output Directory: /root/autodl-tmp/00086/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00087,True,SUCCESS,2025-08-16 18:03:46.256322,/root/autodl-tmp/00087/ptt_bp_analysis_moved,,"Subject 00087 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:03:46.256322
+Output Directory: /root/autodl-tmp/00087/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00088,True,ERROR,2025-08-16 18:03:26.524917,/root/autodl-tmp/00088/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00088 - PTT Analysis Error
+Timestamp: 2025-08-16 18:03:26.524917
+Output Directory: /root/autodl-tmp/00088/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00089,True,ERROR,2025-08-16 18:03:26.525628,/root/autodl-tmp/00089/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00089 - PTT Analysis Error
+Timestamp: 2025-08-16 18:03:26.525628
+Output Directory: /root/autodl-tmp/00089/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00090,True,SUCCESS,2025-08-16 18:04:07.038892,/root/autodl-tmp/00090/ptt_bp_analysis_moved,,"Subject 00090 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:07.038892
+Output Directory: /root/autodl-tmp/00090/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00091,True,SUCCESS,2025-08-16 18:04:17.495972,/root/autodl-tmp/00091/ptt_bp_analysis_moved,,"Subject 00091 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:17.495972
+Output Directory: /root/autodl-tmp/00091/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00092,True,SUCCESS,2025-08-16 18:04:31.124293,/root/autodl-tmp/00092/ptt_bp_analysis_moved,,"Subject 00092 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:31.124293
+Output Directory: /root/autodl-tmp/00092/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00093,True,SUCCESS,2025-08-16 18:04:36.913066,/root/autodl-tmp/00093/ptt_bp_analysis_moved,,"Subject 00093 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:36.913066
+Output Directory: /root/autodl-tmp/00093/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00094,True,SUCCESS,2025-08-16 18:04:39.269998,/root/autodl-tmp/00094/ptt_bp_analysis_moved,,"Subject 00094 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:39.269998
+Output Directory: /root/autodl-tmp/00094/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00095,True,SUCCESS,2025-08-16 18:04:23.977997,/root/autodl-tmp/00095/ptt_bp_analysis_moved,,"Subject 00095 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:23.977997
+Output Directory: /root/autodl-tmp/00095/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00096,True,SUCCESS,2025-08-16 18:04:21.989161,/root/autodl-tmp/00096/ptt_bp_analysis_moved,,"Subject 00096 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:21.989161
+Output Directory: /root/autodl-tmp/00096/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00097,True,SUCCESS,2025-08-16 18:04:30.202605,/root/autodl-tmp/00097/ptt_bp_analysis_moved,,"Subject 00097 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:30.202605
+Output Directory: /root/autodl-tmp/00097/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00098,True,SUCCESS,2025-08-16 18:05:04.396762,/root/autodl-tmp/00098/ptt_bp_analysis_moved,,"Subject 00098 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:04.396762
+Output Directory: /root/autodl-tmp/00098/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00099,True,ERROR,2025-08-16 18:04:17.807894,/root/autodl-tmp/00099/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00099 - PTT Analysis Error
+Timestamp: 2025-08-16 18:04:17.807894
+Output Directory: /root/autodl-tmp/00099/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00100,True,SUCCESS,2025-08-16 18:05:13.840107,/root/autodl-tmp/00100/ptt_bp_analysis_moved,,"Subject 00100 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:13.840107
+Output Directory: /root/autodl-tmp/00100/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00101,True,SUCCESS,2025-08-16 18:05:14.367511,/root/autodl-tmp/00101/ptt_bp_analysis_moved,,"Subject 00101 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:14.367511
+Output Directory: /root/autodl-tmp/00101/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00102,True,SUCCESS,2025-08-16 18:04:45.498373,/root/autodl-tmp/00102/ptt_bp_analysis_moved,,"Subject 00102 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:04:45.498373
+Output Directory: /root/autodl-tmp/00102/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00103,True,ERROR,2025-08-16 18:04:30.485262,/root/autodl-tmp/00103/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00103 - PTT Analysis Error
+Timestamp: 2025-08-16 18:04:30.485262
+Output Directory: /root/autodl-tmp/00103/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00104,True,SUCCESS,2025-08-16 18:05:24.182299,/root/autodl-tmp/00104/ptt_bp_analysis_moved,,"Subject 00104 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:24.182299
+Output Directory: /root/autodl-tmp/00104/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00105,True,ERROR,2025-08-16 18:04:37.574383,/root/autodl-tmp/00105/ptt_bp_analysis_moved,No columns to parse from file,"Subject 00105 - PTT Analysis Error
+Timestamp: 2025-08-16 18:04:37.574383
+Output Directory: /root/autodl-tmp/00105/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: No columns to parse from file
+"
+00106,True,ERROR,2025-08-16 18:04:45.300078,/root/autodl-tmp/00106/ptt_bp_analysis_moved,No columns to parse from file,"Subject 00106 - PTT Analysis Error
+Timestamp: 2025-08-16 18:04:45.300078
+Output Directory: /root/autodl-tmp/00106/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: No columns to parse from file
+"
+00107,True,SUCCESS,2025-08-16 18:05:24.518295,/root/autodl-tmp/00107/ptt_bp_analysis_moved,,"Subject 00107 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:24.518295
+Output Directory: /root/autodl-tmp/00107/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00108,True,SUCCESS,2025-08-16 18:05:19.701860,/root/autodl-tmp/00108/ptt_bp_analysis_moved,,"Subject 00108 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:19.701860
+Output Directory: /root/autodl-tmp/00108/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00109,True,SUCCESS,2025-08-16 18:05:31.681591,/root/autodl-tmp/00109/ptt_bp_analysis_moved,,"Subject 00109 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:31.681591
+Output Directory: /root/autodl-tmp/00109/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00110,True,SUCCESS,2025-08-16 18:05:35.624014,/root/autodl-tmp/00110/ptt_bp_analysis_moved,,"Subject 00110 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:35.624014
+Output Directory: /root/autodl-tmp/00110/ptt_bp_analysis_moved
+Status: SUCCESS
+"
+00111,True,ERROR,2025-08-16 18:05:04.603389,/root/autodl-tmp/00111/ptt_bp_analysis_moved,cannot unpack non-iterable NoneType object,"Subject 00111 - PTT Analysis Error
+Timestamp: 2025-08-16 18:05:04.603389
+Output Directory: /root/autodl-tmp/00111/ptt_bp_analysis_moved
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00112,True,SUCCESS,2025-08-16 18:05:58.582824,/root/autodl-tmp/00112/ptt_bp_analysis_moved,,"Subject 00112 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-16 18:05:58.582824
+Output Directory: /root/autodl-tmp/00112/ptt_bp_analysis_moved
+Status: SUCCESS
+"

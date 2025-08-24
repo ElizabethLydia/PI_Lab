@@ -1,0 +1,381 @@
+subject,status_file_exists,status,timestamp,output_directory,error_message,raw_content
+00003,True,SUCCESS,2025-08-24 14:34:04.244922,/root/autodl-tmp/00003/ptt_bp_analysis_calibrated,,"Subject 00003 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:34:04.244922
+Output Directory: /root/autodl-tmp/00003/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00016,True,SUCCESS,2025-08-24 14:34:26.246576,/root/autodl-tmp/00016/ptt_bp_analysis_calibrated,,"Subject 00016 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:34:26.246576
+Output Directory: /root/autodl-tmp/00016/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00017,True,SUCCESS,2025-08-24 14:33:53.130192,/root/autodl-tmp/00017/ptt_bp_analysis_calibrated,,"Subject 00017 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:33:53.130192
+Output Directory: /root/autodl-tmp/00017/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00023,True,SUCCESS,2025-08-24 14:34:52.995118,/root/autodl-tmp/00023/ptt_bp_analysis_calibrated,,"Subject 00023 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:34:52.995118
+Output Directory: /root/autodl-tmp/00023/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00041,True,SUCCESS,2025-08-24 14:32:45.933932,/root/autodl-tmp/00041/ptt_bp_analysis_calibrated,,"Subject 00041 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:32:45.933932
+Output Directory: /root/autodl-tmp/00041/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00042,True,SUCCESS,2025-08-24 14:34:50.923764,/root/autodl-tmp/00042/ptt_bp_analysis_calibrated,,"Subject 00042 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:34:50.923764
+Output Directory: /root/autodl-tmp/00042/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00043,True,SUCCESS,2025-08-24 14:32:44.326686,/root/autodl-tmp/00043/ptt_bp_analysis_calibrated,,"Subject 00043 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:32:44.326686
+Output Directory: /root/autodl-tmp/00043/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00044,True,SUCCESS,2025-08-24 14:34:36.297693,/root/autodl-tmp/00044/ptt_bp_analysis_calibrated,,"Subject 00044 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:34:36.297693
+Output Directory: /root/autodl-tmp/00044/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00045,True,SUCCESS,2025-08-24 14:34:17.101077,/root/autodl-tmp/00045/ptt_bp_analysis_calibrated,,"Subject 00045 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:34:17.101077
+Output Directory: /root/autodl-tmp/00045/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00046,True,SUCCESS,2025-08-24 14:34:59.919324,/root/autodl-tmp/00046/ptt_bp_analysis_calibrated,,"Subject 00046 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:34:59.919324
+Output Directory: /root/autodl-tmp/00046/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00047,True,SUCCESS,2025-08-24 14:35:39.173860,/root/autodl-tmp/00047/ptt_bp_analysis_calibrated,,"Subject 00047 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:35:39.173860
+Output Directory: /root/autodl-tmp/00047/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00048,True,SUCCESS,2025-08-24 14:35:26.308265,/root/autodl-tmp/00048/ptt_bp_analysis_calibrated,,"Subject 00048 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:35:26.308265
+Output Directory: /root/autodl-tmp/00048/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00049,True,SUCCESS,2025-08-24 14:35:48.326692,/root/autodl-tmp/00049/ptt_bp_analysis_calibrated,,"Subject 00049 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:35:48.326692
+Output Directory: /root/autodl-tmp/00049/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00050,True,SUCCESS,2025-08-24 14:35:32.675443,/root/autodl-tmp/00050/ptt_bp_analysis_calibrated,,"Subject 00050 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:35:32.675443
+Output Directory: /root/autodl-tmp/00050/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00051,True,SUCCESS,2025-08-24 14:36:12.534589,/root/autodl-tmp/00051/ptt_bp_analysis_calibrated,,"Subject 00051 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:36:12.534589
+Output Directory: /root/autodl-tmp/00051/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00052,True,SUCCESS,2025-08-24 14:36:36.591579,/root/autodl-tmp/00052/ptt_bp_analysis_calibrated,,"Subject 00052 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:36:36.591579
+Output Directory: /root/autodl-tmp/00052/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00053,True,SUCCESS,2025-08-24 14:36:31.770140,/root/autodl-tmp/00053/ptt_bp_analysis_calibrated,,"Subject 00053 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:36:31.770140
+Output Directory: /root/autodl-tmp/00053/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00054,True,SUCCESS,2025-08-24 14:35:37.171005,/root/autodl-tmp/00054/ptt_bp_analysis_calibrated,,"Subject 00054 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:35:37.171005
+Output Directory: /root/autodl-tmp/00054/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00055,True,SUCCESS,2025-08-24 14:36:58.251279,/root/autodl-tmp/00055/ptt_bp_analysis_calibrated,,"Subject 00055 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:36:58.251279
+Output Directory: /root/autodl-tmp/00055/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00056,True,SUCCESS,2025-08-24 14:37:08.034604,/root/autodl-tmp/00056/ptt_bp_analysis_calibrated,,"Subject 00056 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:37:08.034604
+Output Directory: /root/autodl-tmp/00056/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00057,True,SUCCESS,2025-08-24 14:36:22.612760,/root/autodl-tmp/00057/ptt_bp_analysis_calibrated,,"Subject 00057 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:36:22.612760
+Output Directory: /root/autodl-tmp/00057/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00058,True,SUCCESS,2025-08-24 14:37:08.346164,/root/autodl-tmp/00058/ptt_bp_analysis_calibrated,,"Subject 00058 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:37:08.346164
+Output Directory: /root/autodl-tmp/00058/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00059,True,FAILED - No valid results,2025-08-24 14:35:48.368426,/root/autodl-tmp/00059/ptt_bp_analysis_calibrated,,"Subject 00059 - PTT Analysis Failed
+Timestamp: 2025-08-24 14:35:48.368426
+Output Directory: /root/autodl-tmp/00059/ptt_bp_analysis_calibrated
+Status: FAILED - No valid results
+"
+00060,True,FAILED - No valid results,2025-08-24 14:35:48.421339,/root/autodl-tmp/00060/ptt_bp_analysis_calibrated,,"Subject 00060 - PTT Analysis Failed
+Timestamp: 2025-08-24 14:35:48.421339
+Output Directory: /root/autodl-tmp/00060/ptt_bp_analysis_calibrated
+Status: FAILED - No valid results
+"
+00061,True,FAILED - No valid results,2025-08-24 14:35:48.454145,/root/autodl-tmp/00061/ptt_bp_analysis_calibrated,,"Subject 00061 - PTT Analysis Failed
+Timestamp: 2025-08-24 14:35:48.454145
+Output Directory: /root/autodl-tmp/00061/ptt_bp_analysis_calibrated
+Status: FAILED - No valid results
+"
+00062,True,SUCCESS,2025-08-24 14:37:20.057444,/root/autodl-tmp/00062/ptt_bp_analysis_calibrated,,"Subject 00062 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:37:20.057444
+Output Directory: /root/autodl-tmp/00062/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00063,True,SUCCESS,2025-08-24 14:38:15.263403,/root/autodl-tmp/00063/ptt_bp_analysis_calibrated,,"Subject 00063 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:38:15.263403
+Output Directory: /root/autodl-tmp/00063/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00064,True,SUCCESS,2025-08-24 14:36:43.094995,/root/autodl-tmp/00064/ptt_bp_analysis_calibrated,,"Subject 00064 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:36:43.094995
+Output Directory: /root/autodl-tmp/00064/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00065,True,SUCCESS,2025-08-24 14:38:14.615757,/root/autodl-tmp/00065/ptt_bp_analysis_calibrated,,"Subject 00065 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:38:14.615757
+Output Directory: /root/autodl-tmp/00065/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00066,True,SUCCESS,2025-08-24 14:37:59.504501,/root/autodl-tmp/00066/ptt_bp_analysis_calibrated,,"Subject 00066 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:37:59.504501
+Output Directory: /root/autodl-tmp/00066/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00067,True,SUCCESS,2025-08-24 14:38:58.053045,/root/autodl-tmp/00067/ptt_bp_analysis_calibrated,,"Subject 00067 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:38:58.053045
+Output Directory: /root/autodl-tmp/00067/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00068,True,SUCCESS,2025-08-24 14:38:50.048350,/root/autodl-tmp/00068/ptt_bp_analysis_calibrated,,"Subject 00068 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:38:50.048350
+Output Directory: /root/autodl-tmp/00068/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00069,True,SUCCESS,2025-08-24 14:39:26.235870,/root/autodl-tmp/00069/ptt_bp_analysis_calibrated,,"Subject 00069 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:26.235870
+Output Directory: /root/autodl-tmp/00069/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00070,True,SUCCESS,2025-08-24 14:39:25.261947,/root/autodl-tmp/00070/ptt_bp_analysis_calibrated,,"Subject 00070 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:25.261947
+Output Directory: /root/autodl-tmp/00070/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00071,True,SUCCESS,2025-08-24 14:39:00.000599,/root/autodl-tmp/00071/ptt_bp_analysis_calibrated,,"Subject 00071 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:00.000599
+Output Directory: /root/autodl-tmp/00071/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00072,True,SUCCESS,2025-08-24 14:39:27.899236,/root/autodl-tmp/00072/ptt_bp_analysis_calibrated,,"Subject 00072 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:27.899236
+Output Directory: /root/autodl-tmp/00072/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00073,True,SUCCESS,2025-08-24 14:39:14.311360,/root/autodl-tmp/00073/ptt_bp_analysis_calibrated,,"Subject 00073 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:14.311360
+Output Directory: /root/autodl-tmp/00073/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00074,True,SUCCESS,2025-08-24 14:39:16.459800,/root/autodl-tmp/00074/ptt_bp_analysis_calibrated,,"Subject 00074 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:16.459800
+Output Directory: /root/autodl-tmp/00074/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00075,True,SUCCESS,2025-08-24 14:39:46.022949,/root/autodl-tmp/00075/ptt_bp_analysis_calibrated,,"Subject 00075 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:46.022949
+Output Directory: /root/autodl-tmp/00075/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00076,True,SUCCESS,2025-08-24 14:40:53.206661,/root/autodl-tmp/00076/ptt_bp_analysis_calibrated,,"Subject 00076 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:40:53.206661
+Output Directory: /root/autodl-tmp/00076/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00077,True,SUCCESS,2025-08-24 14:39:43.598114,/root/autodl-tmp/00077/ptt_bp_analysis_calibrated,,"Subject 00077 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:43.598114
+Output Directory: /root/autodl-tmp/00077/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00078,True,SUCCESS,2025-08-24 14:40:21.546214,/root/autodl-tmp/00078/ptt_bp_analysis_calibrated,,"Subject 00078 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:40:21.546214
+Output Directory: /root/autodl-tmp/00078/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00079,True,SUCCESS,2025-08-24 14:40:25.476118,/root/autodl-tmp/00079/ptt_bp_analysis_calibrated,,"Subject 00079 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:40:25.476118
+Output Directory: /root/autodl-tmp/00079/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00080,True,SUCCESS,2025-08-24 14:39:52.474864,/root/autodl-tmp/00080/ptt_bp_analysis_calibrated,,"Subject 00080 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:39:52.474864
+Output Directory: /root/autodl-tmp/00080/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00081,True,SUCCESS,2025-08-24 14:41:47.441374,/root/autodl-tmp/00081/ptt_bp_analysis_calibrated,,"Subject 00081 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:41:47.441374
+Output Directory: /root/autodl-tmp/00081/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00082,True,SUCCESS,2025-08-24 14:41:13.623368,/root/autodl-tmp/00082/ptt_bp_analysis_calibrated,,"Subject 00082 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:41:13.623368
+Output Directory: /root/autodl-tmp/00082/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00083,True,SUCCESS,2025-08-24 14:41:11.700517,/root/autodl-tmp/00083/ptt_bp_analysis_calibrated,,"Subject 00083 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:41:11.700517
+Output Directory: /root/autodl-tmp/00083/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00084,True,SUCCESS,2025-08-24 14:41:51.555003,/root/autodl-tmp/00084/ptt_bp_analysis_calibrated,,"Subject 00084 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:41:51.555003
+Output Directory: /root/autodl-tmp/00084/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00085,True,SUCCESS,2025-08-24 14:42:06.326225,/root/autodl-tmp/00085/ptt_bp_analysis_calibrated,,"Subject 00085 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:42:06.326225
+Output Directory: /root/autodl-tmp/00085/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00086,True,SUCCESS,2025-08-24 14:42:11.866789,/root/autodl-tmp/00086/ptt_bp_analysis_calibrated,,"Subject 00086 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:42:11.866789
+Output Directory: /root/autodl-tmp/00086/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00087,True,SUCCESS,2025-08-24 14:41:29.111429,/root/autodl-tmp/00087/ptt_bp_analysis_calibrated,,"Subject 00087 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:41:29.111429
+Output Directory: /root/autodl-tmp/00087/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00088,True,FAILED - No valid results,2025-08-24 14:40:53.212659,/root/autodl-tmp/00088/ptt_bp_analysis_calibrated,,"Subject 00088 - PTT Analysis Failed
+Timestamp: 2025-08-24 14:40:53.212659
+Output Directory: /root/autodl-tmp/00088/ptt_bp_analysis_calibrated
+Status: FAILED - No valid results
+"
+00089,True,FAILED - No valid results,2025-08-24 14:40:53.228719,/root/autodl-tmp/00089/ptt_bp_analysis_calibrated,,"Subject 00089 - PTT Analysis Failed
+Timestamp: 2025-08-24 14:40:53.228719
+Output Directory: /root/autodl-tmp/00089/ptt_bp_analysis_calibrated
+Status: FAILED - No valid results
+"
+00090,True,SUCCESS,2025-08-24 14:42:08.334041,/root/autodl-tmp/00090/ptt_bp_analysis_calibrated,,"Subject 00090 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:42:08.334041
+Output Directory: /root/autodl-tmp/00090/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00091,True,SUCCESS,2025-08-24 14:43:10.504024,/root/autodl-tmp/00091/ptt_bp_analysis_calibrated,,"Subject 00091 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:43:10.504024
+Output Directory: /root/autodl-tmp/00091/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00092,True,SUCCESS,2025-08-24 14:43:40.469023,/root/autodl-tmp/00092/ptt_bp_analysis_calibrated,,"Subject 00092 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:43:40.469023
+Output Directory: /root/autodl-tmp/00092/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00093,True,SUCCESS,2025-08-24 14:43:40.573179,/root/autodl-tmp/00093/ptt_bp_analysis_calibrated,,"Subject 00093 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:43:40.573179
+Output Directory: /root/autodl-tmp/00093/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00094,True,SUCCESS,2025-08-24 14:44:09.830659,/root/autodl-tmp/00094/ptt_bp_analysis_calibrated,,"Subject 00094 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:44:09.830659
+Output Directory: /root/autodl-tmp/00094/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00095,True,SUCCESS,2025-08-24 14:43:45.559799,/root/autodl-tmp/00095/ptt_bp_analysis_calibrated,,"Subject 00095 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:43:45.559799
+Output Directory: /root/autodl-tmp/00095/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00096,True,SUCCESS,2025-08-24 14:42:57.120875,/root/autodl-tmp/00096/ptt_bp_analysis_calibrated,,"Subject 00096 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:42:57.120875
+Output Directory: /root/autodl-tmp/00096/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00097,True,SUCCESS,2025-08-24 14:43:01.066739,/root/autodl-tmp/00097/ptt_bp_analysis_calibrated,,"Subject 00097 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:43:01.066739
+Output Directory: /root/autodl-tmp/00097/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00098,True,SUCCESS,2025-08-24 14:44:37.552962,/root/autodl-tmp/00098/ptt_bp_analysis_calibrated,,"Subject 00098 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:44:37.552962
+Output Directory: /root/autodl-tmp/00098/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00099,True,SUCCESS,2025-08-24 14:44:11.627476,/root/autodl-tmp/00099/ptt_bp_analysis_calibrated,,"Subject 00099 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:44:11.627476
+Output Directory: /root/autodl-tmp/00099/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00100,True,SUCCESS,2025-08-24 14:45:22.796187,/root/autodl-tmp/00100/ptt_bp_analysis_calibrated,,"Subject 00100 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:45:22.796187
+Output Directory: /root/autodl-tmp/00100/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00101,True,SUCCESS,2025-08-24 14:44:25.997313,/root/autodl-tmp/00101/ptt_bp_analysis_calibrated,,"Subject 00101 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:44:25.997313
+Output Directory: /root/autodl-tmp/00101/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00102,True,SUCCESS,2025-08-24 14:44:25.542410,/root/autodl-tmp/00102/ptt_bp_analysis_calibrated,,"Subject 00102 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:44:25.542410
+Output Directory: /root/autodl-tmp/00102/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00103,True,SUCCESS,2025-08-24 14:44:49.363023,/root/autodl-tmp/00103/ptt_bp_analysis_calibrated,,"Subject 00103 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:44:49.363023
+Output Directory: /root/autodl-tmp/00103/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00104,True,SUCCESS,2025-08-24 14:45:40.751717,/root/autodl-tmp/00104/ptt_bp_analysis_calibrated,,"Subject 00104 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:45:40.751717
+Output Directory: /root/autodl-tmp/00104/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00105,True,SUCCESS,2025-08-24 14:45:01.685269,/root/autodl-tmp/00105/ptt_bp_analysis_calibrated,,"Subject 00105 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:45:01.685269
+Output Directory: /root/autodl-tmp/00105/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00106,True,SUCCESS,2025-08-24 14:45:39.044114,/root/autodl-tmp/00106/ptt_bp_analysis_calibrated,,"Subject 00106 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:45:39.044114
+Output Directory: /root/autodl-tmp/00106/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00107,True,SUCCESS,2025-08-24 14:45:59.425595,/root/autodl-tmp/00107/ptt_bp_analysis_calibrated,,"Subject 00107 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:45:59.425595
+Output Directory: /root/autodl-tmp/00107/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00108,True,SUCCESS,2025-08-24 14:45:35.734946,/root/autodl-tmp/00108/ptt_bp_analysis_calibrated,,"Subject 00108 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:45:35.734946
+Output Directory: /root/autodl-tmp/00108/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00109,True,SUCCESS,2025-08-24 14:46:19.034956,/root/autodl-tmp/00109/ptt_bp_analysis_calibrated,,"Subject 00109 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:46:19.034956
+Output Directory: /root/autodl-tmp/00109/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00110,True,SUCCESS,2025-08-24 14:46:42.012448,/root/autodl-tmp/00110/ptt_bp_analysis_calibrated,,"Subject 00110 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:46:42.012448
+Output Directory: /root/autodl-tmp/00110/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00111,True,SUCCESS,2025-08-24 14:46:03.333057,/root/autodl-tmp/00111/ptt_bp_analysis_calibrated,,"Subject 00111 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:46:03.333057
+Output Directory: /root/autodl-tmp/00111/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"
+00112,True,SUCCESS,2025-08-24 14:46:50.764483,/root/autodl-tmp/00112/ptt_bp_analysis_calibrated,,"Subject 00112 - PTT Analysis Completed Successfully
+Timestamp: 2025-08-24 14:46:50.764483
+Output Directory: /root/autodl-tmp/00112/ptt_bp_analysis_calibrated
+Status: SUCCESS
+"

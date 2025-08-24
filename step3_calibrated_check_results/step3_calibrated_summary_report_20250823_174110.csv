@@ -1,0 +1,457 @@
+subject,status_file_exists,status,timestamp,output_directory,error_message,raw_content
+00003,True,ERROR,2025-08-23 17:40:17.816534,/root/autodl-tmp/00003/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00003 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:17.816534
+Output Directory: /root/autodl-tmp/00003/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00016,True,ERROR,2025-08-23 17:40:20.749513,/root/autodl-tmp/00016/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00016 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:20.749513
+Output Directory: /root/autodl-tmp/00016/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00017,True,ERROR,2025-08-23 17:40:16.704045,/root/autodl-tmp/00017/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00017 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:16.704045
+Output Directory: /root/autodl-tmp/00017/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00023,True,ERROR,2025-08-23 17:40:19.313524,/root/autodl-tmp/00023/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00023 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:19.313524
+Output Directory: /root/autodl-tmp/00023/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00041,True,ERROR,2025-08-23 17:40:16.678996,/root/autodl-tmp/00041/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00041 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:16.678996
+Output Directory: /root/autodl-tmp/00041/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00042,True,ERROR,2025-08-23 17:40:22.040101,/root/autodl-tmp/00042/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00042 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:22.040101
+Output Directory: /root/autodl-tmp/00042/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00043,True,ERROR,2025-08-23 17:40:16.678663,/root/autodl-tmp/00043/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00043 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:16.678663
+Output Directory: /root/autodl-tmp/00043/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00044,True,ERROR,2025-08-23 17:40:17.482476,/root/autodl-tmp/00044/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00044 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:17.482476
+Output Directory: /root/autodl-tmp/00044/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00045,True,ERROR,2025-08-23 17:40:23.513140,/root/autodl-tmp/00045/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00045 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:23.513140
+Output Directory: /root/autodl-tmp/00045/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00046,True,ERROR,2025-08-23 17:40:24.811331,/root/autodl-tmp/00046/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00046 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:24.811331
+Output Directory: /root/autodl-tmp/00046/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00047,True,ERROR,2025-08-23 17:40:24.304181,/root/autodl-tmp/00047/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00047 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:24.304181
+Output Directory: /root/autodl-tmp/00047/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00048,True,ERROR,2025-08-23 17:40:21.703198,/root/autodl-tmp/00048/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00048 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:21.703198
+Output Directory: /root/autodl-tmp/00048/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00049,True,ERROR,2025-08-23 17:40:25.512759,/root/autodl-tmp/00049/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00049 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:25.512759
+Output Directory: /root/autodl-tmp/00049/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00050,True,ERROR,2025-08-23 17:40:22.666265,/root/autodl-tmp/00050/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00050 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:22.666265
+Output Directory: /root/autodl-tmp/00050/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00051,True,ERROR,2025-08-23 17:40:26.155575,/root/autodl-tmp/00051/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00051 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:26.155575
+Output Directory: /root/autodl-tmp/00051/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00052,True,ERROR,2025-08-23 17:40:26.262215,/root/autodl-tmp/00052/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00052 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:26.262215
+Output Directory: /root/autodl-tmp/00052/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00053,True,ERROR,2025-08-23 17:40:30.707883,/root/autodl-tmp/00053/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00053 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:30.707883
+Output Directory: /root/autodl-tmp/00053/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00054,True,ERROR,2025-08-23 17:40:24.110617,/root/autodl-tmp/00054/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00054 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:24.110617
+Output Directory: /root/autodl-tmp/00054/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00055,True,ERROR,2025-08-23 17:40:28.460536,/root/autodl-tmp/00055/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00055 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:28.460536
+Output Directory: /root/autodl-tmp/00055/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00056,True,ERROR,2025-08-23 17:40:30.112566,/root/autodl-tmp/00056/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00056 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:30.112566
+Output Directory: /root/autodl-tmp/00056/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00057,True,ERROR,2025-08-23 17:40:27.136510,/root/autodl-tmp/00057/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00057 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:27.136510
+Output Directory: /root/autodl-tmp/00057/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00058,True,ERROR,2025-08-23 17:40:27.835256,/root/autodl-tmp/00058/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00058 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:27.835256
+Output Directory: /root/autodl-tmp/00058/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00059,True,ERROR,2025-08-23 17:40:28.318599,/root/autodl-tmp/00059/ptt_bp_analysis_calibrated,cannot unpack non-iterable NoneType object,"Subject 00059 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:28.318599
+Output Directory: /root/autodl-tmp/00059/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00060,True,ERROR,2025-08-23 17:40:28.208696,/root/autodl-tmp/00060/ptt_bp_analysis_calibrated,cannot unpack non-iterable NoneType object,"Subject 00060 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:28.208696
+Output Directory: /root/autodl-tmp/00060/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00061,True,ERROR,2025-08-23 17:40:28.111642,/root/autodl-tmp/00061/ptt_bp_analysis_calibrated,cannot unpack non-iterable NoneType object,"Subject 00061 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:28.111642
+Output Directory: /root/autodl-tmp/00061/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00062,True,ERROR,2025-08-23 17:40:35.611763,/root/autodl-tmp/00062/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00062 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:35.611763
+Output Directory: /root/autodl-tmp/00062/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00063,True,ERROR,2025-08-23 17:40:40.141136,/root/autodl-tmp/00063/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00063 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:40.141136
+Output Directory: /root/autodl-tmp/00063/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00064,True,ERROR,2025-08-23 17:40:30.532882,/root/autodl-tmp/00064/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00064 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:30.532882
+Output Directory: /root/autodl-tmp/00064/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00065,True,ERROR,2025-08-23 17:40:37.148985,/root/autodl-tmp/00065/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00065 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:37.148985
+Output Directory: /root/autodl-tmp/00065/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00066,True,ERROR,2025-08-23 17:40:30.946311,/root/autodl-tmp/00066/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00066 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:30.946311
+Output Directory: /root/autodl-tmp/00066/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00067,True,ERROR,2025-08-23 17:40:33.623602,/root/autodl-tmp/00067/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00067 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:33.623602
+Output Directory: /root/autodl-tmp/00067/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00068,True,ERROR,2025-08-23 17:40:33.948864,/root/autodl-tmp/00068/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00068 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:33.948864
+Output Directory: /root/autodl-tmp/00068/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00069,True,ERROR,2025-08-23 17:40:40.923996,/root/autodl-tmp/00069/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00069 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:40.923996
+Output Directory: /root/autodl-tmp/00069/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00070,True,ERROR,2025-08-23 17:40:32.164191,/root/autodl-tmp/00070/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00070 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:32.164191
+Output Directory: /root/autodl-tmp/00070/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00071,True,ERROR,2025-08-23 17:40:35.831701,/root/autodl-tmp/00071/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00071 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:35.831701
+Output Directory: /root/autodl-tmp/00071/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00072,True,ERROR,2025-08-23 17:40:37.756649,/root/autodl-tmp/00072/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00072 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:37.756649
+Output Directory: /root/autodl-tmp/00072/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00073,True,ERROR,2025-08-23 17:40:36.237629,/root/autodl-tmp/00073/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00073 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:36.237629
+Output Directory: /root/autodl-tmp/00073/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00074,True,ERROR,2025-08-23 17:40:35.972240,/root/autodl-tmp/00074/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00074 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:35.972240
+Output Directory: /root/autodl-tmp/00074/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00075,True,ERROR,2025-08-23 17:40:38.116114,/root/autodl-tmp/00075/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00075 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:38.116114
+Output Directory: /root/autodl-tmp/00075/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00076,True,ERROR,2025-08-23 17:40:41.116293,/root/autodl-tmp/00076/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00076 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:41.116293
+Output Directory: /root/autodl-tmp/00076/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00077,True,ERROR,2025-08-23 17:40:36.910051,/root/autodl-tmp/00077/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00077 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:36.910051
+Output Directory: /root/autodl-tmp/00077/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00078,True,ERROR,2025-08-23 17:40:43.119787,/root/autodl-tmp/00078/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00078 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:43.119787
+Output Directory: /root/autodl-tmp/00078/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00079,True,ERROR,2025-08-23 17:40:38.900437,/root/autodl-tmp/00079/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00079 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:38.900437
+Output Directory: /root/autodl-tmp/00079/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00080,True,ERROR,2025-08-23 17:40:38.398169,/root/autodl-tmp/00080/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00080 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:38.398169
+Output Directory: /root/autodl-tmp/00080/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00081,True,ERROR,2025-08-23 17:40:45.966283,/root/autodl-tmp/00081/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00081 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:45.966283
+Output Directory: /root/autodl-tmp/00081/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00082,True,ERROR,2025-08-23 17:40:40.928663,/root/autodl-tmp/00082/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00082 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:40.928663
+Output Directory: /root/autodl-tmp/00082/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00083,True,ERROR,2025-08-23 17:40:42.157107,/root/autodl-tmp/00083/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00083 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:42.157107
+Output Directory: /root/autodl-tmp/00083/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00084,True,ERROR,2025-08-23 17:40:48.338685,/root/autodl-tmp/00084/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00084 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:48.338685
+Output Directory: /root/autodl-tmp/00084/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00085,True,ERROR,2025-08-23 17:40:47.139904,/root/autodl-tmp/00085/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00085 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:47.139904
+Output Directory: /root/autodl-tmp/00085/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00086,True,ERROR,2025-08-23 17:40:47.436373,/root/autodl-tmp/00086/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00086 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:47.436373
+Output Directory: /root/autodl-tmp/00086/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00087,True,ERROR,2025-08-23 17:40:47.428138,/root/autodl-tmp/00087/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00087 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:47.428138
+Output Directory: /root/autodl-tmp/00087/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00088,True,ERROR,2025-08-23 17:40:41.117649,/root/autodl-tmp/00088/ptt_bp_analysis_calibrated,cannot unpack non-iterable NoneType object,"Subject 00088 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:41.117649
+Output Directory: /root/autodl-tmp/00088/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00089,True,ERROR,2025-08-23 17:40:41.154054,/root/autodl-tmp/00089/ptt_bp_analysis_calibrated,cannot unpack non-iterable NoneType object,"Subject 00089 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:41.154054
+Output Directory: /root/autodl-tmp/00089/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: cannot unpack non-iterable NoneType object
+"
+00090,True,ERROR,2025-08-23 17:40:49.456601,/root/autodl-tmp/00090/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00090 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:49.456601
+Output Directory: /root/autodl-tmp/00090/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00091,True,ERROR,2025-08-23 17:40:53.305959,/root/autodl-tmp/00091/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00091 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:53.305959
+Output Directory: /root/autodl-tmp/00091/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00092,True,ERROR,2025-08-23 17:40:57.244881,/root/autodl-tmp/00092/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00092 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:57.244881
+Output Directory: /root/autodl-tmp/00092/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00093,True,ERROR,2025-08-23 17:40:53.264667,/root/autodl-tmp/00093/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00093 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:53.264667
+Output Directory: /root/autodl-tmp/00093/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00094,True,ERROR,2025-08-23 17:40:57.053597,/root/autodl-tmp/00094/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00094 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:57.053597
+Output Directory: /root/autodl-tmp/00094/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00095,True,ERROR,2025-08-23 17:40:53.436545,/root/autodl-tmp/00095/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00095 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:53.436545
+Output Directory: /root/autodl-tmp/00095/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00096,True,ERROR,2025-08-23 17:40:53.412030,/root/autodl-tmp/00096/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00096 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:53.412030
+Output Directory: /root/autodl-tmp/00096/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00097,True,ERROR,2025-08-23 17:40:57.046295,/root/autodl-tmp/00097/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00097 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:57.046295
+Output Directory: /root/autodl-tmp/00097/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00098,True,ERROR,2025-08-23 17:41:01.338414,/root/autodl-tmp/00098/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00098 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:01.338414
+Output Directory: /root/autodl-tmp/00098/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00099,True,ERROR,2025-08-23 17:40:57.332436,/root/autodl-tmp/00099/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00099 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:57.332436
+Output Directory: /root/autodl-tmp/00099/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00100,True,ERROR,2025-08-23 17:41:01.715316,/root/autodl-tmp/00100/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00100 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:01.715316
+Output Directory: /root/autodl-tmp/00100/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00101,True,ERROR,2025-08-23 17:41:08.029010,/root/autodl-tmp/00101/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00101 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:08.029010
+Output Directory: /root/autodl-tmp/00101/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00102,True,ERROR,2025-08-23 17:40:57.530878,/root/autodl-tmp/00102/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00102 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:57.530878
+Output Directory: /root/autodl-tmp/00102/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00103,True,ERROR,2025-08-23 17:41:00.929894,/root/autodl-tmp/00103/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00103 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:00.929894
+Output Directory: /root/autodl-tmp/00103/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00104,True,ERROR,2025-08-23 17:41:05.865342,/root/autodl-tmp/00104/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00104 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:05.865342
+Output Directory: /root/autodl-tmp/00104/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00105,True,ERROR,2025-08-23 17:40:58.212691,/root/autodl-tmp/00105/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00105 - PTT Analysis Error
+Timestamp: 2025-08-23 17:40:58.212691
+Output Directory: /root/autodl-tmp/00105/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00106,True,ERROR,2025-08-23 17:41:02.835030,/root/autodl-tmp/00106/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00106 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:02.835030
+Output Directory: /root/autodl-tmp/00106/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00107,True,ERROR,2025-08-23 17:41:02.009123,/root/autodl-tmp/00107/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00107 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:02.009123
+Output Directory: /root/autodl-tmp/00107/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00108,True,ERROR,2025-08-23 17:41:02.109511,/root/autodl-tmp/00108/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00108 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:02.109511
+Output Directory: /root/autodl-tmp/00108/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00109,True,ERROR,2025-08-23 17:41:07.826324,/root/autodl-tmp/00109/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00109 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:07.826324
+Output Directory: /root/autodl-tmp/00109/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00110,True,ERROR,2025-08-23 17:41:06.518239,/root/autodl-tmp/00110/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00110 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:06.518239
+Output Directory: /root/autodl-tmp/00110/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00111,True,ERROR,2025-08-23 17:41:08.315212,/root/autodl-tmp/00111/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00111 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:08.315212
+Output Directory: /root/autodl-tmp/00111/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
+00112,True,ERROR,2025-08-23 17:41:10.443543,/root/autodl-tmp/00112/ptt_bp_analysis_calibrated,No objects to concatenate,"Subject 00112 - PTT Analysis Error
+Timestamp: 2025-08-23 17:41:10.443543
+Output Directory: /root/autodl-tmp/00112/ptt_bp_analysis_calibrated
+Status: ERROR
+Error Message: No objects to concatenate
+"
