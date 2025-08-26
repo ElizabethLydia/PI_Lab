@@ -1,0 +1,560 @@
+subject,status_file_exists,status,timestamp,output_directory,total_experiments,successful_experiments,failed_experiments,success_rate,processing_time,raw_content,error_message
+00003,True,SUCCESS,2024-01-01 12:00:00,/root/autodl-tmp/blood_pressure_reconstruction/00003,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00003
+Status: SUCCESS
+Timestamp: 2024-01-01 12:00:00
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00003
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 45.2 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00003/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00003/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00003/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00003/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00016,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00017,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00023,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00041,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00042,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00043,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00044,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00045,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00046,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00047,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00048,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00049,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00050,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00051,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00052,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00053,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00054,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00055,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00056,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00057,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00058,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00059,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00060,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00061,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00062,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00063,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00064,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00065,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00066,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00067,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00068,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00069,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00070,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00071,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00072,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00073,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00074,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00075,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00076,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00077,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00078,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00079,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00080,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00081,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00082,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00083,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00084,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00085,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00086,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00087,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00088,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00089,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00090,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00091,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00092,False,NO_FILE,N/A,N/A,N/A,N/A,N/A,N/A,N/A,,状态文件不存在
+00093,True,SUCCESS,2025-08-26 10:50:27,/root/autodl-tmp/blood_pressure_reconstruction/00093,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00093
+Status: SUCCESS
+Timestamp: 2025-08-26 10:50:27
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00093
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 155.6 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00093/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00093/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00093/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00093/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00094,True,SUCCESS,2025-08-26 10:50:30,/root/autodl-tmp/blood_pressure_reconstruction/00094,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00094
+Status: SUCCESS
+Timestamp: 2025-08-26 10:50:30
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00094
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 158.7 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00094/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00094/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00094/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00094/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00095,True,SUCCESS,2025-08-26 10:52:52,/root/autodl-tmp/blood_pressure_reconstruction/00095,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00095
+Status: SUCCESS
+Timestamp: 2025-08-26 10:52:52
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00095
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 145.8 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00095/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00095/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00095/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00095/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00096,True,SUCCESS,2025-08-26 10:53:01,/root/autodl-tmp/blood_pressure_reconstruction/00096,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00096
+Status: SUCCESS
+Timestamp: 2025-08-26 10:53:01
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00096
+
+Processing Summary:
+- Total Experiments: 10
+- Successful: 10
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 151.8 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00096/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00096/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00096/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00096/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00097,True,SUCCESS,2025-08-26 10:56:13,/root/autodl-tmp/blood_pressure_reconstruction/00097,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00097
+Status: SUCCESS
+Timestamp: 2025-08-26 10:56:13
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00097
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 200.5 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00097/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00097/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00097/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00097/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00098,True,SUCCESS,2025-08-26 10:56:32,/root/autodl-tmp/blood_pressure_reconstruction/00098,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00098
+Status: SUCCESS
+Timestamp: 2025-08-26 10:56:32
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00098
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 210.9 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00098/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00098/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00098/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00098/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00099,True,SUCCESS,2025-08-26 10:59:37,/root/autodl-tmp/blood_pressure_reconstruction/00099,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00099
+Status: SUCCESS
+Timestamp: 2025-08-26 10:59:37
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00099
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 204.1 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00099/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00099/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00099/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00099/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00100,True,SUCCESS,2025-08-26 10:59:52,/root/autodl-tmp/blood_pressure_reconstruction/00100,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00100
+Status: SUCCESS
+Timestamp: 2025-08-26 10:59:52
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00100
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 199.5 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00100/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00100/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00100/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00100/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00101,True,SUCCESS,2025-08-26 11:02:22,/root/autodl-tmp/blood_pressure_reconstruction/00101,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00101
+Status: SUCCESS
+Timestamp: 2025-08-26 11:02:22
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00101
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 164.7 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00101/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00101/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00101/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00101/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00102,True,SUCCESS,2025-08-26 11:02:25,/root/autodl-tmp/blood_pressure_reconstruction/00102,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00102
+Status: SUCCESS
+Timestamp: 2025-08-26 11:02:25
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00102
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 153.6 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00102/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00102/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00102/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00102/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00103,True,SUCCESS,2025-08-26 11:05:21,/root/autodl-tmp/blood_pressure_reconstruction/00103,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00103
+Status: SUCCESS
+Timestamp: 2025-08-26 11:05:21
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00103
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 179.1 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00103/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00103/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00103/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00103/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00104,True,SUCCESS,2025-08-26 11:05:22,/root/autodl-tmp/blood_pressure_reconstruction/00104,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00104
+Status: SUCCESS
+Timestamp: 2025-08-26 11:05:22
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00104
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 176.8 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00104/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00104/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00104/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00104/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00105,True,SUCCESS,2025-08-26 11:08:33,/root/autodl-tmp/blood_pressure_reconstruction/00105,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00105
+Status: SUCCESS
+Timestamp: 2025-08-26 11:08:33
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00105
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 192.1 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00105/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00105/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00105/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00105/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00106,True,SUCCESS,2025-08-26 11:08:00,/root/autodl-tmp/blood_pressure_reconstruction/00106,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00106
+Status: SUCCESS
+Timestamp: 2025-08-26 11:08:00
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00106
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 158.0 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00106/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00106/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00106/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00106/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00107,True,SUCCESS,2025-08-26 11:10:33,/root/autodl-tmp/blood_pressure_reconstruction/00107,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00107
+Status: SUCCESS
+Timestamp: 2025-08-26 11:10:33
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00107
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 153.1 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00107/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00107/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00107/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00107/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00108,True,SUCCESS,2025-08-26 11:11:05,/root/autodl-tmp/blood_pressure_reconstruction/00108,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00108
+Status: SUCCESS
+Timestamp: 2025-08-26 11:11:05
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00108
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 151.9 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00108/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00108/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00108/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00108/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00109,True,SUCCESS,2025-08-26 11:13:01,/root/autodl-tmp/blood_pressure_reconstruction/00109,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00109
+Status: SUCCESS
+Timestamp: 2025-08-26 11:13:01
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00109
+
+Processing Summary:
+- Total Experiments: 10
+- Successful: 10
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 147.9 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00109/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00109/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00109/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00109/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00110,True,SUCCESS,2025-08-26 11:14:03,/root/autodl-tmp/blood_pressure_reconstruction/00110,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00110
+Status: SUCCESS
+Timestamp: 2025-08-26 11:14:03
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00110
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 178.2 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00110/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00110/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00110/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00110/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00111,True,SUCCESS,2025-08-26 11:15:48,/root/autodl-tmp/blood_pressure_reconstruction/00111,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00111
+Status: SUCCESS
+Timestamp: 2025-08-26 11:15:48
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00111
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 166.8 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00111/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00111/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00111/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00111/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",
+00112,True,SUCCESS,2025-08-26 11:17:13,/root/autodl-tmp/blood_pressure_reconstruction/00112,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,"Step1 Calibrated 处理成功状态
+==================================================
+
+Subject ID: 00112
+Status: SUCCESS
+Timestamp: 2025-08-26 11:17:13
+Output Directory: /root/autodl-tmp/blood_pressure_reconstruction/00112
+
+Processing Summary:
+- Total Experiments: 11
+- Successful: 11
+- Failed: 0
+- Success Rate: 100.0%
+- Total Processing Time: 189.8 seconds
+
+Output Structure:
+- CSV files: /root/autodl-tmp/blood_pressure_reconstruction/00112/csv/
+- PKL files: /root/autodl-tmp/blood_pressure_reconstruction/00112/pkl/
+- NPY files: /root/autodl-tmp/blood_pressure_reconstruction/00112/npy/
+- Processing logs: /root/autodl-tmp/blood_pressure_reconstruction/00112/processing_logs/
+
+Note: This subject has been successfully processed.
+Future runs will skip this subject to avoid reprocessing.
+",

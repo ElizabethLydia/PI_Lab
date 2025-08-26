@@ -911,7 +911,7 @@ def main():
     MAX_EXPERIMENTS = None  # None表示处理所有实验
     
     # 指定要处理的subject_ids
-    subject_ids = [112]
+    subject_ids = [3]
     target_subjects = [f'00{num:03d}' for num in subject_ids]
     
     # 获取所有日期文件夹
