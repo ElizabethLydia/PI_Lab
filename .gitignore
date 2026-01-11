@@ -1,3 +1,64 @@
-00017/*
-__pycache__/*
-output/*
+# Python缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# 环境
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 数据文件
+*.mat
+*.dat
+*.csv
+*.hea
+*.breath
+*.npy
+*.pkl
+*.pickle
+
+# 结果和输出
+results/
+output/
+csv_output/
+ptt_output/
+ptt_output2/
+*_results/
+*_output/
+*_check_results/
+step*_moved/
+step*_calibrated/
+
+# 日志
+*.log
+nohup.out
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 文档构建
+_build/
+dist/
+build/
+*.egg-info/
